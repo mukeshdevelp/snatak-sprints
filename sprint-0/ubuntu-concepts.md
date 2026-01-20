@@ -490,7 +490,7 @@ sudo journalctl -u service-name -n 100
 
 | Name | Email address |
 |------|---------------|
-| abc | abc@mygurukulam.co |
+| mukesh | msmukeshkumarsharma@gmail.com |
 
 ## References
 
