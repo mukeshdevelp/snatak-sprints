@@ -63,11 +63,19 @@ npm simplifies installing and sharing JavaScript packages, provides version cont
 
 ### Use Cases
 
-1. Installing libraries/frameworks (React, Express, Vite).
-2. Managing build tooling (Webpack, Babel, ESLint, TypeScript).
-3. Running project scripts (dev server, tests, builds).
-4. Publishing internal or public packages.
-5. Managing monorepos with workspaces.
+1. **Installing libraries/frameworks**: Quickly add popular libraries like React, Express, Vue, Angular, or Vite to projects with a single command, along with all their dependencies.
+
+2. **Managing build tooling**: Install and configure build tools like Webpack, Babel, ESLint, TypeScript, and other development tools that enhance the development workflow.
+
+3. **Running project scripts**: Execute predefined scripts for common tasks like starting development servers (`npm start`), running tests (`npm test`), building for production (`npm run build`), and custom project-specific commands.
+
+4. **Publishing packages**: Share your own code packages with the community or within your organization. npm provides tools to publish, version, and maintain packages.
+
+5. **Managing monorepos**: Use npm workspaces to manage multiple related packages in a single repository, allowing shared dependencies and coordinated versioning across multiple projects.
+
+6. **Development workflow automation**: Automate repetitive tasks through npm scripts, reducing manual work and ensuring consistent execution of build, test, and deployment processes.
+
+7. **Dependency management**: Track and update project dependencies, manage version conflicts, and ensure all required packages are available and compatible.
 
 ## Getting Started
 
@@ -129,31 +137,31 @@ npm cache clean --force          # Clear npm cache
 ## Project Setup Example
 
 ```bash
-mkdir my-app
+#!/bin/bash
+
+# Create project directory
+mkdir -p my-app
 cd my-app
+# Initialize npm project
 npm init -y
+# Install dependencies
 npm install react react-dom
-
-# Optional: add a simple script
-npm set-script start "node index.js"
-```
-
-Minimal `index.js`:
-```javascript
-console.log("npm project ready");
-```
-
-Run:
-```bash
+# Create index.js file
+echo 'console.log("npm project ready");' > index.js
+# Add start script to package.json
+npm pkg set scripts.start="node index.js"
+# Run the project
+echo "Starting npm project..."
 npm start
+
 ```
 
 ## Configuration
 
 ```bash
+#/bin/bash
 npm config list                  # View current config
-npm config set registry https://registry.npmjs.org/
-npm set-script dev "node index.js"
+
 ```
 
 ## Software Overview
@@ -199,7 +207,7 @@ npm cache clean --force     # Clear cache
 npm config list             # View config
 ```
 
-```
+
 
 ## Troubleshooting
 
@@ -220,6 +228,7 @@ npm config set registry https://registry.npmjs.org/
 npm cache clean --force
 ```
 
+
 **Port in use (e.g., 3000)**
 ```bash
 lsof -ti:3000 | xargs kill -9   # macOS/Linux
@@ -231,8 +240,19 @@ netstat -ano | findstr :3000    # Windows (then taskkill /PID <PID> /F)
 **1. Does npm come with Node.js?**  
 Yes. Installing Node.js installs npm.
 
-**2. How do I update npm?**  
-`npm install -g npm@latest`
+**2. How do I update npm?**
+
+First, update Node.js to a compatible version (npm 11+ requires Node.js 20.17.0+ or 22.9.0+):
+
+**Using NodeSource (Ubuntu)**
+# Update to Node.js 20.x LTS
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Verify Node.js version
+node --version
+npm install -g npm@9
+
 
 **3. How do I install a specific Node.js version?**  
 Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
@@ -245,8 +265,10 @@ Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
 
 ## References
 
-- https://nodejs.org/en/download
-- https://docs.npmjs.com/
-- https://github.com/nvm-sh/nvm
-- https://github.com/coreybutler/nvm-windows
+| Links | Descriptions |
+|-------|--------------|
+| https://nodejs.org/en/download | Official Node.js download page with installation instructions |
+| https://docs.npmjs.com/ | Official npm documentation and CLI reference |
+| https://github.com/nvm-sh/nvm | Node Version Manager (nvm) for managing multiple Node.js versions |
+| https://github.com/coreybutler/nvm-windows | nvm-windows for Windows users |
 
