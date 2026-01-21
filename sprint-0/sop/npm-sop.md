@@ -242,15 +242,18 @@ Yes. Installing Node.js installs npm.
 
 First, update Node.js to a compatible version (npm 11+ requires Node.js 20.17.0+ or 22.9.0+):
 
-**Using NodeSource (Ubuntu)**
-# Update to Node.js 20.x LTS
+
+Update to Node.js 20.x LTS
+```bash
+#!/bin/bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 npm install -g npm@9
-<img width="1920" height="454" alt="image" src="https://github.com/user-attachments/assets/bd4630cf-7580-463f-b13a-9ee4e6e54044" />
-# Verify Node.js version
-node --version
 
+
+node --version
+```
+<img width="1920" height="454" alt="image" src="https://github.com/user-attachments/assets/bd4630cf-7580-463f-b13a-9ee4e6e54044" />
 <img width="1920" height="63" alt="Screenshot from 2026-01-21 13-44-47" src="https://github.com/user-attachments/assets/d9b67986-856c-4731-9a2f-b643a7f0f8b5" />
 
 
