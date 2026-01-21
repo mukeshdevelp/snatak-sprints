@@ -94,7 +94,13 @@ sudo apt install -y nodejs
 node --version
 npm --version
 ```
+<img width="1908" height="885" alt="Screenshot from 2026-01-21 12-19-21" src="https://github.com/user-attachments/assets/67340358-bb32-4d3b-8d39-0dff830e89ca" />
 
+<img width="1908" height="885" alt="Screenshot from 2026-01-21 12-26-50" src="https://github.com/user-attachments/assets/93c8250b-4290-4b41-9f39-76d3a3575f08" />
+
+<img width="1908" height="577" alt="image" src="https://github.com/user-attachments/assets/2bdee003-ec57-4ea6-a7b1-e7b08dbcfef5" />
+
+<img width="1919" height="117" alt="Screenshot from 2026-01-21 12-28-59" src="https://github.com/user-attachments/assets/bbf2bc92-b37d-4310-a325-c2b6486a766f" />
 
 #### Option B: Install via nvm (Node Version Manager) — Flexible
 
@@ -111,6 +117,9 @@ nvm use 16
 node --version
 npm --version
 ```
+<img width="1919" height="963" alt="Screenshot from 2026-01-21 12-32-50" src="https://github.com/user-attachments/assets/ab30ca86-89d8-4148-9ad2-8cd9b915c3b3" />
+
+<img width="1895" height="157" alt="image" src="https://github.com/user-attachments/assets/540dd265-e699-43f8-a9ba-4ec138f42b9a" />
 
 ## Basic Commands
 
@@ -125,6 +134,9 @@ npm update <pkg>                 # Update package
 npm audit                        # Security audit
 npm cache clean --force          # Clear npm cache
 ```
+<img width="1920" height="668" alt="Screenshot from 2026-01-21 12-35-23" src="https://github.com/user-attachments/assets/39256812-2700-4534-8ec2-69e148c03c57" />
+
+<img width="1919" height="331" alt="Screenshot from 2026-01-21 12-38-08" src="https://github.com/user-attachments/assets/071916eb-083c-4745-bb5d-684f650acaf5" />
 
 ## Project Setup Example
 
