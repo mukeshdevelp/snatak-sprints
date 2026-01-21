@@ -15,8 +15,8 @@
   - [Benefits](#benefits)
   - [Use Cases](#use-cases)
 - [Getting Started](#getting-started)
-  - [Pre-requisites (Ubuntu)](#Pre-requisites (Ubuntu))
-  - [Step-by-Step Installation Guide (Ubuntu)](#Step-by-Step Installation Guide (Ubuntu))
+  - [Pre-requisites](#Pre-requisites)
+  - [Step-by-Step Installation Guide](#Step-by-Step Installation Guide)
 - [Basic Commands](#basic-commands)
 - [Project Setup Example](#project-setup-example)
 - [Configuration](#configuration)
@@ -70,7 +70,7 @@ npm simplifies installing and sharing JavaScript packages, provides version cont
 
 ## Getting Started
 
-### Pre-requisites (Ubuntu)
+### Pre-requisites
 
 | Requirement | Description |
 |-------------|-------------|
@@ -79,7 +79,7 @@ npm simplifies installing and sharing JavaScript packages, provides version cont
 | Shell | Terminal on Ubuntu |
 | curl | To fetch install scripts (install via `sudo apt install -y curl`) |
 
-### Step-by-Step Installation Guide (Ubuntu)
+### Step-by-Step Installation Guide
 
 #### Option A: Install via NodeSource (includes npm) — Recommended
 
