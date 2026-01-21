@@ -214,7 +214,7 @@ npm cache clean --force     # Clear cache
 npm config list             # View config
 ```
 
-```
+
 
 ## Troubleshooting
 
@@ -259,9 +259,11 @@ Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
 `npm config set registry <url>`
 
 ## References
+| Links | Descriptions |
+|-------|--------------|
+| https://nodejs.org/en/download | Official Node.js download page with installation instructions |
+| https://docs.npmjs.com/ | Official npm documentation and CLI reference |
+| https://github.com/nvm-sh/nvm | Node Version Manager (nvm) for managing multiple Node.js versions |
+| https://github.com/coreybutler/nvm-windows | nvm-windows for Windows users |
 
-- https://nodejs.org/en/download
-- https://docs.npmjs.com/
-- https://github.com/nvm-sh/nvm
-- https://github.com/coreybutler/nvm-windows
 
