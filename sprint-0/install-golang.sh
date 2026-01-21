@@ -5,7 +5,7 @@
 # 
 # A generic bash script for installing Golang with support for:
 # - Multiple Go versions
-# - Multiple installation methods (Official Binary, Package Manager, Snap)
+# - Multiple installation methods (Official Binary, Package Manager)
 # - Upgrading existing Go installations
 # - Cross-platform support (Linux, macOS)
 #
@@ -14,21 +14,21 @@
 #
 # Options:
 #   --version VERSION    Go version: 1.21, 1.22, 1.23, latest (default: latest)
-#   --method METHOD      Installation method: official, apt, snap (default: official)
+#   --method METHOD      Installation method: official, apt (default: official)
 #   --install-dir DIR    Installation directory (default: /usr/local/go)
 #   --upgrade            Upgrade existing Go installation
 #   --help               Show this help message
 #
 ################################################################################
 
-set -e  # Exit on error
+set -e
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 # Default values
 GO_VERSION="latest"
@@ -73,7 +73,6 @@ Options:
     --method METHOD          Installation method:
                             - official  : Official binary from go.dev (default)
                             - apt       : apt package manager (Ubuntu/Debian)
-                            - snap      : Snap package (Ubuntu)
     
     --install-dir DIR        Installation directory (default: /usr/local/go)
                             Note: Only used with official method
@@ -105,7 +104,6 @@ EOF
 detect_system() {
     print_info "Detecting system information..."
     
-    # Detect OS
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         OS="linux"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -115,7 +113,6 @@ detect_system() {
         exit 1
     fi
     
-    # Detect architecture
     ARCH=$(uname -m)
     case "$ARCH" in
         x86_64)
@@ -146,7 +143,7 @@ check_prerequisites() {
         official)
             if ! command_exists wget && ! command_exists curl; then
                 print_error "Neither wget nor curl is installed!"
-                print_info "Please install wget or curl to download Go"
+                print_info "Install wget or curl to download Go"
                 exit 1
             fi
             if ! command_exists tar; then
@@ -157,13 +154,6 @@ check_prerequisites() {
         apt)
             if ! command_exists apt; then
                 print_error "apt is not available! This method only works on Debian/Ubuntu"
-                exit 1
-            fi
-            ;;
-        snap)
-            if ! command_exists snap; then
-                print_error "snap is not installed!"
-                print_info "Please install snapd first"
                 exit 1
             fi
             ;;
@@ -195,6 +185,29 @@ get_latest_version() {
     fi
 }
 
+# Function to get latest patch version for a minor version
+get_latest_patch_version() {
+    local minor_version="$1"
+    
+    local json_data=""
+    if command_exists curl; then
+        json_data=$(curl -s https://go.dev/dl/?mode=json 2>/dev/null)
+    elif command_exists wget; then
+        json_data=$(wget -qO- https://go.dev/dl/?mode=json 2>/dev/null)
+    else
+        echo "ERROR" >&2
+        exit 1
+    fi
+    
+    local versions=$(echo "$json_data" | grep -oE "go${minor_version}\.[0-9]+" | sort -V -u | tail -1)
+    
+    if [ -z "$versions" ]; then
+        echo "${minor_version}.0"
+    else
+        echo "$versions" | sed 's/go//'
+    fi
+}
+
 # Function to get version string for download
 get_version_string() {
     local version="$1"
@@ -203,19 +216,22 @@ get_version_string() {
         version=$(get_latest_version)
     fi
     
-    # If version doesn't start with "go", add it
+    local dot_count=$(echo "$version" | tr -cd '.' | wc -c)
+    
+    if [ "$dot_count" -eq 1 ]; then
+        print_info "Resolving latest patch version for Go $version..."
+        local resolved_version=$(get_latest_patch_version "$version" 2>/dev/null)
+        if [ "$resolved_version" = "${version}.0" ]; then
+            print_warning "Could not find latest patch for $version, using ${version}.0"
+        fi
+        version="$resolved_version"
+    fi
+    
     if [[ ! "$version" =~ ^go ]]; then
         version="go$version"
     fi
     
     echo "$version"
-}
-
-# Function to get download URL
-get_download_url() {
-    local version=$(get_version_string "$GO_VERSION")
-    local filename="${version}.${OS}-${ARCH}.tar.gz"
-    echo "https://go.dev/dl/${filename}"
 }
 
 # Function to check current Go installation
@@ -246,7 +262,6 @@ setup_go_environment() {
         touch "$shell_rc"
     fi
     
-    # Check if PATH already includes Go
     if grep -q "/usr/local/go/bin" "$shell_rc" 2>/dev/null; then
         print_info "Go PATH already configured in $shell_rc"
     else
@@ -259,7 +274,6 @@ setup_go_environment() {
         print_success "Go environment variables added to $shell_rc"
     fi
     
-    # Export for current session
     export PATH=$PATH:/usr/local/go/bin
     export GOPATH=$HOME/go
     export PATH=$PATH:$GOPATH/bin
@@ -272,7 +286,7 @@ install_official() {
     print_info "Installing Go using official binary method..."
     
     local version=$(get_version_string "$GO_VERSION")
-    local download_url=$(get_download_url)
+    local download_url="https://go.dev/dl/${version}.${OS}-${ARCH}.tar.gz"
     local filename=$(basename "$download_url")
     local temp_dir=$(mktemp -d)
     
@@ -281,7 +295,6 @@ install_official() {
     
     cd "$temp_dir"
     
-    # Download Go
     if command_exists wget; then
         wget -q --show-progress "$download_url" || {
             print_error "Failed to download Go"
@@ -298,13 +311,11 @@ install_official() {
     
     print_success "Download completed"
     
-    # Remove old installation if exists
     if [ -d "$INSTALL_DIR" ]; then
         print_warning "Removing existing Go installation at $INSTALL_DIR"
         sudo rm -rf "$INSTALL_DIR"
     fi
     
-    # Extract Go
     print_info "Extracting Go to $INSTALL_DIR..."
     sudo mkdir -p "$(dirname "$INSTALL_DIR")"
     sudo tar -C "$(dirname "$INSTALL_DIR")" -xzf "$filename" || {
@@ -313,13 +324,11 @@ install_official() {
         exit 1
     }
     
-    # Cleanup
     rm -f "$filename"
     rm -rf "$temp_dir"
     
     print_success "Go extracted successfully"
     
-    # Setup environment
     setup_go_environment
 }
 
@@ -343,22 +352,6 @@ install_apt() {
     print_warning "Note: apt may install an older version. Use --method official for latest version."
 }
 
-# Function to install Go using snap
-install_snap() {
-    print_info "Installing Go using snap..."
-    
-    if [ "$GO_VERSION" != "latest" ]; then
-        print_warning "Snap method installs latest version. Version $GO_VERSION will be ignored."
-    fi
-    
-    sudo snap install go --classic || {
-        print_error "Failed to install Go via snap"
-        exit 1
-    }
-    
-    print_success "Go installed via snap"
-}
-
 # Function to upgrade Go
 upgrade_go() {
     print_info "Upgrading Go installation..."
@@ -372,13 +365,8 @@ upgrade_go() {
     local current_version=$(go version | awk '{print $3}' | sed 's/go//')
     print_info "Current version: $current_version"
     
-    if [ "$INSTALL_METHOD" != "official" ]; then
-        print_warning "Upgrade mode works best with --method official"
-        print_info "Switching to official method for upgrade..."
-        INSTALL_METHOD="official"
-    fi
+    INSTALL_METHOD="official"
     
-    # Get target version
     local target_version="$GO_VERSION"
     if [ "$target_version" = "latest" ]; then
         target_version=$(get_latest_version)
@@ -386,14 +374,12 @@ upgrade_go() {
     
     print_info "Target version: $target_version"
     
-    # Compare versions (simple check)
     if [ "$current_version" = "$target_version" ] || [ "$current_version" = "go$target_version" ]; then
         print_warning "Go is already at version $current_version"
         print_info "No upgrade needed"
         return 0
     fi
     
-    # Perform installation (which will replace existing)
     install_official
     
     print_success "Go upgraded successfully!"
@@ -403,8 +389,8 @@ upgrade_go() {
 verify_installation() {
     print_info "Verifying Go installation..."
     
-    # Reload PATH for current session
     export PATH=$PATH:/usr/local/go/bin
+    cd "$HOME" 2>/dev/null || cd /tmp 2>/dev/null || true
     
     if ! command_exists go; then
         print_error "Go command not found!"
@@ -412,37 +398,52 @@ verify_installation() {
         return 1
     fi
     
-    local installed_version=$(go version)
-    print_success "Go installation verified!"
-    print_info "Installed version: $installed_version"
+    local installed_version=$(cd "$HOME" 2>/dev/null && go version 2>&1)
+    if [ $? -eq 0 ] && [ -n "$installed_version" ]; then
+        print_success "Go installation verified!"
+        print_info "Installed version: $installed_version"
+    else
+        print_warning "Could not verify Go version (may need to reload PATH)"
+    fi
     
-    # Check Go environment
     print_info "Go environment:"
-    go env GOROOT
-    go env GOPATH
+    local goroot=$(cd "$HOME" 2>/dev/null && go env GOROOT 2>&1)
+    if [ $? -eq 0 ] && [ -n "$goroot" ]; then
+        echo "GOROOT: $goroot"
+    else
+        print_warning "Could not get GOROOT"
+    fi
     
-    # Test Go installation
+    local gopath=$(cd "$HOME" 2>/dev/null && go env GOPATH 2>&1)
+    if [ $? -eq 0 ] && [ -n "$gopath" ]; then
+        echo "GOPATH: $gopath"
+    else
+        print_warning "Could not get GOPATH"
+    fi
+    
     print_info "Testing Go installation with a simple program..."
     local test_dir=$(mktemp -d)
-    cd "$test_dir"
     
-    cat > main.go << 'EOF'
+    if [ -d "$test_dir" ] && cd "$test_dir" 2>/dev/null; then
+        cat > main.go << 'EOF'
 package main
 import "fmt"
 func main() {
     fmt.Println("Hello, Go!")
 }
 EOF
-    
-    if go run main.go > /dev/null 2>&1; then
-        print_success "Go test program executed successfully!"
-        local output=$(go run main.go)
-        print_info "Output: $output"
-    else
-        print_warning "Go test program failed (this might be normal if PATH not updated)"
+        
+        if go run main.go > /dev/null 2>&1; then
+            print_success "Go test program executed successfully!"
+            local output=$(go run main.go 2>&1)
+            print_info "Output: $output"
+        else
+            print_warning "Go test program failed (this might be normal if PATH not updated)"
+        fi
+        
+        cd "$HOME" 2>/dev/null || cd /tmp 2>/dev/null || true
+        rm -rf "$test_dir"
     fi
-    
-    rm -rf "$test_dir"
 }
 
 # Parse command line arguments
@@ -483,19 +484,14 @@ main() {
     print_info "Golang Installation Script"
     print_info "==========================="
     
-    # Parse arguments
     parse_arguments "$@"
     
-    # Detect system
     detect_system
     
-    # Check prerequisites
     check_prerequisites
     
-    # Check current installation
     check_current_installation || true
     
-    # Execute based on mode
     if [ "$UPGRADE_MODE" = true ]; then
         upgrade_go
     else
@@ -506,18 +502,14 @@ main() {
             apt)
                 install_apt
                 ;;
-            snap)
-                install_snap
-                ;;
             *)
                 print_error "Invalid installation method: $INSTALL_METHOD"
-                print_info "Valid methods: official, apt, snap"
+                print_info "Valid methods: official, apt"
                 exit 1
                 ;;
         esac
     fi
     
-    # Verify installation
     verify_installation
     
     print_success "Installation completed successfully!"
@@ -526,11 +518,7 @@ main() {
     print_info "  1. Run 'source ~/.bashrc' (or ~/.zshrc) to update PATH"
     print_info "  2. Verify with: go version"
     print_info "  3. Check environment: go env"
-    print_info "  4. Create your first program: mkdir hello-go && cd hello-go"
-    print_info "     echo 'package main; import \"fmt\"; func main() { fmt.Println(\"Hello!\") }' > main.go"
-    print_info "     go run main.go"
 }
 
 # Run main function
 main "$@"
-
