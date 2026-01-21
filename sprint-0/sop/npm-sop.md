@@ -26,8 +26,6 @@
   - [Run-time Dependency](#run-time-dependency)
   - [Other Dependency](#other-dependency)
 - [Software Management](#software-management)
-- [Services](#services)
-- [Process Management](#process-management)
 - [Troubleshooting](#troubleshooting)
 - [FAQs](#faqs)
 - [References](#references)
@@ -79,7 +77,7 @@ npm simplifies installing and sharing JavaScript packages, provides version cont
 
 ## Getting Started
 
-### Pre-requisites (Ubuntu)
+### Pre-requisites
 
 | Requirement | Description |
 |-------------|-------------|
@@ -88,7 +86,7 @@ npm simplifies installing and sharing JavaScript packages, provides version cont
 | Shell | Terminal on Ubuntu |
 | curl | To fetch install scripts (install via `sudo apt install -y curl`) |
 
-### Step-by-Step Installation Guide (Ubuntu)
+### Step-by-Step Installation Guide
 
 #### Option A: Install via NodeSource (includes npm) — Recommended
 
@@ -102,7 +100,13 @@ sudo apt install -y nodejs
 node --version
 npm --version
 ```
+<img width="1908" height="885" alt="Screenshot from 2026-01-21 12-19-21" src="https://github.com/user-attachments/assets/67340358-bb32-4d3b-8d39-0dff830e89ca" />
 
+<img width="1908" height="885" alt="Screenshot from 2026-01-21 12-26-50" src="https://github.com/user-attachments/assets/93c8250b-4290-4b41-9f39-76d3a3575f08" />
+
+<img width="1908" height="577" alt="image" src="https://github.com/user-attachments/assets/2bdee003-ec57-4ea6-a7b1-e7b08dbcfef5" />
+
+<img width="1919" height="117" alt="Screenshot from 2026-01-21 12-28-59" src="https://github.com/user-attachments/assets/bbf2bc92-b37d-4310-a325-c2b6486a766f" />
 
 #### Option B: Install via nvm (Node Version Manager) — Flexible
 
@@ -119,6 +123,9 @@ nvm use 16
 node --version
 npm --version
 ```
+<img width="1919" height="963" alt="Screenshot from 2026-01-21 12-32-50" src="https://github.com/user-attachments/assets/ab30ca86-89d8-4148-9ad2-8cd9b915c3b3" />
+
+<img width="1895" height="157" alt="image" src="https://github.com/user-attachments/assets/540dd265-e699-43f8-a9ba-4ec138f42b9a" />
 
 ## Basic Commands
 
@@ -133,6 +140,9 @@ npm update <pkg>                 # Update package
 npm audit                        # Security audit
 npm cache clean --force          # Clear npm cache
 ```
+<img width="1920" height="668" alt="Screenshot from 2026-01-21 12-35-23" src="https://github.com/user-attachments/assets/39256812-2700-4534-8ec2-69e148c03c57" />
+
+<img width="1919" height="331" alt="Screenshot from 2026-01-21 12-38-08" src="https://github.com/user-attachments/assets/071916eb-083c-4745-bb5d-684f650acaf5" />
 
 ## Project Setup Example
 
@@ -155,6 +165,9 @@ echo "Starting npm project..."
 npm start
 
 ```
+<img width="1920" height="933" alt="Screenshot from 2026-01-21 13-01-51" src="https://github.com/user-attachments/assets/d4d95188-839e-49d9-a0d9-34958cd9dfcf" />
+
+<img width="1920" height="623" alt="Screenshot from 2026-01-21 13-02-02" src="https://github.com/user-attachments/assets/2a9bce78-35b3-4fb7-b519-364726b484e3" />
 
 ## Configuration
 
@@ -163,6 +176,7 @@ npm start
 npm config list                  # View current config
 
 ```
+<img width="1920" height="335" alt="Screenshot from 2026-01-21 13-12-51" src="https://github.com/user-attachments/assets/87a1b5a0-e0c4-4750-a7e9-e67eab16a627" />
 
 ## Software Overview
 
@@ -214,14 +228,6 @@ npm config list             # View config
 **npm: command not found**
 - Ensure Node.js is installed and PATH updated; reopen terminal.
 
-**Permission errors on Linux/macOS**
-```bash
-mkdir ~/.npm-global
-npm config set prefix '~/.npm-global'
-echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
-```
-
 **SSL / network issues**
 ```bash
 npm config set registry https://registry.npmjs.org/
@@ -231,8 +237,8 @@ npm cache clean --force
 
 **Port in use (e.g., 3000)**
 ```bash
-lsof -ti:3000 | xargs kill -9   # macOS/Linux
-netstat -ano | findstr :3000    # Windows (then taskkill /PID <PID> /F)
+lsof -ti:3000 | xargs kill -9   
+netstat -ano | findstr :3000    
 ```
 
 ## FAQs
@@ -245,14 +251,16 @@ Yes. Installing Node.js installs npm.
 First, update Node.js to a compatible version (npm 11+ requires Node.js 20.17.0+ or 22.9.0+):
 
 **Using NodeSource (Ubuntu)**
-# Update to Node.js 20.x LTS
+```bash
+#!/bin/bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
-
-# Verify Node.js version
-node --version
 npm install -g npm@9
 
+node --version
+```
+<img width="1920" height="454" alt="image" src="https://github.com/user-attachments/assets/bd4630cf-7580-463f-b13a-9ee4e6e54044" />
+<img width="1920" height="63" alt="Screenshot from 2026-01-21 13-44-47" src="https://github.com/user-attachments/assets/d9b67986-856c-4631-9a2f-b643a7f0f8b5" />
 
 **3. How do I install a specific Node.js version?**  
 Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
@@ -260,11 +268,8 @@ Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
 **4. How do I clear npm cache?**  
 `npm cache clean --force`
 
-**5. How do I set a different registry?**  
-`npm config set registry <url>`
 
 ## References
-
 | Links | Descriptions |
 |-------|--------------|
 | https://nodejs.org/en/download | Official Node.js download page with installation instructions |
