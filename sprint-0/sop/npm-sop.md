@@ -141,24 +141,26 @@ npm cache clean --force          # Clear npm cache
 ## Project Setup Example
 
 ```bash
-mkdir my-app
+#!/bin/bash
+
+# Create project directory
+mkdir -p my-app
 cd my-app
+# Initialize npm project
 npm init -y
+# Install dependencies
 npm install react react-dom
-
-# Optional: add a simple script
-npm set-script start "node index.js"
-```
-
-Minimal `index.js`:
-```javascript
-console.log("npm project ready");
-```
-
-Run:
-```bash
+# Create index.js file
+echo 'console.log("npm project ready");' > index.js
+# Add start script to package.json
+npm pkg set scripts.start="node index.js"
+# Run the project
+echo "Starting npm project..."
 npm start
 ```
+<img width="1920" height="933" alt="Screenshot from 2026-01-21 13-01-51" src="https://github.com/user-attachments/assets/d4d95188-839e-49d9-a0d9-34958cd9dfcf" />
+
+<img width="1920" height="623" alt="Screenshot from 2026-01-21 13-02-02" src="https://github.com/user-attachments/assets/2a9bce78-35b3-4fb7-b519-364726b484e3" />
 
 ## Configuration
 
