@@ -186,7 +186,7 @@ npm start
 ## How to Create a React.js Project using npm+vite
 
 
-Vite provides faster development experience and optimized builds:
+Vite provides faster development experience and optimized builds. It supports node 18+.
 
 ```bash
 # Create a new React app with Vite
