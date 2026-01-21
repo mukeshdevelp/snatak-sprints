@@ -16,7 +16,7 @@
   - [Use Cases](#use-cases)
 - [Getting Started](#getting-started)
   - [Pre-requisites](#Pre-requisites)
-  - [Step-by-Step Installation Guide](#Step-by-Step Installation Guide)
+  - [Step-by-Step Installation Guide](#step-by-step-installation-guide)
 - [Basic Commands](#basic-commands)
 - [Project Setup Example](#project-setup-example)
 - [Configuration](#configuration)
