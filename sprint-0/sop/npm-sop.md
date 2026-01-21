@@ -183,7 +183,7 @@ npm start
 
 <img width="1920" height="623" alt="Screenshot from 2026-01-21 13-02-02" src="https://github.com/user-attachments/assets/2a9bce78-35b3-4fb7-b519-364726b484e3" />
 
-## How to Create a React.js Project using npm+vite
+## How to Create a React.js Project using npm+vite 
 
 
 Vite provides faster development experience and optimized builds. It supports node 18+.
@@ -203,26 +203,11 @@ npm run dev
 ```
 
 **Expected Output:**
-```
-✔ Select a framework: › React
-✔ Select a variant: › JavaScript
+<img width="1920" height="1080" alt="Screenshot from 2026-01-21 14-54-46" src="https://github.com/user-attachments/assets/88a5ebbb-46ef-46ae-8374-b40768785807" />
 
-Scaffolding project in /path/to/my-react-app...
+<img width="1920" height="1080" alt="Screenshot from 2026-01-21 14-54-59" src="https://github.com/user-attachments/assets/33735eb4-5ec7-418d-9b66-285882cedfd8" />
 
-Done. Now run:
-
-  cd my-react-app
-  npm install
-  npm run dev
-
-> my-react-app@0.1.0 dev
-> vite
-
-  VITE v5.x.x  ready in xxx ms
-
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: use --host to expose
-```
+<img width="1920" height="1080" alt="Screenshot from 2026-01-21 14-55-21" src="https://github.com/user-attachments/assets/a09e3fbd-22da-4c3a-be73-d26ca27d45d3" />
 
 
 ## Configuration
