@@ -165,10 +165,11 @@ npm start
 ## Configuration
 
 ```bash
+#/bin/bash
 npm config list                  # View current config
-npm config set registry https://registry.npmjs.org/
-npm set-script dev "node index.js"
+
 ```
+<img width="1920" height="335" alt="Screenshot from 2026-01-21 13-12-51" src="https://github.com/user-attachments/assets/87a1b5a0-e0c4-4750-a7e9-e67eab16a627" />
 
 ## Software Overview
 
