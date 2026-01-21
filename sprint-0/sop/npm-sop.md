@@ -221,14 +221,6 @@ npm config list             # View config
 **npm: command not found**
 - Ensure Node.js is installed and PATH updated; reopen terminal.
 
-**Permission errors on Linux/macOS**
-```bash
-mkdir ~/.npm-global
-npm config set prefix '~/.npm-global'
-echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
-```
-
 **SSL / network issues**
 ```bash
 npm config set registry https://registry.npmjs.org/
@@ -237,8 +229,8 @@ npm cache clean --force
 
 **Port in use (e.g., 3000)**
 ```bash
-lsof -ti:3000 | xargs kill -9   # macOS/Linux
-netstat -ano | findstr :3000    # Windows (then taskkill /PID <PID> /F)
+lsof -ti:3000 | xargs kill -9   
+netstat -ano | findstr :3000    
 ```
 
 ## FAQs
@@ -246,8 +238,21 @@ netstat -ano | findstr :3000    # Windows (then taskkill /PID <PID> /F)
 **1. Does npm come with Node.js?**  
 Yes. Installing Node.js installs npm.
 
-**2. How do I update npm?**  
-`npm install -g npm@latest`
+**2. How do I update npm?**
+
+First, update Node.js to a compatible version (npm 11+ requires Node.js 20.17.0+ or 22.9.0+):
+
+**Using NodeSource (Ubuntu)**
+# Update to Node.js 20.x LTS
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+npm install -g npm@9
+<img width="1920" height="454" alt="image" src="https://github.com/user-attachments/assets/bd4630cf-7580-463f-b13a-9ee4e6e54044" />
+# Verify Node.js version
+node --version
+
+<img width="1920" height="63" alt="Screenshot from 2026-01-21 13-44-47" src="https://github.com/user-attachments/assets/d9b67986-856c-4731-9a2f-b643a7f0f8b5" />
+
 
 **3. How do I install a specific Node.js version?**  
 Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
@@ -255,8 +260,6 @@ Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
 **4. How do I clear npm cache?**  
 `npm cache clean --force`
 
-**5. How do I set a different registry?**  
-`npm config set registry <url>`
 
 ## References
 | Links | Descriptions |
