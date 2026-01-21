@@ -26,7 +26,6 @@
   - [Run-time Dependency](#run-time-dependency)
   - [Other Dependency](#other-dependency)
 - [Software Management](#software-management)
-- [Services](#services)
 - [Troubleshooting](#troubleshooting)
 - [FAQs](#faqs)
 - [References](#references)
