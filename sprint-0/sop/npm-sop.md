@@ -8,38 +8,40 @@
 
 ## Table of Contents
 
-- [What is npm?](#what-is-npm)
-  - [Definition](#definition)
-  - [Core Components](#core-components)
-- [Why npm?](#why-npm)
-  - [Benefits](#benefits)
-  - [Use Cases](#use-cases)
-- [Getting Started](#getting-started)
-  - [Pre-requisites](#pre-requisites)
-  - [Step-by-Step Installation Guide](#step-by-step-installation-guide)
-- [Basic Commands](#basic-commands)
-- [Project Setup Example](#project-setup-example)
-- [How to Create a React.js Project using npm+vite](#how-to-create-a-reactjs-project-using-npmvite)
-- [Configuration](#configuration)
-- [Software Overview](#software-overview)
-- [System Requirement](#system-requirement)
-- [Dependencies](#dependencies)
-  - [Run-time Dependency](#run-time-dependency)
-  - [Other Dependency](#other-dependency)
-- [Software Management](#software-management)
-- [Troubleshooting](#troubleshooting)
-- [FAQs](#faqs)
-- [References](#references)
+1. [What is npm?](#1-what-is-npm)
+    
+    1.1. [Core Components](#11-core-components)
+2. [Why npm?](#2-why-npm)
+    
+    2.1. [Benefits](#21-benefits)
+    
+    2.2. [Use Cases](#22-use-cases)
+3. [Getting Started](#3-getting-started)
+    
+    3.1. [Pre-requisites](#31-pre-requisites)
+    
+    3.2. [Step-by-Step Installation Guide](#32-step-by-step-installation-guide)
+4. [Basic Commands](#4-basic-commands)
+5. [Project Setup Example](#5-project-setup-example)
+6. [How to Create a React.js Project using npm+vite](#6-how-to-create-a-reactjs-project-using-npmvite)
+7. [Configuration](#7-configuration)
+8. [Software Overview](#8-software-overview)
+9. [System Requirement](#9-system-requirement)
+10. [Dependencies](#10-dependencies)
+    
+    10.1. [Run-time Dependency](#101-run-time-dependency)
+    
+    10.2. [Other Dependency](#102-other-dependency)
+11. [Software Management](#11-software-management)
+12. [Troubleshooting](#12-troubleshooting)
+13. [FAQs](#13-faqs)
+14. [References](#14-references)
 
-## What is npm?
+## 1. What is npm?
 
-npm (Node Package Manager) is the default package manager for Node.js and the world's largest software registry. It serves as both a command-line tool and an online repository that hosts millions of open-source JavaScript packages. npm enables developers to discover, install, develop, and share code packages, making it an essential tool in modern JavaScript development. It manages project dependencies, handles versioning, and automates various development tasks through scripts, significantly streamlining the software development workflow.
+npm (Node Package Manager) is the default package manager for Node.js and the world's largest software registry. It serves as both a command-line tool and an online repository that hosts millions of open-source JavaScript packages. npm enables developers to discover, install, develop, and share code packages, making it an essential tool in modern JavaScript development. It manages project dependencies, handles versioning, and automates various development tasks through scripts, significantly streamlining the software development workflow. It uses `package.json` files to track project metadata and dependencies, and `package-lock.json` files to lock specific versions for reproducible builds across different environments.
 
-### Definition
-
-npm is a comprehensive package management system that consists of three main components: the npm CLI (Command Line Interface), the npm registry (an online database of packages), and the npm website. The CLI tool allows developers to interact with the registry to install, update, remove, and publish packages. It automatically manages dependency trees, resolves version conflicts, and ensures that all required packages are available for a project. npm ships by default with Node.js installation, eliminating the need for separate setup. It uses `package.json` files to track project metadata and dependencies, and `package-lock.json` files to lock specific versions for reproducible builds across different environments.
-
-### Core Components
+### 1.1. Core Components
 
 1. **npm CLI**: Command-line tool to install, update, and publish packages. Provides commands like `npm install`, `npm publish`, `npm run`, and many others for package management operations.
 
@@ -51,11 +53,11 @@ npm is a comprehensive package management system that consists of three main com
 
 5. **node_modules/**: Directory where npm installs all downloaded packages and their dependencies. Contains the actual package files used by your application.
 
-## Why npm?
+## 2. Why npm?
 
 npm was created to solve the problem of managing JavaScript dependencies and sharing code in a standardized way. Before npm, developers had to manually download and manage JavaScript libraries, leading to version conflicts, missing dependencies, and inconsistent project setups. npm provides a centralized, reliable system for package management that has become the foundation of modern JavaScript development. It enables teams to build upon existing code, share solutions, and maintain consistent development environments across different machines and team members.
 
-### Benefits
+### 2.1. Benefits
 
 1. **Bundled with Node.js**: No separate install needed once Node.js is installed. This integration ensures that every Node.js installation comes with npm ready to use, reducing setup complexity and ensuring compatibility.
 
@@ -73,7 +75,7 @@ npm was created to solve the problem of managing JavaScript dependencies and sha
 
 8. **Community Support**: Large, active community providing packages, documentation, and support. The npm registry is continuously growing with new packages and updates.
 
-### Use Cases
+### 2.2. Use Cases
 
 1. **Installing libraries/frameworks**: Quickly add popular libraries like React, Express, Vue, Angular, or Vite to projects with a single command, along with all their dependencies.
 
@@ -89,9 +91,9 @@ npm was created to solve the problem of managing JavaScript dependencies and sha
 
 7. **Dependency management**: Track and update project dependencies, manage version conflicts, and ensure all required packages are available and compatible.
 
-## Getting Started
+## 3. Getting Started
 
-### Pre-requisites
+### 3.1. Pre-requisites
 
 | Requirement | Description |
 |-------------|-------------|
@@ -100,7 +102,7 @@ npm was created to solve the problem of managing JavaScript dependencies and sha
 | Shell | Terminal on Ubuntu |
 | curl | To fetch install scripts (install via `sudo apt install -y curl`) |
 
-### Step-by-Step Installation Guide
+### 3.2. Step-by-Step Installation Guide
 
 #### Option A: Install via NodeSource (includes npm) — Recommended
 
@@ -141,7 +143,7 @@ npm --version
 
 <img width="1895" height="157" alt="image" src="https://github.com/user-attachments/assets/540dd265-e699-43f8-a9ba-4ec138f42b9a" />
 
-## Basic Commands
+## 4. Basic Commands
 
 ```bash
 npm --version                    # Check npm version
@@ -158,7 +160,7 @@ npm cache clean --force          # Clear npm cache
 
 <img width="1919" height="331" alt="Screenshot from 2026-01-21 12-38-08" src="https://github.com/user-attachments/assets/071916eb-083c-4745-bb5d-684f650acaf5" />
 
-## Project Setup Example
+## 5. Project Setup Example
 
 ```bash
 #!/bin/bash
@@ -183,7 +185,7 @@ npm start
 
 <img width="1920" height="623" alt="Screenshot from 2026-01-21 13-02-02" src="https://github.com/user-attachments/assets/2a9bce78-35b3-4fb7-b519-364726b484e3" />
 
-## How to Create a React.js Project using npm+vite 
+## 6. How to Create a React.js Project using npm+vite 
 
 
 Vite provides faster development experience and optimized builds. It supports node 18+.
@@ -210,7 +212,7 @@ npm run dev
 <img width="1920" height="1080" alt="Screenshot from 2026-01-21 14-55-21" src="https://github.com/user-attachments/assets/a09e3fbd-22da-4c3a-be73-d26ca27d45d3" />
 
 
-## Configuration
+## 7. Configuration
 
 ```bash
 #/bin/bash
@@ -219,7 +221,7 @@ npm config list                  # View current config
 ```
 <img width="1920" height="335" alt="Screenshot from 2026-01-21 13-12-51" src="https://github.com/user-attachments/assets/87a1b5a0-e0c4-4750-a7e9-e67eab16a627" />
 
-## Software Overview
+## 8. Software Overview
 
 | Software | Version |
 |----------|---------|
@@ -227,7 +229,7 @@ npm config list                  # View current config
 | Node.js | 16.x LTS |
 | npx | Bundled with npm |
 
-## System Requirement
+## 9. System Requirement
 
 | Requirement | Minimum | Recommendation |
 |-------------|---------|----------------|
@@ -236,16 +238,16 @@ npm config list                  # View current config
 | Disk Space | 500 MB free | 1 GB+ |
 | Network | Internet access | Stable broadband |
 
-## Dependencies
+## 10. Dependencies
 
-### Run-time Dependency
+### 10.1. Run-time Dependency
 
 | Run-time Dependency | Version | Description |
 |---------------------|---------|-------------|
 | node | 16.x LTS | JavaScript runtime required for npm |
 | npm | 8.x | Package manager CLI |
 
-### Other Dependency
+### 10.2. Other Dependency
 
 | Other Dependency | Version | Description |
 |------------------|---------|-------------|
@@ -253,7 +255,7 @@ npm config list                  # View current config
 | build-essential (optional) | Latest | Compilers/tools for native addons |
 | git (optional) | Latest | For cloning repositories |
 
-## Software Management
+## 11. Software Management
 
 ```bash
 npm --version               # Check npm version
@@ -264,7 +266,7 @@ npm config list             # View config
 
 
 
-## Troubleshooting
+## 12. Troubleshooting
 
 **npm: command not found**
 - Ensure Node.js is installed and PATH updated; reopen terminal.
@@ -282,7 +284,7 @@ lsof -ti:3000 | xargs kill -9
 netstat -ano | findstr :3000    
 ```
 
-## FAQs
+## 13. FAQs
 
 **1. Does npm come with Node.js?**  
 Yes. Installing Node.js installs npm.
@@ -301,7 +303,7 @@ npm install -g npm@9
 node --version
 ```
 <img width="1920" height="454" alt="image" src="https://github.com/user-attachments/assets/bd4630cf-7580-463f-b13a-9ee4e6e54044" />
-<img width="1920" height="63" alt="Screenshot from 2026-01-21 13-44-47" src="https://github.com/user-attachments/assets/d9b67986-856c-4631-9a2f-b643a7f0f8b5" />
+
 
 **3. How do I install a specific Node.js version?**  
 Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
@@ -310,11 +312,11 @@ Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
 `npm cache clean --force`
 
 
-## References
+## 14. References
 | Links | Descriptions |
 |-------|--------------|
 | https://nodejs.org/en/download | Official Node.js download page with installation instructions |
 | https://docs.npmjs.com/ | Official npm documentation and CLI reference |
 | https://github.com/nvm-sh/nvm | Node Version Manager (nvm) for managing multiple Node.js versions |
-| https://github.com/coreybutler/nvm-windows | nvm-windows for Windows users |
+
 
