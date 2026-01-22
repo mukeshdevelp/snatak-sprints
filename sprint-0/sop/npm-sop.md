@@ -23,19 +23,18 @@
     3.2. [Step-by-Step Installation Guide](#32-step-by-step-installation-guide)
 4. [Basic Commands](#4-basic-commands)
 5. [Project Setup Example](#5-project-setup-example)
-6. [How to Create a React.js Project using npm+vite](#6-how-to-create-a-reactjs-project-using-npmvite)
-7. [Configuration](#7-configuration)
-8. [Software Overview](#8-software-overview)
-9. [System Requirement](#9-system-requirement)
-10. [Dependencies](#10-dependencies)
+6. [Configuration](#6-configuration)
+7. [Software Overview](#7-software-overview)
+8. [System Requirement](#8-system-requirement)
+9. [Dependencies](#9-dependencies)
     
-    10.1. [Run-time Dependency](#101-run-time-dependency)
+    9.1. [Run-time Dependency](#91-run-time-dependency)
     
-    10.2. [Other Dependency](#102-other-dependency)
-11. [Software Management](#11-software-management)
-12. [Troubleshooting](#12-troubleshooting)
-13. [FAQs](#13-faqs)
-14. [References](#14-references)
+    9.2. [Other Dependency](#92-other-dependency)
+10. [Software Management](#10-software-management)
+11. [Troubleshooting](#11-troubleshooting)
+12. [FAQs](#12-faqs)
+13. [References](#13-references)
 
 ## 1. What is npm?
 
@@ -185,34 +184,7 @@ npm start
 
 <img width="1920" height="623" alt="Screenshot from 2026-01-21 13-02-02" src="https://github.com/user-attachments/assets/2a9bce78-35b3-4fb7-b519-364726b484e3" />
 
-## 6. How to Create a React.js Project using npm+vite 
-
-
-Vite provides faster development experience and optimized builds. It supports node 18+.
-
-```bash
-# Create a new React app with Vite
-npm create vite@latest my-react-app -- --template react
-
-# Navigate to the app directory
-cd my-react-app
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-
-**Expected Output:**
-<img width="1920" height="1080" alt="Screenshot from 2026-01-21 14-54-46" src="https://github.com/user-attachments/assets/88a5ebbb-46ef-46ae-8374-b40768785807" />
-
-<img width="1920" height="1080" alt="Screenshot from 2026-01-21 14-54-59" src="https://github.com/user-attachments/assets/33735eb4-5ec7-418d-9b66-285882cedfd8" />
-
-<img width="1920" height="1080" alt="Screenshot from 2026-01-21 14-55-21" src="https://github.com/user-attachments/assets/a09e3fbd-22da-4c3a-be73-d26ca27d45d3" />
-
-
-## 7. Configuration
+## 6. Configuration
 
 ```bash
 #/bin/bash
@@ -221,7 +193,7 @@ npm config list                  # View current config
 ```
 <img width="1920" height="335" alt="Screenshot from 2026-01-21 13-12-51" src="https://github.com/user-attachments/assets/87a1b5a0-e0c4-4750-a7e9-e67eab16a627" />
 
-## 8. Software Overview
+## 7. Software Overview
 
 | Software | Version |
 |----------|---------|
@@ -229,7 +201,7 @@ npm config list                  # View current config
 | Node.js | 16.x LTS |
 | npx | Bundled with npm |
 
-## 9. System Requirement
+## 8. System Requirement
 
 | Requirement | Minimum | Recommendation |
 |-------------|---------|----------------|
@@ -238,16 +210,16 @@ npm config list                  # View current config
 | Disk Space | 500 MB free | 1 GB+ |
 | Network | Internet access | Stable broadband |
 
-## 10. Dependencies
+## 9. Dependencies
 
-### 10.1. Run-time Dependency
+### 9.1. Run-time Dependency
 
 | Run-time Dependency | Version | Description |
 |---------------------|---------|-------------|
 | node | 16.x LTS | JavaScript runtime required for npm |
 | npm | 8.x | Package manager CLI |
 
-### 10.2. Other Dependency
+### 9.2. Other Dependency
 
 | Other Dependency | Version | Description |
 |------------------|---------|-------------|
@@ -255,7 +227,7 @@ npm config list                  # View current config
 | build-essential (optional) | Latest | Compilers/tools for native addons |
 | git (optional) | Latest | For cloning repositories |
 
-## 11. Software Management
+## 10. Software Management
 
 ```bash
 npm --version               # Check npm version
@@ -266,7 +238,7 @@ npm config list             # View config
 
 
 
-## 12. Troubleshooting
+## 11. Troubleshooting
 
 **npm: command not found**
 - Ensure Node.js is installed and PATH updated; reopen terminal.
@@ -284,7 +256,7 @@ lsof -ti:3000 | xargs kill -9
 netstat -ano | findstr :3000    
 ```
 
-## 13. FAQs
+## 12. FAQs
 
 **1. Does npm come with Node.js?**  
 Yes. Installing Node.js installs npm.
@@ -312,7 +284,7 @@ Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
 `npm cache clean --force`
 
 
-## 14. References
+## 13. References
 | Links | Descriptions |
 |-------|--------------|
 | https://nodejs.org/en/download | Official Node.js download page with installation instructions |
