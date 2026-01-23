@@ -152,6 +152,7 @@ go version
 ```bash
 go env
 ```
+<img width="1919" height="714" alt="Screenshot from 2026-01-23 12-12-16" src="https://github.com/user-attachments/assets/a6ea30ae-f5e9-4f40-8672-4f394aca5199" />
 
 **Test with Simple Program:**
 ```bash
@@ -167,7 +168,10 @@ EOF
 go run main.go
 ```
 
-**Expected Output:** `Hello, Go!`
+**Expected Output:** 
+
+<img width="1919" height="152" alt="Screenshot from 2026-01-23 12-13-57" src="https://github.com/user-attachments/assets/64086395-95c2-490b-b812-5f7977b14b2e" />
+
 
 ## 9. Troubleshooting
 
