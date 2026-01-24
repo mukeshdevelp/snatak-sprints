@@ -61,6 +61,7 @@ Go was created to solve several critical problems in software development, makin
 # Download latest Go version (replace 1.21.5 with latest version)
 wget https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
 ```
+<img width="1919" height="506" alt="Screenshot from 2026-01-23 11-53-39" src="https://github.com/user-attachments/assets/4886a242-0cfc-440d-a308-cd21ed582ffa" />
 
 **Step 2: Remove Old Installation (if exists)**
 ```bash
@@ -83,6 +84,7 @@ source ~/.bashrc
 ```bash
 go version
 ```
+<img width="1919" height="335" alt="image" src="https://github.com/user-attachments/assets/69f8a677-3041-41bf-876a-9c00ef91f955" />
 
 ### 4.2. Method 2: Package Manager
 
@@ -92,6 +94,9 @@ sudo apt update
 sudo apt install -y golang-go
 go version
 ```
+<img width="1919" height="942" alt="Screenshot from 2026-01-23 11-58-22" src="https://github.com/user-attachments/assets/f4f4d9f0-e419-4422-a440-de68421c4fc6" />
+<img width="1919" height="863" alt="Screenshot from 2026-01-23 11-58-47" src="https://github.com/user-attachments/assets/e509dafc-9bb1-410a-ad3f-a03cb9c6790d" />
+<img width="1919" height="136" alt="image" src="https://github.com/user-attachments/assets/d2e1a5dd-f353-4b2d-b966-3fc2fe3aab72" />
 
 **RedHat/CentOS/Fedora:**
 ```bash
@@ -141,11 +146,13 @@ go version
 ```bash
 go version
 ```
+<img width="1919" height="335" alt="image" src="https://github.com/user-attachments/assets/acaa476a-39b9-4209-9c5d-2c04c4bd23a0" />
 
 **Check Go Environment:**
 ```bash
 go env
 ```
+<img width="1919" height="714" alt="Screenshot from 2026-01-23 12-12-16" src="https://github.com/user-attachments/assets/a6ea30ae-f5e9-4f40-8672-4f394aca5199" />
 
 **Test with Simple Program:**
 ```bash
@@ -161,7 +168,10 @@ EOF
 go run main.go
 ```
 
-**Expected Output:** `Hello, Go!`
+**Expected Output:** 
+
+<img width="1919" height="152" alt="Screenshot from 2026-01-23 12-13-57" src="https://github.com/user-attachments/assets/64086395-95c2-490b-b812-5f7977b14b2e" />
+
 
 ## 9. Troubleshooting
 
