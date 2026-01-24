@@ -276,6 +276,8 @@ main
 **Expected Output**
 <img width="1413" height="651" alt="Screenshot from 2026-01-24 11-29-10" src="https://github.com/user-attachments/assets/1a7a6a2f-06e9-47f8-a3f3-21ec9392e779" />
 
+---
+
 ## 5. Installation
 
 1. **Go to the `bash` folder:**
