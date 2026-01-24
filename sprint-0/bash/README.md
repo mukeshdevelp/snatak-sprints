@@ -202,7 +202,13 @@ main
 
 **Expected Output**
 
-image place holder
+<img width="1413" height="941" alt="Screenshot from 2026-01-24 12-08-29" src="https://github.com/user-attachments/assets/dc277ac8-39c4-4078-aa12-cb75c0211064" />
+
+<img width="1387" height="891" alt="image" src="https://github.com/user-attachments/assets/3462a960-26b8-4707-8e89-951fb57ec656" />
+
+
+<img width="1907" height="1080" alt="image" src="https://github.com/user-attachments/assets/c3699e9e-ce06-4cdf-8219-f83e0f1c83ae" />
+
 
 ---
 
@@ -211,7 +217,7 @@ image place holder
 1. **Download** or clone the repo and go to the `bash` folder:
 
    ```bash
-   cd /path/to/snatak-sprints/sprint-0/bash
+   cd /path/to/install-react.sh
    ```
 
 2. **Make the script executable:**
