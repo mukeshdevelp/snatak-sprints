@@ -1,577 +1,262 @@
 # Golang Introduction
 
-## Introduction
-
-Go (also known as Golang) is an open-source programming language developed by Google engineers Robert Griesemer, Rob Pike, and Ken Thompson. It was first released in 2009 and announced publicly in 2012. Go was designed to address the challenges of modern software development, combining the ease of programming of interpreted, dynamically typed languages with the efficiency and safety of statically typed, compiled languages. Go is particularly well-suited for building scalable, concurrent, and efficient software systems.
-
-## Why Golang?
-
-Golang was created to solve several critical problems in software development:
-
-- **Simplicity and Readability**: Many modern languages have become complex with numerous features. Go was designed with simplicity in mind, making it easy to learn and maintain. The language has a small, clean syntax that reduces cognitive load
-- **Fast Compilation**: Go compiles directly to machine code, resulting in fast compilation times. This enables rapid development cycles and quick feedback during development
-- **Concurrent Programming**: Built-in support for goroutines and channels makes concurrent programming straightforward. This is essential for modern applications that need to handle multiple tasks simultaneously
-- **Performance**: Go programs compile to native machine code, providing performance comparable to C/C++ while being easier to write and maintain
-- **Cross-Platform Support**: Go supports cross-compilation, allowing you to build binaries for different operating systems and architectures from a single machine
-- **Strong Standard Library**: Go comes with a comprehensive standard library that covers networking, HTTP servers, file I/O, encryption, and more, reducing the need for external dependencies
-- **Static Typing with Type Inference**: Go provides the safety of static typing while using type inference to reduce verbosity
-- **Garbage Collection**: Automatic memory management eliminates the need for manual memory management, reducing bugs related to memory leaks and pointer errors
-- **Industry Adoption**: Used by major companies like Google, Uber, Docker, Kubernetes, Dropbox, and many others, ensuring long-term support and stability
-- **Cloud-Native Development**: Go is the language of choice for many cloud-native tools and infrastructure projects (Docker, Kubernetes, Prometheus, etc.)
-
-## What is Golang?
-
-Go is a statically typed, compiled programming language designed for building simple, reliable, and efficient software. At its core, Go is:
-
-- **A Compiled Language**: Go code is compiled directly to machine code, resulting in standalone binaries that don't require a runtime environment
-- **Statically Typed**: Type checking happens at compile time, catching errors before the program runs
-- **Garbage Collected**: Automatic memory management handles memory allocation and deallocation
-- **Concurrent by Design**: Built-in primitives (goroutines and channels) make concurrent programming a first-class feature
-- **Opinionated**: Go has strong opinions about code style and structure, enforced by tools like `gofmt` and `golint`
-- **Minimalist**: Go intentionally omits many features found in other languages (no classes, no inheritance, no generics in early versions) to keep the language simple
-- **Fast and Efficient**: Designed for performance, with fast compilation and efficient runtime execution
-- **Cross-Platform**: Supports multiple operating systems (Linux, macOS, Windows) and architectures (x86, ARM, etc.)
-
-## Key Features
-
-### Core Language Features
-
-- **Simple Syntax**: Clean, minimal syntax that's easy to read and write. No semicolons needed, minimal keywords
-- **Static Typing**: Type safety at compile time prevents many runtime errors
-- **Type Inference**: The `:=` operator allows type inference, reducing verbosity while maintaining type safety
-- **Multiple Return Values**: Functions can return multiple values, making error handling more elegant
-- **Interfaces**: Go's interface system is implicit and structural, allowing for flexible and powerful abstractions
-- **Packages**: Code organization through packages with clear import and export rules
-- **Pointers**: Support for pointers with automatic dereferencing, but no pointer arithmetic for safety
-- **Defer Statement**: Ensures cleanup code runs even if a function returns early or panics
-- **Panic and Recover**: Mechanism for handling exceptional situations
-
-### Concurrency Features
-
-- **Goroutines**: Lightweight threads managed by the Go runtime. Thousands of goroutines can run concurrently
-- **Channels**: Communication mechanism between goroutines, enabling safe data sharing
-- **Select Statement**: Allows a goroutine to wait on multiple channel operations
-- **Mutexes and Atomic Operations**: Additional synchronization primitives for more complex scenarios
-
-### Standard Library Features
-
-- **net/http**: Comprehensive HTTP client and server implementation
-- **encoding/json**: Built-in JSON encoding and decoding
-- **database/sql**: Database interface with drivers for various databases
-- **os/exec**: Execute external commands
-- **crypto**: Cryptographic primitives and secure random number generation
-- **testing**: Built-in testing framework
-- **fmt**: Formatted I/O functions
-- **strings, strconv**: String manipulation utilities
-- **time**: Time and date handling
-- **io, ioutil**: Input/output operations
-
-### Tooling Features
-
-- **go fmt**: Automatic code formatting tool
-- **go test**: Built-in testing framework
-- **go build**: Compile packages and dependencies
-- **go run**: Compile and run Go programs
-- **go get**: Download and install packages
-- **go mod**: Module system for dependency management
-- **go vet**: Static analysis tool for finding bugs
-- **gofmt**: Code formatter that enforces a standard style
-- **golint**: Linter for Go code
-
-### Performance Features
-
-- **Fast Compilation**: Compiles quickly even for large codebases
-- **Efficient Runtime**: Low memory footprint and fast execution
-- **Native Binaries**: Produces standalone executables with no external dependencies
-- **Optimized Garbage Collector**: Low-latency garbage collection suitable for real-time applications
-
-## Required Knowledge: Basic to Medium Level
-
-### Basic Level
-
-#### 1. Language Fundamentals
-
-**Variables and Constants**
-- Declaring variables with `var`, `:=`, and type inference
-- Understanding zero values
-- Working with constants using `const`
-- Type conversions and type assertions
-
-**Basic Data Types**
-- Integers: `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, etc.
-- Floating-point: `float32`, `float64`
-- Boolean: `bool`
-- String: `string` and string manipulation
-- Byte and Rune: `byte` (alias for `uint8`), `rune` (alias for `int32`)
-
-**Operators**
-- Arithmetic operators: `+`, `-`, `*`, `/`, `%`
-- Comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`
-- Logical operators: `&&`, `||`, `!`
-- Bitwise operators: `&`, `|`, `^`, `<<`, `>>`
-- Assignment operators: `=`, `+=`, `-=`, etc.
-
-**Control Flow**
-- `if`, `else if`, `else` statements
-- `switch` statements (with and without expression)
-- `for` loops (traditional, while-style, infinite, range)
-- `break` and `continue` statements
-- `goto` statement (rarely used)
-
-**Functions**
-- Function declaration and definition
-- Function parameters and return values
-- Multiple return values
-- Named return values
-- Variadic functions (`...`)
-- Function types and function values
-- Anonymous functions and closures
-- Recursion
-
-**Arrays and Slices**
-- Arrays: fixed-size collections
-- Slices: dynamic arrays (length and capacity)
-- Slice operations: append, copy, slicing
-- Slice internals and memory management
-- Multi-dimensional slices
-
-**Maps**
-- Creating and initializing maps
-- Adding, updating, and deleting map entries
-- Checking for key existence
-- Iterating over maps
-- Map internals and nil maps
-
-**Structs**
-- Defining structs
-- Creating struct instances
-- Accessing struct fields
-- Struct literals
-- Anonymous structs
-- Struct embedding
-
-**Pointers**
-- Understanding pointers and addresses
-- Creating and dereferencing pointers
-- Pointer to structs
-- Nil pointers
-- Pointer vs value receivers
-
-**Methods**
-- Defining methods on types
-- Value receivers vs pointer receivers
-- Method sets
-- Methods on non-struct types
-
-**Interfaces**
-- Defining interfaces
-- Implementing interfaces implicitly
-- Interface values and nil interfaces
-- Empty interface (`interface{}`)
-- Type assertions
-- Type switches
-
-**Error Handling**
-- Understanding Go's error handling philosophy
-- Creating and returning errors
-- Error checking patterns
-- Custom error types
-- Error wrapping (Go 1.13+)
-- `errors.Is()` and `errors.As()`
-
-**Packages**
-- Package declaration
-- Importing packages
-- Exported vs unexported identifiers
-- Package initialization
-- Creating your own packages
-
-**Modules**
-- Understanding Go modules
-- `go.mod` file
-- Module initialization (`go mod init`)
-- Adding dependencies (`go get`)
-- Version management
-- Module paths and versions
-
-#### 2. Standard Library Basics
-
-**fmt Package**
-- `Print`, `Printf`, `Println`
-- `Sprint`, `Sprintf`, `Sprintln`
-- Formatting verbs: `%v`, `%d`, `%s`, `%f`, etc.
-- Scanning: `Scan`, `Scanf`, `Scanln`
-
-**strings Package**
-- String manipulation functions
-- `Contains`, `HasPrefix`, `HasSuffix`
-- `Index`, `LastIndex`
-- `Split`, `Join`
-- `Trim`, `TrimSpace`, `TrimPrefix`, `TrimSuffix`
-- `Replace`, `ReplaceAll`
-- `ToLower`, `ToUpper`
-- `Fields`, `FieldsFunc`
-
-**strconv Package**
-- Converting strings to numbers: `Atoi`, `ParseInt`, `ParseFloat`
-- Converting numbers to strings: `Itoa`, `FormatInt`, `FormatFloat`
-
-**os Package**
-- File operations: `Open`, `Create`, `ReadFile`, `WriteFile`
-- Environment variables: `Getenv`, `Setenv`
-- Command-line arguments: `Args`
-- Exit: `Exit`
-
-**io and ioutil Packages**
-- `Read`, `Write`, `ReadAll`
-- `Copy`, `CopyN`
-- `ReadFile`, `WriteFile`
-
-**time Package**
-- `Time` type and operations
-- `Now()`, `Parse()`, `Format()`
-- Duration and time arithmetic
-- Timers and tickers
-- Sleep
-
-**math Package**
-- Basic math functions
-- `Max`, `Min`, `Abs`, `Pow`, `Sqrt`
-- Random numbers: `rand` package
-
-**encoding/json Package**
-- Marshaling (struct to JSON): `Marshal`
-- Unmarshaling (JSON to struct): `Unmarshal`
-- JSON tags for field mapping
-- Handling nested structures
-
-#### 3. Basic Concurrency
-
-**Goroutines**
-- Understanding goroutines
-- Starting goroutines with `go` keyword
-- Goroutine lifecycle
-- Goroutine scheduling
-
-**Channels**
-- Creating channels: `make(chan type)`
-- Sending and receiving: `<-` operator
-- Buffered vs unbuffered channels
-- Channel direction (send-only, receive-only)
-- Closing channels
-- Range over channels
-
-**Select Statement**
-- Using `select` for multiple channel operations
-- Default case in select
-- Non-blocking operations
-
-**Synchronization**
-- `sync.WaitGroup` for waiting on goroutines
-- `sync.Mutex` and `sync.RWMutex` for mutual exclusion
-- `sync.Once` for one-time initialization
-
-#### 4. Testing
-
-**Writing Tests**
-- Test file naming: `*_test.go`
-- Test function signature: `func TestXxx(t *testing.T)`
-- Running tests: `go test`
-- Test flags: `-v`, `-run`, `-cover`
-
-**Table-Driven Tests**
-- Writing table-driven tests
-- Test cases as data structures
-
-**Benchmarking**
-- Benchmark function signature: `func BenchmarkXxx(b *testing.B)`
-- Running benchmarks: `go test -bench`
-- Benchmark flags and analysis
-
-**Examples**
-- Example functions for documentation
-- Example output verification
-
-### Medium Level
-
-#### 1. Advanced Language Features
-
-**Advanced Types**
-- Type aliases and type definitions
-- Custom types based on primitives
-- Type embedding in structs
-- Anonymous fields and promoted methods
-
-**Advanced Interfaces**
-- Interface composition
-- Interface satisfaction
-- Interface values and nil
-- Interface design patterns
-- Interface segregation
-
-**Reflection (reflect package)**
-- Understanding reflection basics
-- `Type` and `Value`
-- Inspecting types at runtime
-- Modifying values reflectively
-- When to use reflection (sparingly)
-
-**Advanced Error Handling**
-- Error wrapping and unwrapping
-- Error chains
-- Custom error types with methods
-- Error handling patterns
-- `errors.Is()` and `errors.As()`
-
-**Defer, Panic, and Recover**
-- Understanding `defer` execution order
-- Defer with named return values
-- Panic and panic recovery
-- When to use panic vs error
-- Recover patterns
-
-**Context Package**
-- Understanding `context.Context`
-- Context creation: `Background()`, `WithCancel()`, `WithTimeout()`, `WithDeadline()`, `WithValue()`
-- Context propagation
-- Using context for cancellation
-- Context in HTTP requests
-
-#### 2. Advanced Concurrency
-
-**Channel Patterns**
-- Worker pools
-- Fan-in and fan-out patterns
-- Pipeline pattern
-- Generator pattern
-- Timeout patterns with channels
-
-**Advanced Synchronization**
-- `sync.Cond` for condition variables
-- `sync.Map` for concurrent maps
-- `atomic` package for atomic operations
-- `sync.Pool` for object pooling
-
-**Concurrency Best Practices**
-- Avoiding race conditions
-- Detecting race conditions: `go test -race`
-- Deadlock detection
-- Goroutine leaks and how to avoid them
-- Context for cancellation
-
-#### 3. Advanced Standard Library
-
-**net/http Package**
-- Creating HTTP servers
-- HTTP handlers and handler functions
-- Request and Response handling
-- Middleware patterns
-- HTTP client usage
-- Custom transports and clients
-- Server timeouts and configurations
-
-**database/sql Package**
-- Database connections and connection pooling
-- Querying databases
-- Prepared statements
-- Transactions
-- Handling NULL values
-- Database-specific drivers
-
-**encoding Packages**
-- `encoding/json`: Advanced JSON handling
-- `encoding/xml`: XML encoding/decoding
-- `encoding/csv`: CSV file handling
-- Custom encoding/decoding
-
-**crypto Package**
-- Hashing: `crypto/sha256`, `crypto/md5`
-- Encryption basics
-- Secure random numbers: `crypto/rand`
-- TLS/SSL: `crypto/tls`
-
-**os/exec Package**
-- Executing external commands
-- Capturing output
-- Handling command errors
-- Process management
-
-**log Package**
-- Standard logging
-- Custom loggers
-- Log levels and formatting
-- Structured logging
-
-**flag Package**
-- Command-line flag parsing
-- Custom flag types
-- Flag validation
-
-**regexp Package**
-- Regular expressions
-- Pattern matching
-- Submatch extraction
-- Compiling and reusing patterns
-
-#### 4. Project Structure and Organization
-
-**Project Layout**
-- Standard Go project layout
-- Organizing packages
-- Internal packages
-- Vendor directory (legacy)
-
-**Module Management**
-- Module versioning
-- Semantic versioning
-- Dependency updates
-- Module proxy and checksum database
-- Private module repositories
-
-**Code Organization**
-- Package design principles
-- Interface design
-- Dependency injection patterns
-- Project structure best practices
-
-#### 5. Performance and Optimization
-
-**Profiling**
-- CPU profiling: `go tool pprof`
-- Memory profiling
-- Block profiling
-- Using `net/http/pprof`
-- Analyzing profiles
-
-**Optimization Techniques**
-- Benchmarking and optimization
-- Avoiding premature optimization
-- Memory allocation optimization
-- Slice capacity management
-- String concatenation optimization
-
-**Build Optimization**
-- Build tags
-- Build constraints
-- Conditional compilation
-- Optimizing binary size
-
-#### 6. Advanced Testing
-
-**Testing Patterns**
-- Test helpers and utilities
-- Mocking and test doubles
-- Integration testing
-- Table-driven tests (advanced)
-- Property-based testing
-
-**Test Organization**
-- Test packages
-- Test fixtures
-- Test data management
-- Test cleanup
-
-#### 7. Common Patterns and Idioms
-
-**Idiomatic Go**
-- Error handling patterns
-- Interface design patterns
-- Package design patterns
-- Naming conventions
-- Code organization patterns
-
-**Design Patterns in Go**
-- Factory pattern
-- Builder pattern
-- Strategy pattern
-- Observer pattern
-- Dependency injection
-
-## Getting Started
-
-### Prerequisites
-
-Before learning Golang, you should have:
-
-- **Programming Fundamentals**: Basic understanding of programming concepts (variables, functions, control flow)
-- **Command Line**: Comfortable using terminal/command line
-- **Text Editor/IDE**: Familiarity with a code editor (VS Code with Go extension recommended)
-- **Basic Computer Science Knowledge**: Understanding of data structures and algorithms (helpful but not required)
-- **Optional**: Experience with other programming languages (helps understand Go's design decisions)
-
-### Installation
-
-See the [Golang Installation Guide](./golang-installation-guide.md) for detailed installation instructions.
-
-Quick installation check:
-```bash
-go version
-```
-
-### Quick Start
-
-Create your first Go program:
+**Mukesh** edited this page on Jan 21, 2026 · 1 revision
+
+| Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
+|--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
+| Mukesh Sharma | 21-01-2026 | v1.0 | Mukesh Sharma | 21-01-2026 |  |  |  |  |
+
+## Table of Contents
+
+1. [What is Golang?](#1-what-is-golang)
+    
+    1.1. [Core Components](#11-core-components)
+2. [Why Golang?](#2-why-golang)
+    
+    2.1. [Benefits](#21-benefits)
+    
+    2.2. [Use Cases](#22-use-cases)
+3. [Key Features](#3-key-features)
+4. [Common Concepts](#4-common-concepts)
+5. [Getting Started](#5-getting-started)
+    
+    5.1. [Pre-requisites](#51-pre-requisites)
+6. [Software Overview](#6-software-overview)
+7. [System Requirement](#7-system-requirement)
+8. [Dependencies](#8-dependencies)
+    
+    8.1. [Run-time Dependency](#81-run-time-dependency)
+    
+    8.2. [Other Dependency](#82-other-dependency)
+9. [Software Management](#9-software-management)
+10. [Conclusion](#10-conclusion)
+11. [Troubleshooting](#11-troubleshooting)
+12. [FAQs](#12-faqs)
+13. [Contact Information](#13-contact-information)
+14. [References](#14-references)
+
+## 1. What is Golang?
+
+Go (also known as Golang) is an open-source programming language developed by Google engineers Robert Griesemer, Rob Pike, and Ken Thompson. It was first released in 2009 and announced publicly in 2012. Go was designed to address the challenges of modern software development, combining the ease of programming of interpreted languages with the efficiency and safety of statically typed, compiled languages.
+
+### 1.1. Core Components
+
+1. **Go Compiler**: Converts Go source code into machine code for different platforms
+2. **Go Runtime**: Manages goroutines, garbage collection, and memory allocation
+3. **Standard Library**: Comprehensive library covering networking, HTTP, file I/O, encryption, and more
+4. **Go Tools**: Command-line tools including `go build`, `go test`, `go fmt`, and `go mod`
+5. **Package System**: Code organization through packages with clear import and export rules
+
+## 2. Why Golang?
+
+Golang was created to solve several critical problems in software development, making it an excellent choice for modern applications.
+
+### 2.1. Benefits
+
+1. **Simplicity and Readability**: Clean, minimal syntax that's easy to learn and maintain, reducing cognitive load
+2. **Fast Compilation**: Compiles directly to machine code with fast compilation times, enabling rapid development cycles
+3. **Concurrent Programming**: Built-in support for goroutines and channels makes concurrent programming straightforward
+4. **Performance**: Compiles to native machine code, providing performance comparable to C/C++ while being easier to write
+5. **Cross-Platform Support**: Supports cross-compilation, allowing you to build binaries for different operating systems from a single machine
+6. **Strong Standard Library**: Comprehensive standard library covering networking, HTTP servers, file I/O, encryption, reducing external dependencies
+7. **Static Typing with Type Inference**: Provides type safety at compile time while using type inference to reduce verbosity
+8. **Garbage Collection**: Automatic memory management eliminates manual memory management, reducing bugs related to memory leaks
+9. **Industry Adoption**: Used by major companies like Google, Uber, Docker, Kubernetes, ensuring long-term support
+10. **Cloud-Native Development**: Language of choice for many cloud-native tools and infrastructure projects
+
+### 2.2. Use Cases
+
+1. **Web Services and APIs**: Building RESTful APIs, microservices, and web backends with excellent HTTP support
+2. **Cloud-Native Applications**: Developing containerized applications, Kubernetes operators, and cloud infrastructure tools
+3. **Concurrent Systems**: Applications requiring high concurrency like web servers, real-time systems, and data processing
+4. **Command-Line Tools**: Creating fast, cross-platform CLI applications and system utilities
+5. **Network Programming**: Building network servers, proxies, and distributed systems
+6. **DevOps Tools**: Developing infrastructure automation, monitoring tools, and CI/CD pipelines
+
+## 3. Key Features
+
+1. **Simple Syntax**: Clean, minimal syntax with no semicolons needed and minimal keywords
+2. **Static Typing**: Type safety at compile time prevents many runtime errors
+3. **Type Inference**: The `:=` operator allows type inference, reducing verbosity while maintaining type safety
+4. **Multiple Return Values**: Functions can return multiple values, making error handling more elegant
+5. **Interfaces**: Implicit and structural interface system allowing for flexible abstractions
+6. **Goroutines**: Lightweight threads managed by the Go runtime, enabling thousands of concurrent operations
+7. **Channels**: Communication mechanism between goroutines, enabling safe data sharing
+8. **Garbage Collection**: Automatic memory management with optimized low-latency garbage collector
+9. **Fast Compilation**: Compiles quickly even for large codebases
+10. **Native Binaries**: Produces standalone executables with no external dependencies
+
+## 4. Common Concepts
+
+1. **Package**: Collection of Go source files in the same directory. Every Go file belongs to a package declared with `package` keyword.
+
+2. **Module**: Collection of related Go packages managed together. Defined by `go.mod` file. Initialize with `go mod init module-name`.
+
+3. **Struct**: Composite data type grouping related data. Define with `type Name struct { fields }`. Create instances with struct literals.
+
+4. **Slice**: Dynamic array with length and capacity. More commonly used than arrays. Create with `make([]type, length, capacity)` or slice literal.
+
+5. **Map**: Key-value data structure. Create with `make(map[keyType]valueType)`. Access with `map[key]`, check existence with `value, ok := map[key]`.
+
+6. **Error Handling**: Go uses explicit error returns. Functions return `(result, error)`. Check errors with `if err != nil { handle error }`.
+
+7. **Methods**: Functions with receiver argument. Define on types: `func (receiver Type) MethodName() {}`. Value receivers vs pointer receivers.
+
+8. **Go Modules**: Dependency management system. `go.mod` defines module. Add dependencies with `go get package@version`.
+
+
+
+## 5. Getting Started
+
+### 5.1. Pre-requisites
+
+| Requirement | Description |
+|-------------|-------------|
+| Programming Fundamentals | Basic understanding of variables, functions, and control flow |
+| Command Line | Comfortable using terminal/command line |
+| Text Editor/IDE | VS Code with Go extension recommended |
+| Operating System | Linux, macOS, or Windows |
+
+## 6. Software Overview
+
+| Software | Version |
+|----------|---------|
+| Go | 1.21+ (recommended) |
+| gofmt | Built-in |
+| go test | Built-in |
+| go mod | Built-in |
+
+## 7. System Requirement
+
+| Requirement | Minimum | Recommendation |
+|-------------|---------|----------------|
+| OS | Linux, macOS, Windows | Latest stable version |
+| RAM | 512 MB | 2 GB or higher |
+| Disk Space | 200 MB | 500 MB or higher |
+| Processor | Any modern processor | Multi-core processor |
+
+## 8. Dependencies
+
+### 8.1. Run-time Dependency
+
+| Run-time Dependency | Version | Description |
+|---------------------|---------|-------------|
+| Go Runtime | 1.21+ | Runtime environment for executing Go programs |
+| Standard Library | Built-in | Core libraries included with Go installation |
+
+### 8.2. Other Dependency
+
+| Other Dependency | Version | Description |
+|------------------|---------|-------------|
+| Git | Latest | Required for downloading Go modules from version control |
+| C Compiler | Latest | Required for building packages with CGO (optional) |
+
+## 9. Software Management
+
+Go uses modules for dependency management. Key commands:
 
 ```bash
-# Create a new directory
-mkdir hello-go
-cd hello-go
+# Initialize a new module
+go mod init module-name
 
-# Initialize a Go module
-go mod init hello-go
+# Add a dependency
+go get package-name@version
 
-# Create main.go
-cat > main.go << EOF
-package main
+# Update dependencies
+go get -u ./...
 
-import "fmt"
+# Remove unused dependencies
+go mod tidy
 
-func main() {
-    fmt.Println("Hello, Go!")
-}
-EOF
+# Download dependencies
+go mod download
 
-# Run the program
-go run main.go
+# Verify dependencies
+go mod verify
+
+# View module graph
+go mod graph
 ```
 
-**Expected Output:** `Hello, Go!`
+**Module File (`go.mod`):**
+- Defines module path and Go version
+- Lists direct and indirect dependencies
+- Managed automatically by Go tools
 
-## Software Overview
+## 10. Conclusion
 
-| Software | Version | Purpose |
-|----------|---------|---------|
-| Go | 1.21+ (recommended) | Programming language and toolchain |
-| gofmt | Built-in | Code formatter |
-| golint | Optional | Code linter |
-| VS Code Go Extension | Latest | IDE support (recommended) |
+Go is a powerful, efficient, and simple programming language designed for modern software development. With its excellent concurrency support, fast compilation, and comprehensive standard library, Go has become the language of choice for cloud-native applications, microservices, and high-performance systems. Its simplicity makes it accessible to beginners while its performance and features satisfy the needs of experienced developers.
 
-## Version Information
+## 11. Troubleshooting
 
-Go follows a regular release schedule with two major releases per year. Key versions:
+**Go command not found:**
+- Ensure Go is installed and added to PATH
+- Verify installation: `go version`
+- Restart terminal after installation
 
-- **Go 1.0** (March 2012): First stable release
-- **Go 1.11** (August 2018): Introduction of Go modules
-- **Go 1.13** (September 2019): Error wrapping improvements
-- **Go 1.14** (February 2020): Module improvements
-- **Go 1.16** (February 2021): Embed directive, io/fs package
-- **Go 1.17** (August 2021): Generics (experimental)
-- **Go 1.18** (March 2022): Generics, fuzzing, workspace mode
-- **Go 1.19** (August 2022): Memory model updates
-- **Go 1.20** (February 2023): Profile-guided optimization
-- **Go 1.21** (August 2023): Built-in toolchain, structured logging
-- **Go 1.22** (February 2024): Range-over-function iterators, improved for loop semantics
+**Import errors:**
+- Ensure package is in `go.mod`
+- Run `go mod tidy` to update dependencies
+- Check import paths are correct
 
-## Additional Resources
+## 12. FAQs
 
-- [Go Official Documentation](https://go.dev/doc/)
-- [A Tour of Go](https://go.dev/tour/) - Interactive tutorial
-- [Effective Go](https://go.dev/doc/effective_go) - Go best practices
-- [Go by Example](https://gobyexample.com/) - Code examples
-- [Go Blog](https://go.dev/blog/) - Official blog with articles
-- [Go GitHub Repository](https://github.com/golang/go)
-- [Go Playground](https://go.dev/play/) - Online Go compiler
-- [Go Standard Library Documentation](https://pkg.go.dev/std)
-- [Go Modules Documentation](https://go.dev/ref/mod)
-- [Go Concurrency Patterns](https://go.dev/blog/pipelines)
+**1. What is the difference between Go and Golang?**
 
+Go is the official name. Golang is a common nickname used in search engines and domain names (golang.org).
+
+**2. Is Go object-oriented?**
+
+Go is not a traditional object-oriented language. It has structs and methods but no classes or inheritance. It uses composition and interfaces instead.
+
+**3. Do I need to learn other languages before Go?**
+
+No, Go is beginner-friendly. However, basic programming knowledge helps.
+
+**4. What is a goroutine?**
+
+A goroutine is a lightweight thread managed by the Go runtime. It's more efficient than OS threads and allows thousands of concurrent operations.
+
+
+**5. How do I handle errors in Go?**
+
+Go uses explicit error returns. Functions return `(result, error)`. Check errors with `if err != nil { handle error }`.
+
+**6. What is the difference between slice and array?**
+
+Arrays have fixed size, slices are dynamic. Slices are more commonly used and built on top of arrays.
+
+**7. Can I use Go for web development?**
+
+Yes, Go has excellent HTTP support in the standard library and is widely used for building web services and APIs.
+
+**8. Is Go fast?**
+
+Yes, Go compiles to native machine code and provides performance comparable to C/C++ for many use cases.
+
+**9. What is Go modules?**
+
+Go modules is the dependency management system introduced in Go 1.11. It uses `go.mod` file to manage dependencies.
+
+**10. How do I test Go code?**
+
+Use the built-in testing framework. Create test files with `*_test.go` suffix and run with `go test`.
+
+## 13. Contact Information
+
+| Name | Email address |
+|------|---------------|
+| Mukesh | msmukeshkumarsharma@gmail.com |
+
+## 14. References
+
+| Links | Descriptions |
+|-------|--------------|
+| https://go.dev/ | Official Go website with documentation and downloads |
+| https://go.dev/doc/ | Official Go documentation |
+| https://go.dev/tour/ | Interactive Go tutorial (A Tour of Go) |
+| https://go.dev/doc/effective_go | Effective Go - Go best practices guide |
+| https://gobyexample.com/ | Go by Example - Code examples for learning |
+| https://pkg.go.dev/std | Go Standard Library documentation |
+| https://go.dev/blog/ | Official Go blog with articles and updates |
+| https://github.com/golang/go | Go source code repository |

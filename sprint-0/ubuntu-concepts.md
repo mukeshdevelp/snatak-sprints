@@ -1,6 +1,6 @@
 # Ubuntu Concepts
 
-**Mukesh** edited this page on Dec 14, 2023 · 1 revision
+
 
 | Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
 |--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
@@ -9,43 +9,50 @@
 
 ## Table of Contents
 
-- [What is Ubuntu?](#what-is-ubuntu)
-  - [Definition](#definition)
-  - [Core Components](#core-components)
-- [Why Ubuntu?](#why-ubuntu)
-  - [Benefits](#benefits)
-  - [Use Cases](#use-cases)
-- [Key Features](#key-features)
-- [Common Concepts](#common-concepts)
-- [Getting Started](#getting-started)
-  - [Pre-requisites](#pre-requisites)
-- [Software Overview](#software-overview)
-- [System Requirement](#system-requirement)
-- [Dependencies](#dependencies)
-  - [Run-time Dependency](#run-time-dependency)
-  - [Other Dependency](#other-dependency)
-- [Software Management](#software-management)
-  - [APT (Advanced Package Tool)](#apt-advanced-package-tool)
-  - [DPKG (Debian Package Manager)](#dpkg-debian-package-manager)
-  - [SNAP Package Manager](#snap-package-manager)
-- [Services](#services)
-  - [Systemd Service Management](#systemd-service-management)
-- [Process Management](#process-management)
-- [Conclusion](#conclusion)
-- [Troubleshooting](#troubleshooting)
-- [FAQs](#faqs)
-- [Contact Information](#contact-information)
-- [References](#references)
+1. [What is Ubuntu?](#1-what-is-ubuntu)
+    
+    1.1. [Core Components](#11-core-components)
+2. [Why Ubuntu?](#2-why-ubuntu)
+    
+    2.1. [Benefits](#21-benefits)
+    
+    2.2. [Use Cases](#22-use-cases)
+3. [Key Features](#3-key-features)
+4. [Common Concepts](#4-common-concepts)
+5. [Getting Started](#5-getting-started)
+    
+    5.1. [Pre-requisites](#51-pre-requisites)
+6. [Software Overview](#6-software-overview)
+7. [System Requirement](#7-system-requirement)
+8. [Dependencies](#8-dependencies)
+    
+    8.1. [Run-time Dependency](#81-run-time-dependency)
+    
+    8.2. [Other Dependency](#82-other-dependency)
+9. [Software Management](#9-software-management)
+    
+    9.1. [APT (Advanced Package Tool)](#91-apt-advanced-package-tool)
+    
+    9.2. [DPKG (Debian Package Manager)](#92-dpkg-debian-package-manager)
+    
+    9.3. [SNAP Package Manager](#93-snap-package-manager)
+10. [Services](#10-services)
+    
+    10.1. [What are Services?](#101-what-are-services)
+    
+    10.2. [Managing Services with systemctl](#102-managing-services-with-systemctl)
+    
+    10.3. [Service Status and Logs](#103-service-status-and-logs)
+11. [Troubleshooting](#11-troubleshooting)
+12. [FAQs](#12-faqs)
+13. [Contact Information](#13-contact-information)
+14. [References](#14-references)
 
-## What is Ubuntu?
+## 1. What is Ubuntu?
 
 Ubuntu is a free and open-source Linux distribution based on Debian, designed for desktop, server, and cloud environments. It is one of the most popular Linux distributions worldwide, known for its user-friendly interface, strong security features, and extensive community support. Ubuntu provides a stable, secure, and easy-to-use operating system that serves as the foundation for many enterprise applications, cloud services, and development environments.
 
-### Definition
-
-Ubuntu is an operating system built on the Linux kernel, providing a complete computing environment with system software, applications, and development tools. It combines the stability of Debian with a focus on ease of use and regular release cycles, making it accessible to both beginners and experienced users.
-
-### Core Components
+### 1.1. Core Components
 
 1. **Linux Kernel**: The core operating system component that manages hardware resources
 2. **Systemd**: Init system and service manager for system initialization and service management
@@ -53,22 +60,21 @@ Ubuntu is an operating system built on the Linux kernel, providing a complete co
 4. **APT Package Manager**: Tool for installing, updating, and managing software packages
 5. **Shell (Bash)**: Command-line interface for interacting with the system
 
-## Why Ubuntu?
+## 2. Why Ubuntu?
 
 Ubuntu offers numerous advantages and is widely used across different sectors due to its reliability, security, and versatility.
 
-### Benefits
+### 2.1. Benefits
 
 1. **Free and Open Source**: No licensing costs, complete source code access, and freedom to modify
 2. **Security**: Built-in security features including automatic security updates, AppArmor, and UFW firewall
 3. **Stability**: LTS (Long-Term Support) versions receive 5 years of security updates and support
-4. **Ease of Use**: User-friendly interface suitable for users transitioning from other operating systems
-5. **Large Software Repository**: Thousands of free applications available through package managers
-6. **Community Support**: Active community providing help, documentation, and troubleshooting
-7. **Enterprise Ready**: Used by major corporations and cloud providers worldwide
-8. **Regular Updates**: Consistent release cycle with new features every 6 months
+4. **Large Software Repository**: Thousands of free applications available through package managers
+5. **Community Support**: Active community providing help, documentation, and troubleshooting
+6. **Enterprise Ready**: Used by major corporations and cloud providers worldwide
+7. **Regular Updates**: Consistent release cycle with new features every 6 months
 
-### Use Cases
+### 2.2. Use Cases
 
 Ubuntu is used in various scenarios to solve specific problems and meet particular needs:
 
@@ -77,10 +83,10 @@ Ubuntu is used in various scenarios to solve specific problems and meet particul
 3. **Cloud Platforms**: Used as the base operating system for cloud instances on AWS, Azure, Google Cloud, and other cloud providers
 4. **Development Environment**: Offers a robust platform for software development with extensive programming language support and development tools
 5. **Container Hosting**: Serves as the host OS for Docker containers and Kubernetes clusters
-6. **IoT and Embedded Systems**: Provides lightweight versions for Internet of Things (IoT) devices and embedded systems
 
 
-## Key Features
+
+## 3. Key Features
 
 1. **User-Friendly Interface**: Intuitive graphical user interface (GNOME desktop environment) that makes Linux accessible to users of all skill levels
 2. **Security**: Built-in security features including AppArmor, UFW firewall, automatic security updates, and strong user permission management
@@ -91,90 +97,45 @@ Ubuntu is used in various scenarios to solve specific problems and meet particul
 7. **Regular Updates**: Scheduled releases every 6 months, with LTS versions every 2 years
 8. **Community Support**: Large, active community providing documentation, forums, and technical support
 
-## Common Concepts
+## 4. Common Concepts
 
-1. **Boot Process**: Sequence of events when Ubuntu starts - BIOS/UEFI initialization, GRUB bootloader, kernel loading, systemd initialization, and service startup.
+1. **Users and Groups**: User accounts have unique User IDs (UID) and belong to groups with Group IDs (GID). User info in `/etc/passwd` and `/etc/shadow`. Groups in `/etc/group`.
 
-2. **Systemd**: Init system and service manager (PID 1) that manages system services, handles boot process, and controls system initialization.
+2. **File Permissions**: Three permission types - Read (r), Write (w), Execute (x) - for three categories - Owner (u), Group (g), Others (o). Numeric: r=4, w=2, x=1 (e.g., 755).
 
-3. **GRUB (GRand Unified Bootloader)**: Bootloader that loads the Linux kernel and initializes the boot process. Configuration file: `/boot/grub/grub.cfg`.
+3. **Root User**: Superuser account (UID 0) with full administrative privileges. Access via `sudo` or `su` commands.
 
-4. **Users and Groups**: User accounts have unique User IDs (UID) and belong to groups with Group IDs (GID). User info in `/etc/passwd` and `/etc/shadow`. Groups in `/etc/group`.
+4. **Sudo**: Command allowing authorized users to execute commands as root or another user. Configuration in `/etc/sudoers`.
 
-5. **File Permissions**: Three permission types - Read (r), Write (w), Execute (x) - for three categories - Owner (u), Group (g), Others (o). Numeric: r=4, w=2, x=1 (e.g., 755).
+5. **Repository**: Collection of software packages available for installation. Ubuntu repositories configured in `/etc/apt/sources.list`.
 
-6. **Soft Links (Symbolic Links)**: Special files pointing to another file/directory by pathname. Created with `ln -s`. Can link to files/directories, cross filesystems, but break if target deleted.
+6. **Package**: Compressed archive containing software, files, and metadata. Ubuntu uses `.deb` packages managed by APT and DPKG.
 
-7. **Hard Links**: Additional directory entries pointing to same inode (file data). Created with `ln`. File data deleted only when all hard links removed. Only for files, cannot cross filesystems.
+7. **Shell**: Command-line interface interpreting user commands. Common shells: Bash (default), Zsh, Fish. Config files: `~/.bashrc`, `~/.bash_profile`.
 
-8. **Differences Between Hard Links and Soft Links**:
-   - **Target Reference**: Hard links point to inode (file data directly), soft links point to pathname
-   - **Filesystem Boundaries**: Hard links cannot cross filesystems, soft links can
-   - **Target Deletion**: Hard links continue working if target deleted, soft links become broken
+8. **Environment Variables**: Named values storing configuration and system information. Accessed with `$VARIABLE_NAME`. Common: `PATH`, `HOME`, `USER`. Set with `export VARIABLE=value`.
 
-9. **Root User**: Superuser account (UID 0) with full administrative privileges. Access via `sudo` or `su` commands.
+9. **Process**: Running instance of a program. Each has Process ID (PID). Parent creates child processes. View with `ps`, `top`, `htop`. Kill with `kill` or `killall`.
 
-10. **Sudo**: Command allowing authorized users to execute commands as root or another user. Configuration in `/etc/sudoers`.
+10. **Working Directory**: Current directory where commands execute. Check with `pwd`, change with `cd`. `~` is home, `.` is current, `..` is parent directory.
 
-11. **Repository**: Collection of software packages available for installation. Ubuntu repositories configured in `/etc/apt/sources.list`.
+11. **Pipes and Redirection**: Pipes (`|`) send command output as input to another. Redirection (`>`, `>>`, `<`) redirects input/output. Example: `ls | grep file > output.txt`.
 
-12. **Package**: Compressed archive containing software, files, and metadata. Ubuntu uses `.deb` packages managed by APT and DPKG.
+12. **SSH (Secure Shell)**: Network protocol for secure remote access and file transfer. Uses port 22. Connect with `ssh user@hostname`. Key-based authentication for passwordless access.
 
-13. **Daemon**: Background service running continuously without user interaction (e.g., SSH daemon, web servers).
+13. **Tar (Tape Archive)**: Utility for creating and extracting archive files. Commands: `tar -czf` (create), `tar -xzf` (extract).
 
-14. **Inode**: Index node - data structure storing file metadata (permissions, ownership, size, timestamps) and pointing to file's data blocks. Each file has unique inode number.
+14. **Man Pages**: Manual pages providing documentation for commands. Access with `man command-name`.
 
-15. **Shell**: Command-line interface interpreting user commands. Common shells: Bash (default), Zsh, Fish. Config files: `~/.bashrc`, `~/.bash_profile`.
+## 5. Getting Started
 
-16. **Environment Variables**: Named values storing configuration and system information. Accessed with `$VARIABLE_NAME`. Common: `PATH`, `HOME`, `USER`. Set with `export VARIABLE=value`.
-
-17. **Process**: Running instance of a program. Each has Process ID (PID). Parent creates child processes. View with `ps`, `top`, `htop`. Kill with `kill` or `killall`.
-
-18. **Working Directory**: Current directory where commands execute. Check with `pwd`, change with `cd`. `~` is home, `.` is current, `..` is parent directory.
-
-19. **Pipes and Redirection**: Pipes (`|`) send command output as input to another. Redirection (`>`, `>>`, `<`) redirects input/output. Example: `ls | grep file > output.txt`.
-
-20. **Mount Point**: Directory where filesystem is attached/accessible. File systems mounted using `mount` command. Common: `/`, `/home`, `/boot`. Info in `/etc/fstab`.
-
-21. **Kernel**: Core of operating system managing hardware resources, process scheduling, memory management, and system calls. Version shown with `uname -r`.
-
-22. **File System**: Method and data structure organizing files on storage. Common types: ext4 (default), XFS, Btrfs. FHS defines directory structure (`/bin`, `/usr`, `/var`, etc.).
-
-23. **UID and GID**: User ID (UID) uniquely identifies user. Group ID (GID) uniquely identifies group. Root has UID 0. Regular users typically UID ≥ 1000.
-
-24. **TCP/IP**: Network protocols for internet communication. TCP ensures reliable delivery. IP handles addressing and routing.
-
-25. **SSH (Secure Shell)**: Network protocol for secure remote access and file transfer. Uses port 22. Connect with `ssh user@hostname`. Key-based authentication for passwordless access.
-
-26. **Cron**: Time-based job scheduler executing commands at specified intervals. Jobs stored in crontab files. Edit with `crontab -e`. Format: minute hour day month weekday command.
-
-27. **Umask**: Default file permission mask applied when creating files/directories. Example: umask 022 sets permissions to 755 for directories, 644 for files.
-
-28. **Tar (Tape Archive)**: Utility for creating and extracting archive files. Commands: `tar -czf` (create), `tar -xzf` (extract).
-
-29. **Swap Space**: Virtual memory area on disk used when physical RAM is full. Improves system stability.
-
-30. **Runlevel/Target**: System operational state determining which services run. Systemd uses targets (multi-user.target, graphical.target).
-
-31. **Journalctl**: Systemd's log viewing utility for accessing system and service logs.
-
-32. **APT Cache**: Local database storing package information from repositories. Speeds up package operations.
-
-33. **FHS (Filesystem Hierarchy Standard)**: Standard defining directory structure and file locations in Linux systems.
-
-34. **Man Pages**: Manual pages providing documentation for commands. Access with `man command-name`.
-
-35. **Fstab**: File System Table (`/etc/fstab`) defining filesystems to mount at boot.
-
-## Getting Started
-
-### Pre-requisites
+### 5.1. Pre-requisites
 
 | License Type | Description | Commercial Use | Open Source |
 |--------------|-------------|----------------|-------------|
 | GNU GPL v3 | Free and open-source operating system. Ubuntu is free to use, modify, and distribute. | Yes | Yes |
 
-## Software Overview
+## 6. Software Overview
 
 | Software | Version |
 |----------|---------|
@@ -182,7 +143,7 @@ Ubuntu is used in various scenarios to solve specific problems and meet particul
 | Linux Kernel | 5.15.x |
 | Systemd | 249.11 |
 
-## System Requirement
+## 7. System Requirement
 
 | Requirement | Minimum | Recommendation |
 |-------------|---------|----------------|
@@ -191,9 +152,9 @@ Ubuntu is used in various scenarios to solve specific problems and meet particul
 | ROM (Disk Space) | 25 Gigabyte | 50 Gigabyte or Higher |
 | OS Required | Ubuntu 20.04 LTS or higher | Ubuntu 22.04 LTS |
 
-## Dependencies
+## 8. Dependencies
 
-### Run-time Dependency
+### 8.1. Run-time Dependency
 
 | Run-time Dependency | Version | Description |
 |---------------------|---------|-------------|
@@ -201,7 +162,7 @@ Ubuntu is used in various scenarios to solve specific problems and meet particul
 | glibc | 2.35+ | GNU C Library, essential system library providing core functionality |
 | OpenSSL | 3.0.x | Cryptographic library for secure communications |
 
-### Other Dependency
+### 8.2. Other Dependency
 
 | Other Dependency | Version | Description |
 |------------------|---------|-------------|
@@ -209,9 +170,9 @@ Ubuntu is used in various scenarios to solve specific problems and meet particul
 | NetworkManager | 1.36+ | Network connection manager for managing network settings |
 | UFW | 0.36 | Uncomplicated Firewall for managing firewall rules |
 
-## Software Management
+## 9. Software Management
 
-### APT (Advanced Package Tool)
+### 9.1. APT (Advanced Package Tool)
 
 APT is Ubuntu's primary package management system for installing, updating, and removing software.
 
@@ -250,7 +211,7 @@ sudo apt update && sudo apt upgrade -y
 2. Add repository: `sudo add-apt-repository "repository-url"`
 3. Remove repository: `sudo add-apt-repository --remove "repository-url"`
 
-### DPKG (Debian Package Manager)
+### 9.2. DPKG (Debian Package Manager)
 
 Low-level package management tool for installing `.deb` files directly.
 
@@ -272,7 +233,7 @@ dpkg -s package-name
 sudo apt --fix-broken install
 ```
 
-### SNAP Package Manager
+### 9.3. SNAP Package Manager
 
 Modern, cross-distribution package manager for containerized applications.
 
@@ -294,133 +255,101 @@ snap list
 snap search keyword
 ```
 
-## Services
+## 10. Services
 
-### Systemd Service Management
+Services are background processes that run automatically when the system starts or when needed, providing essential system functionality and application support.
 
-Ubuntu uses systemd as its init system and service manager.
+### 10.1. What are Services?
+
+Services in Ubuntu are managed by systemd, the system and service manager. Services can be:
+
+1. **System Services**: Core system services like networking, logging, and system initialization
+2. **Application Services**: Services for applications like web servers, databases, and other daemons
+3. **User Services**: Services that run in user context
+
+**Service Unit Files:**
+- Located in `/etc/systemd/system/` (system services)
+- Located in `/usr/lib/systemd/system/` (system-provided services)
+- User services in `~/.config/systemd/user/`
+
+### 10.2. Managing Services with systemctl
+
+systemctl is the primary command for managing services in Ubuntu.
 
 **Basic Service Commands:**
 ```bash
 # Start a service
-sudo systemctl start ot-service
+sudo systemctl start service-name
 
 # Stop a service
-sudo systemctl stop ot-service
+sudo systemctl stop service-name
 
 # Restart a service
-sudo systemctl restart ot-service
+sudo systemctl restart service-name
 
-# Reload service configuration
-sudo systemctl reload ot-service
+# Reload service configuration (without stopping)
+sudo systemctl reload service-name
 
 # Enable service to start on boot
-sudo systemctl enable ot-service
+sudo systemctl enable service-name
 
 # Disable service from starting on boot
-sudo systemctl disable ot-service
+sudo systemctl disable service-name
+
+# Check if service is enabled
+sudo systemctl is-enabled service-name
 
 # Check service status
-sudo systemctl status ot-service
-
-# List all services
-systemctl list-units --type=service
+sudo systemctl status service-name
 
 ```
 
-**Service File Location:**
-1. System services: `/etc/systemd/system/`
-2. User services: `~/.config/systemd/user/`
-3. Systemd unit files: `/lib/systemd/system/`
+**Service States:**
+- **active (running)**: Service is currently running
+- **active (exited)**: Service completed successfully
+- **inactive (dead)**: Service is stopped
+- **failed**: Service failed to start
 
-**Create Custom Service:**
-1. Create service file: `sudo nano /etc/systemd/system/ot-service.service`
-2. Example service file:
-   ```ini
-   [Unit]
-   Description=OT-Microservice
-   After=network.target
+### 10.3. Service Status and Logs
 
-   [Service]
-   Type=simple
-   User=myuser
-   ExecStart=/usr/bin/ot-service
-   Restart=always
-
-   [Install]
-   WantedBy=multi-user.target
-   ```
-3. Reload systemd: `sudo systemctl daemon-reload`
-4. Enable and start: `sudo systemctl enable ot-service && sudo systemctl start ot-service`
-
-**Service Logs:**
+**Viewing Service Status:**
 ```bash
-# View service logs
-sudo journalctl -u ot-service
+# Detailed status of a service
+sudo systemctl status service-name
+
+# Check if service is active
+sudo systemctl is-active service-name
+
+# Check if service failed
+sudo systemctl is-failed service-name
 ```
 
-## Process Management
-
-Essential commands for managing processes on Ubuntu:
-
-### Basic Commands
-
+**Viewing Service Logs:**
 ```bash
-# List all running processes
-ps aux
+# View logs for a service
+sudo journalctl -u service-name
 
-# Display real-time process information
-top
-# or htop (install: sudo apt install htop)
+# View recent logs (last 50 lines)
+sudo journalctl -u service-name -n 50
 
-# Find process by name
-pgrep nginx
-pidof mysql
+# Follow logs in real-time
+sudo journalctl -u service-name -f
 
-# Find processes using specific port
-sudo lsof -i :80
+# View logs since boot
+sudo journalctl -u service-name -b
+
 ```
 
-### Process Control
-
+**Reloading systemd Configuration:**
 ```bash
-# Start process in background
-nginx &
+# Reload systemd configuration after modifying service files
+sudo systemctl daemon-reload
 
-# Terminate process gracefully
-kill PID
-
-# Force kill process
-kill -9 PID
-
-# Kill process by name
-killall nginx
-killall mysql
-
-# Change process priority (nice value: -20 to 19)
-nice -n 10 nginx
-renice -n 10 -p PID
+# Restart systemd manager
+sudo systemctl daemon-reexec
 ```
 
-### Common Signals
-
-1. **SIGTERM (15)**: Graceful termination
-2. **SIGKILL (9)**: Force kill (cannot be ignored)
-3. **SIGSTOP (19)**: Pause process
-4. **SIGCONT (18)**: Resume stopped process
-
-### Process States
-
-1. **Running (R)**: Executing or ready to run
-2. **Sleeping (S)**: Waiting for event (interruptible)
-3. **Stopped (T)**: Stopped by signal
-4. **Zombie (Z)**: Terminated but not reaped by parent
-
-## Conclusion
-
-Ubuntu stands as a powerful, versatile, and user-friendly Linux distribution that serves multiple purposes across desktop, server, and cloud environments. With its strong emphasis on security, stability, and ease of use, Ubuntu has become one of the most widely adopted operating systems globally.
-
-## Troubleshooting
+## 11. Troubleshooting
 
 Common issues and solutions:
 
@@ -444,10 +373,10 @@ sudo dpkg --configure -a
 
 **Service Won't Start:**
 ```bash
-sudo systemctl status ot-service
-sudo journalctl -u ot-service -n 50
+sudo systemctl status service-name
+sudo journalctl -u service-name -n 50
 sudo systemctl daemon-reload
-sudo systemctl restart ot-service
+sudo systemctl restart service-name
 ```
 
 ### Network Issues
@@ -477,45 +406,55 @@ sudo apt autoremove --purge
 sudo journalctl --vacuum-time=7d
 ```
 
-## FAQs
+## 12. FAQs
 
 **1. Is Ubuntu free to use?**
+
 Yes, Ubuntu is completely free and open-source with no licensing fees for personal or commercial use.
 
 **2. What is the difference between Ubuntu Desktop and Ubuntu Server?**
+
 Ubuntu Desktop includes a graphical interface and desktop applications, while Ubuntu Server is optimized for server environments without GUI.
 
 **3. How often is Ubuntu updated?**
+
 Ubuntu releases new versions every 6 months. LTS versions are released every 2 years and receive 5 years of support.
 
 **4. Can I upgrade Ubuntu without reinstalling?**
+
 Yes, use `sudo do-release-upgrade` command which preserves your data and installed applications.
 
 **5. Is Ubuntu suitable for enterprise use?**
+
 Yes, Ubuntu LTS versions are widely used in enterprise environments with extended security support.
 
 **6. How do I get support for Ubuntu?**
+
 Ubuntu has extensive community support through forums, documentation, and Ask Ubuntu. Canonical offers commercial support for Ubuntu Pro.
 
 **7. What package manager does Ubuntu use?**
+
 Ubuntu uses APT (Advanced Package Tool) as primary package manager, also supports DPKG and SNAP.
 
 **8. How do I install software on Ubuntu?**
+
 Use `sudo apt install package-name` or `sudo snap install package-name` or `sudo dpkg -i package.deb`.
 
 **9. What is the root password in Ubuntu?**
+
 Ubuntu does not use a root password by default. Administrative tasks use `sudo` with the user's password.
 
 **10. What is LTS in Ubuntu?**
+
 LTS stands for Long-Term Support. LTS releases receive 5 years of security updates and support.
 
-## Contact Information
+## 13. Contact Information
 
 | Name | Email address |
 |------|---------------|
 | mukesh | msmukeshkumarsharma@gmail.com |
 
-## References
+## 14. References
 
 | Links | Descriptions |
 |-------|--------------|
@@ -523,7 +462,6 @@ LTS stands for Long-Term Support. LTS releases receive 5 years of security updat
 | https://help.ubuntu.com/ | Official Ubuntu help and documentation |
 | https://wiki.ubuntu.com/ | Ubuntu Wiki with community documentation |
 | https://askubuntu.com/ | Community Q&A forum for Ubuntu |
-| https://ubuntu.com/server/docs | Ubuntu Server documentation |
-| https://systemd.io/ | Systemd documentation for service management |
 | https://wiki.debian.org/Apt | APT package manager documentation |
 | https://snapcraft.io/docs | Snap package manager documentation |
+

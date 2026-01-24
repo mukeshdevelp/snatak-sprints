@@ -8,32 +8,32 @@
 
 ## Table of Contents
 
-- [What is npm?](#what-is-npm)
-  - [Definition](#definition)
-  - [Core Components](#core-components)
-- [Why npm?](#why-npm)
-  - [Benefits](#benefits)
-  - [Use Cases](#use-cases)
-- [Acceptance Criteria](#acceptance-criteria)
-- [Getting Started](#getting-started)
-  - [Pre-requisites](#pre-requisites)
-  - [Step-by-Step Installation Guide](#step-by-step-installation-guide)
-- [Basic Commands](#basic-commands)
-- [Project Setup Example](#project-setup-example)
-- [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
-- [FAQs](#faqs)
-- [References](#references)
+1. [What is npm?](#1-what-is-npm)
+    
+    1.1. [Core Components](#11-core-components)
+2. [Why npm?](#2-why-npm)
+    
+    2.1. [Benefits](#21-benefits)
+    
+    2.2. [Use Cases](#22-use-cases)
+3. [Acceptance Criteria](#3-acceptance-criteria)
+4. [Getting Started](#4-getting-started)
+    
+    4.1. [Pre-requisites](#41-pre-requisites)
+    
+    4.2. [Step-by-Step Installation Guide](#42-step-by-step-installation-guide)
+5. [Basic Commands](#5-basic-commands)
+6. [Project Setup Example](#6-project-setup-example)
+7. [Configuration](#7-configuration)
+8. [Troubleshooting](#8-troubleshooting)
+9. [FAQs](#9-faqs)
+10. [References](#10-references)
 
-## What is npm?
+## 1. What is npm?
 
 npm (Node Package Manager) is the default package manager for Node.js. It installs, updates, and manages JavaScript dependencies for projects, and provides a registry of open-source packages.
 
-### Definition
-
-npm is a CLI tool that works with the npm registry to install and publish JavaScript packages. It ships by default with Node.js.
-
-### Core Components
+### 1.1. Core Components
 
 1. **npm CLI**: Command-line tool to install, update, and publish packages.
 2. **npm Registry**: Hosted repository of public JavaScript packages.
@@ -41,11 +41,11 @@ npm is a CLI tool that works with the npm registry to install and publish JavaSc
 4. **package-lock.json**: Locked dependency tree ensuring reproducible installs.
 5. **node_modules/**: Downloaded dependencies installed locally per project.
 
-## Why npm?
+## 2. Why npm?
 
 npm simplifies installing and sharing JavaScript packages, provides version control of dependencies, and automates common tasks via scripts.
 
-### Benefits
+### 2.1. Benefits
 
 1. **Bundled with Node.js**: No separate install needed once Node.js is installed.
 2. **Massive Ecosystem**: Millions of packages available on the npm registry.
@@ -54,7 +54,7 @@ npm simplifies installing and sharing JavaScript packages, provides version cont
 5. **Scoping & Security**: Scoped packages, audit, and provenance features.
 6. **Cross-Platform**: Works on Windows, macOS, and Linux.
 
-### Use Cases
+### 2.2. Use Cases
 
 1. Installing libraries/frameworks (React, Express, Vite).
 2. Managing build tooling (Webpack, Babel, ESLint, TypeScript).
@@ -62,15 +62,15 @@ npm simplifies installing and sharing JavaScript packages, provides version cont
 4. Publishing internal or public packages.
 5. Managing monorepos with workspaces.
 
-## Acceptance Criteria
+## 3. Acceptance Criteria
 
 - Provides a **step-by-step installation guide** that works on a fresh machine (Windows, macOS, Linux).
 - Includes commands that can be run as-is to install Node.js and npm.
 - Verifies installation with version checks.
 
-## Getting Started
+## 4. Getting Started
 
-### Pre-requisites
+### 4.1. Pre-requisites
 
 | Requirement | Description |
 |-------------|-------------|
@@ -79,7 +79,7 @@ npm simplifies installing and sharing JavaScript packages, provides version cont
 | Shell | PowerShell (Windows), Terminal (macOS/Linux) |
 | curl or package manager | For scripted installs on macOS/Linux |
 
-### Step-by-Step Installation Guide
+### 4.2. Step-by-Step Installation Guide
 
 #### Option A: Install via Node.js (includes npm) — Recommended
 
@@ -144,7 +144,7 @@ node --version
 npm --version
 ```
 
-## Basic Commands
+## 5. Basic Commands
 
 ```bash
 npm --version                    # Check npm version
@@ -158,7 +158,7 @@ npm audit                        # Security audit
 npm cache clean --force          # Clear npm cache
 ```
 
-## Project Setup Example
+## 6. Project Setup Example
 
 ```bash
 mkdir my-app
@@ -180,7 +180,7 @@ Run:
 npm start
 ```
 
-## Configuration
+## 7. Configuration
 
 ```bash
 npm config list                  # View current config
@@ -188,7 +188,7 @@ npm config set registry https://registry.npmjs.org/
 npm set-script dev "node index.js"
 ```
 
-## Troubleshooting
+## 8. Troubleshooting
 
 **npm: command not found**
 - Ensure Node.js is installed and PATH updated; reopen terminal.
@@ -213,7 +213,7 @@ lsof -ti:3000 | xargs kill -9   # macOS/Linux
 netstat -ano | findstr :3000    # Windows (then taskkill /PID <PID> /F)
 ```
 
-## FAQs
+## 9. FAQs
 
 **1. Does npm come with Node.js?**  
 Yes. Installing Node.js installs npm.
@@ -230,7 +230,7 @@ Use `nvm install <version>` then `nvm use <version>` (or nvm-windows).
 **5. How do I set a different registry?**  
 `npm config set registry <url>`
 
-## References
+## 10. References
 
 - https://nodejs.org/en/download
 - https://docs.npmjs.com/

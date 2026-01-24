@@ -6,11 +6,32 @@
 |--------|------------|---------|-----------------|----------------|
 | Mukesh | 10-08-23 | version 1 | Mukesh | 24-08-23 |
 
-## Introduction
+## Table of Contents
+
+1. [Introduction](#1-introduction)
+2. [Why React?](#2-why-react)
+3. [What is React?](#3-what-is-react)
+4. [Key Features](#4-key-features)
+    
+    4.1. [React 16 Specific Features](#41-react-16-specific-features)
+    
+    4.2. [Core React Features](#42-core-react-features)
+5. [Getting Started](#5-getting-started)
+    
+    5.1. [Pre-requisites](#51-pre-requisites)
+    
+    5.2. [Installation](#52-installation)
+    
+    5.3. [Quick Start](#53-quick-start)
+6. [Software Overview](#6-software-overview)
+7. [Version Information](#7-version-information)
+8. [Additional Resources](#8-additional-resources)
+
+## 1. Introduction
 
 React is a free and open-source JavaScript library for building user interfaces, particularly web applications. Developed and maintained by Facebook (now Meta), React 16 was released in September 2017 and introduced significant improvements over previous versions. React enables developers to create interactive, component-based UIs with a declarative programming paradigm, making it easier to build complex applications with predictable behavior and efficient rendering.
 
-## Why React?
+## 2. Why React?
 
 React was created to solve several critical problems in web development:
 
@@ -23,7 +44,7 @@ React was created to solve several critical problems in web development:
 - **Cross-Platform Development**: React can be used for web, mobile (React Native), and desktop applications, allowing code reuse across platforms
 - **Industry Adoption**: Used by major companies like Facebook, Netflix, Airbnb, and many others, ensuring long-term support and stability
 
-## What is React?
+## 3. What is React?
 
 React is a JavaScript library for building user interfaces. At its core, React is:
 
@@ -34,9 +55,9 @@ React is a JavaScript library for building user interfaces. At its core, React i
 - **Unidirectional Data Flow**: Data flows down from parent components to child components through props, making the application's behavior predictable
 - **JavaScript Extension (JSX)**: React uses JSX, a syntax extension that allows writing HTML-like code in JavaScript, making component code more intuitive
 
-## Key Features
+## 4. Key Features
 
-### React 16 Specific Features
+### 4.1. React 16 Specific Features
 
 - **Fragments**: Introduced the ability to return multiple elements from a component without wrapping them in an extra DOM node using `React.Fragment` or shorthand `<>...</>`
 - **Error Boundaries**: New component type that catches JavaScript errors anywhere in the child component tree, logs those errors, and displays a fallback UI instead of crashing the entire app
@@ -49,7 +70,7 @@ React is a JavaScript library for building user interfaces. At its core, React i
 - **Fiber Architecture**: Complete rewrite of React's reconciliation algorithm (React Fiber) for better performance, especially for large applications
 - **Better Error Messages**: Improved error messages and stack traces for easier debugging
 
-### Core React Features
+### 4.2. Core React Features
 
 - **Components**: Reusable, self-contained pieces of UI that can be composed together
 - **Props**: Immutable data passed from parent to child components
@@ -65,9 +86,9 @@ React is a JavaScript library for building user interfaces. At its core, React i
 - **Performance Optimization**: Built-in optimization techniques like `shouldComponentUpdate`, `React.memo`, and `PureComponent`
 
 
-## Getting Started
+## 5. Getting Started
 
-### Pre-requisites
+### 5.1. Pre-requisites
 
 Before learning React, you should have:
 
@@ -78,7 +99,7 @@ Before learning React, you should have:
 - **Command Line**: Comfortable using terminal/command line
 - **Code Editor**: Familiarity with a code editor (VS Code recommended)
 
-### Installation
+### 5.2. Installation
 
 React 16 can be installed via npm or yarn:
 
@@ -90,7 +111,7 @@ npm install react@^16.0.0 react-dom@^16.0.0
 yarn add react@^16.0.0 react-dom@^16.0.0
 ```
 
-### Quick Start
+### 5.3. Quick Start
 
 The easiest way to get started with React 16 is using Create React App:
 
@@ -105,7 +126,7 @@ cd my-app
 npm start
 ```
 
-## Software Overview
+## 6. Software Overview
 
 | Software | Version |
 |----------|---------|
@@ -114,7 +135,7 @@ npm start
 | Node.js | 10.x or higher (recommended) |
 | npm | 6.x or higher (recommended) |
 
-## Version Information
+## 7. Version Information
 
 React 16 was released in September 2017. Key versions in the React 16 series:
 
@@ -127,7 +148,7 @@ React 16 was released in September 2017. Key versions in the React 16 series:
 - **React 16.7** (December 2018): Bug fixes
 - **React 16.8** (February 2019): Hooks introduced (`useState`, `useEffect`, etc.)
 
-## Additional Resources
+## 8. Additional Resources
 
 - [React Official Documentation](https://reactjs.org/docs/getting-started.html)
 - [React 16 Release Notes](https://react.dev/blog/2017/09/26/react-v16.0.html)
