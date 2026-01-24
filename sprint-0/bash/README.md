@@ -47,7 +47,7 @@ The script `install-react.sh` lets you:
 | **Multi-version** | React 16, 17, 18, 19, or latest |
 | **Upgrade mode** | Upgrade React in current project with `--upgrade` |
 | **OS-agnostic** | No OS-specific install commands; only Node/npm checks |
-| **Beginner-friendly** | Clear messages, `--help`, simple options |
+
 
 ---
 
@@ -317,7 +317,7 @@ Linux, macOS, and Windows (via Git Bash or WSL). The script only checks Node/npm
 Vite and modern React tooling work best with Node 20+.
 
 **3. Can I use yarn or pnpm?**  
-The script uses **npm** only. You can switch to yarn/pnpm after the project is created.
+The script uses **npm** only. 
 
 **4. How do I uninstall?**  
 Delete the project folder (e.g. `rm -rf my-react-app`).
@@ -340,4 +340,4 @@ Delete the project folder (e.g. `rm -rf my-react-app`).
 | [Node.js](https://nodejs.org/) | Node.js downloads |
 | [npm](https://www.npmjs.com/) | npm documentation |
 
-**Note:** Generic script for all supported OS. Uses **npm** and **Vite** only. **Node.js 20+** required.
+**Note:** Uses **npm** and **Vite** only. **Node.js 20+** required.
