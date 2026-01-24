@@ -1,10 +1,15 @@
 # Go (Golang) Installation Script
 
-**A concise, beginner-friendly bash script to install and upgrade Go using only official [go.dev](https://go.dev) downloads.**
+**A concise bash script to install and upgrade. official link [go.dev](https://go.dev) downloads.**
 
-Works on **Linux** and **macOS**. Uses **https://go.dev/dl/** only — no package managers or third-party URLs.
+Works on **Linux** and **macOS**. Uses **https://go.dev/dl/** only.
 
 ---
+
+| Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
+|--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
+| Mukesh Sharma | 21-01-2026 | v1.0 | Mukesh Sharma | 21-01-2026 |  |  |  |  |
+
 
 ## Table of Contents
 
@@ -267,6 +272,12 @@ main() {
 main
 
 ```
+
+**Expected Output**
+<img width="1413" height="651" alt="Screenshot from 2026-01-24 11-29-10" src="https://github.com/user-attachments/assets/1a7a6a2f-06e9-47f8-a3f3-21ec9392e779" />
+
+---
+
 ## 5. Installation
 
 1. **Go to the `bash` folder:**
