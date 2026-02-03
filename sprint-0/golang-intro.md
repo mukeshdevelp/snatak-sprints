@@ -55,36 +55,33 @@ Golang was created to solve several critical problems in software development, m
 
 1. **Simplicity and Readability**: Clean, minimal syntax that's easy to learn and maintain, reducing cognitive load
 2. **Fast Compilation**: Compiles directly to machine code with fast compilation times, enabling rapid development cycles
-3. **Concurrent Programming**: Built-in support for goroutines and channels makes concurrent programming straightforward
-4. **Performance**: Compiles to native machine code, providing performance comparable to C/C++ while being easier to write
-5. **Cross-Platform Support**: Supports cross-compilation, allowing you to build binaries for different operating systems from a single machine
-6. **Strong Standard Library**: Comprehensive standard library covering networking, HTTP servers, file I/O, encryption, reducing external dependencies
-7. **Static Typing with Type Inference**: Provides type safety at compile time while using type inference to reduce verbosity
-8. **Garbage Collection**: Automatic memory management eliminates manual memory management, reducing bugs related to memory leaks
-9. **Industry Adoption**: Used by major companies like Google, Uber, Docker, Kubernetes, ensuring long-term support
-10. **Cloud-Native Development**: Language of choice for many cloud-native tools and infrastructure projects
+
+3. **Performance**: Compiles to native machine code, providing performance comparable to C/C++ while being easier to write
+4. **Cross-Platform Support**: Supports cross-compilation, allowing you to build binaries for different operating systems from a single machine
+
+5. **Static Typing with Type Inference**: Provides type safety at compile time while using type inference to reduce verbosity
+6. **Garbage Collection**: Automatic memory management eliminates manual memory management, reducing bugs related to memory leaks
+7. **Industry Adoption**: Used by major companies like Google, Uber, Docker, Kubernetes, ensuring long-term support
+
 
 ### 2.2. Use Cases
 
 1. **Web Services and APIs**: Building RESTful APIs, microservices, and web backends with excellent HTTP support
 2. **Cloud-Native Applications**: Developing containerized applications, Kubernetes operators, and cloud infrastructure tools
-3. **Concurrent Systems**: Applications requiring high concurrency like web servers, real-time systems, and data processing
-4. **Command-Line Tools**: Creating fast, cross-platform CLI applications and system utilities
-5. **Network Programming**: Building network servers, proxies, and distributed systems
-6. **DevOps Tools**: Developing infrastructure automation, monitoring tools, and CI/CD pipelines
+
+3. **Command-Line Tools**: Creating fast, cross-platform CLI applications and system utilities
+4. **Network Programming**: Building network servers, proxies, and distributed systems
+
 
 ## 3. Key Features
 
 1. **Simple Syntax**: Clean, minimal syntax with no semicolons needed and minimal keywords
-2. **Static Typing**: Type safety at compile time prevents many runtime errors
-3. **Type Inference**: The `:=` operator allows type inference, reducing verbosity while maintaining type safety
-4. **Multiple Return Values**: Functions can return multiple values, making error handling more elegant
-5. **Interfaces**: Implicit and structural interface system allowing for flexible abstractions
-6. **Goroutines**: Lightweight threads managed by the Go runtime, enabling thousands of concurrent operations
-7. **Channels**: Communication mechanism between goroutines, enabling safe data sharing
-8. **Garbage Collection**: Automatic memory management with optimized low-latency garbage collector
-9. **Fast Compilation**: Compiles quickly even for large codebases
-10. **Native Binaries**: Produces standalone executables with no external dependencies
+2. **Static Typing**: Type safety at compile time prevents many runtime errors.
+3. **Multiple Return Values**: Functions can return multiple values, making error handling more elegant
+4. **Interfaces**: Implicit and structural interface system allowing for flexible abstractions
+5. **Garbage Collection**: Automatic memory management with optimized low-latency garbage collector
+6. **Fast Compilation**: Compiles quickly even for large codebases
+
 
 ## 4. Common Concepts
 
@@ -102,7 +99,7 @@ Golang was created to solve several critical problems in software development, m
 
 7. **Methods**: Functions with receiver argument. Define on types: `func (receiver Type) MethodName() {}`. Value receivers vs pointer receivers.
 
-8. **Go Modules**: Dependency management system. `go.mod` defines module. Add dependencies with `go get package@version`.
+
 
 
 
@@ -189,15 +186,12 @@ Go is a powerful, efficient, and simple programming language designed for modern
 
 ## 11. Troubleshooting
 
-**Go command not found:**
-- Ensure Go is installed and added to PATH
-- Verify installation: `go version`
-- Restart terminal after installation
+| issue | common steps |
+|-------|--------------|
+| Go Command Not Found | Ensure PATH is added, run cmd `go version`, restart terminal |
+| Import errors | Ensure package is in `go.mod`, run cmd `go tidy tidy`, check import paths |
 
-**Import errors:**
-- Ensure package is in `go.mod`
-- Run `go mod tidy` to update dependencies
-- Check import paths are correct
+---
 
 ## 12. FAQs
 
@@ -209,38 +203,29 @@ Go is the official name. Golang is a common nickname used in search engines and 
 
 Go is not a traditional object-oriented language. It has structs and methods but no classes or inheritance. It uses composition and interfaces instead.
 
-**3. Do I need to learn other languages before Go?**
-
-No, Go is beginner-friendly. However, basic programming knowledge helps.
-
-**4. What is a goroutine?**
-
-A goroutine is a lightweight thread managed by the Go runtime. It's more efficient than OS threads and allows thousands of concurrent operations.
 
 
-**5. How do I handle errors in Go?**
+
+
+
+**3. How do I handle errors in Go?**
 
 Go uses explicit error returns. Functions return `(result, error)`. Check errors with `if err != nil { handle error }`.
 
-**6. What is the difference between slice and array?**
 
-Arrays have fixed size, slices are dynamic. Slices are more commonly used and built on top of arrays.
 
-**7. Can I use Go for web development?**
+**4. Can I use Go for web development?**
 
 Yes, Go has excellent HTTP support in the standard library and is widely used for building web services and APIs.
 
-**8. Is Go fast?**
+**5. Is Go fast?**
 
 Yes, Go compiles to native machine code and provides performance comparable to C/C++ for many use cases.
 
-**9. What is Go modules?**
+**6. What is Go modules?**
 
 Go modules is the dependency management system introduced in Go 1.11. It uses `go.mod` file to manage dependencies.
 
-**10. How do I test Go code?**
-
-Use the built-in testing framework. Create test files with `*_test.go` suffix and run with `go test`.
 
 ## 13. Contact Information
 
@@ -254,9 +239,6 @@ Use the built-in testing framework. Create test files with `*_test.go` suffix an
 |-------|--------------|
 | https://go.dev/ | Official Go website with documentation and downloads |
 | https://go.dev/doc/ | Official Go documentation |
-| https://go.dev/tour/ | Interactive Go tutorial (A Tour of Go) |
-| https://go.dev/doc/effective_go | Effective Go - Go best practices guide |
 | https://gobyexample.com/ | Go by Example - Code examples for learning |
-| https://pkg.go.dev/std | Go Standard Library documentation |
 | https://go.dev/blog/ | Official Go blog with articles and updates |
 | https://github.com/golang/go | Go source code repository |
