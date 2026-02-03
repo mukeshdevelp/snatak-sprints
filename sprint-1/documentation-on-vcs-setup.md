@@ -12,9 +12,8 @@ Works on **Linux** and **macOS**. Uses **Git** as the reference VCS.
 
 ## Table of Contents
 
-1. [VCS Design & POC](#1-vcs-design--poc)
-   - 1.1 [Design](#design)
-   - 1.2 [POC Scope](#poc-scope)
+1. [What is VCS](#1-what-is-vcs)
+   
 2. [Features of VCS](#2-features-of-vcs)
 3. [Prerequisites](#3-prerequisites)
 4. [VCS Setup (Detailed)](#4-vcs-setup-detailed)
@@ -33,24 +32,16 @@ Works on **Linux** and **macOS**. Uses **Git** as the reference VCS.
 
 ---
 
-## 1. VCS Design & POC
+## 1. What is VCS
 
-### Design
+A **Version Control System (VCS)** is software that records and manages changes to files and folders over time. Instead of overwriting or losing earlier work, a VCS keeps a history of changes so you can go back to any previous version, see what changed and by whom, and work with others on the same project without clashing. It is commonly used for source code, documents, and any set of files that evolve over time. This document uses **Git** as the VCS for setup and examples.
 
-A **Version Control System (VCS)** tracks changes to files over time so you can recall specific versions, compare changes, and collaborate without overwriting work. This document uses **Git** as the POC (Proof of Concept) VCS.
-
-| Design aspect | Description |
+| Terminologies | Description |
 |---------------|-------------|
 | **Repository** | Single folder (local or remote) holding full history of the project. |
 | **Commits** | Snapshots of the working tree at a point in time; each has a unique hash. |
 | **Branches** | Parallel lines of development; default branch is usually `main` or `master`. |
 | **Remote** | Hosted copy (e.g. GitHub, GitLab) for backup and collaboration. |
-
-### POC Scope
-
-- Install and configure Git on the machine.
-- Create a local repo, make a commit, and (optionally) connect to a remote.
-- Confirm basic workflow: clone / add / commit / push / pull.
 
 ---
 
@@ -65,6 +56,14 @@ A **Version Control System (VCS)** tracks changes to files over time so you can 
 | **Remote sync** | Push to and pull from a remote (e.g. GitHub) for backup and sharing. |
 | **Tagging** | Mark releases (e.g. `v1.0`) for easy reference. |
 | **Conflict handling** | Merge conflicts surfaced and resolved before completing merge. |
+| **Diff** | See line-by-line changes between commits, branches, or working copy. |
+| **Revert** | Restore files or the whole repo to a previous commit; undo changes safely. |
+| **Stash** | Temporarily set aside uncommitted changes and reapply or drop them later. |
+| **Blame / Annotate** | See who last changed each line in a file and when. |
+| **Distributed** | Full copy of history on each machine; work offline and sync when connected. |
+| **Integrity** | Content-addressed storage (hashes); tampering or corruption is detectable. |
+| **Ignore / Exclude** | Exclude files from tracking (e.g. build output, secrets, local config). |
+| **Hooks** | Run scripts on events (pre-commit, post-merge) for linting, tests, or automation. |
 
 ---
 
@@ -80,25 +79,28 @@ A **Version Control System (VCS)** tracks changes to files over time so you can 
 
 ## 4. VCS Setup (Detailed)
 
-Follow these steps in order. Each step states **what** to do and **why**.
+Follow these steps in order.
 
 ### Step 1: Install Git
 
 **What:** Install the Git package.
 
-**Why:** Git is the VCS binary; without it you cannot run `git` commands.
-
-**How:**
+**Why:** Git is the VCS binary; without it you cannot run `git` commands. Use the command for your OS:
 
 ```bash
 # Debian/Ubuntu
+# Refresh package list
 sudo apt update
+
+# Install Git package
 sudo apt install -y git
 
 # Fedora/RHEL
+# Install Git package
 sudo dnf install -y git
 
 # macOS
+# Install Git via Homebrew
 brew install git
 ```
 
@@ -108,16 +110,15 @@ brew install git
 
 **What:** Configure `user.name` and `user.email` for this machine.
 
-**Why:** Every commit records an author. Without identity, Git may refuse commits or use wrong metadata.
-
-**How:**
+**Why:** Every commit records an author; without identity, Git may refuse commits or use wrong metadata. Use the same email as on your remote (e.g. GitHub) so commits link to your account.
 
 ```bash
+# Set author name for all commits
 git config --global user.name "Your Name"
+
+# Set author email for all commits
 git config --global user.email "your.email@example.com"
 ```
-
-Use the same email as on your remote (e.g. GitHub) so commits link to your account.
 
 ---
 
@@ -127,9 +128,8 @@ Use the same email as on your remote (e.g. GitHub) so commits link to your accou
 
 **Why:** Keeps naming consistent with common hosting (GitHub, GitLab) and avoids `master` if you prefer `main`.
 
-**How:**
-
 ```bash
+# Set default branch name for new repos
 git config --global init.defaultBranch main
 ```
 
@@ -144,15 +144,23 @@ git config --global init.defaultBranch main
 **Option A – New repo:**
 
 ```bash
+# Create a new directory for the project
 mkdir my-project
+
+# Change into the project directory
 cd my-project
+
+# Initialize a new Git repository
 git init
 ```
 
 **Option B – Clone existing repo:**
 
 ```bash
+# Download repo and create local copy
 git clone https://github.com/username/repo-name.git
+
+# Change into the cloned repository directory
 cd repo-name
 ```
 
@@ -164,16 +172,18 @@ cd repo-name
 
 **Why:** Git only stores history for changes you explicitly stage and commit.
 
-**How:**
-
 ```bash
-# Stage all changes (or use specific paths)
+
+
+# Stage all modified and new files
 git add .
 
 # Or stage a single file
+# Stage only the specified file
 git add path/to/file
 
 # Create a commit with a message
+# Save staged changes to history with a message
 git commit -m "Initial commit"
 ```
 
@@ -185,9 +195,8 @@ git commit -m "Initial commit"
 
 **Why:** Enables backup and collaboration; required for push/pull to that host.
 
-**How:**
-
 ```bash
+# Add remote named 'origin' with the repo URL
 git remote add origin https://github.com/username/repo-name.git
 ```
 
@@ -197,15 +206,12 @@ git remote add origin https://github.com/username/repo-name.git
 
 **What:** Upload your branch to the remote.
 
-**Why:** Backs up work and makes it visible to others (or to you on another machine).
-
-**How:**
+**Why:** Backs up work and makes it visible to others (or to you on another machine). Use `-u origin main` once so future `git push` knows where to go.
 
 ```bash
+# Push local 'main' branch to remote 'origin' and set it as upstream
 git push -u origin main
 ```
-
-Use `-u origin main` once so future `git push` knows where to go.
 
 ---
 
@@ -268,6 +274,3 @@ So every repo on this machine uses the same author info unless you override it p
 | [Git](https://git-scm.com/) | Official Git site |
 | [Git Book](https://git-scm.com/book/en/v2) | Pro Git book (free) |
 | [GitHub Docs](https://docs.github.com/) | GitHub usage and Git workflows |
-
-**Note:** This document describes **Git** as the reference VCS. **Linux** and **macOS** (or WSL) are in scope.
-
