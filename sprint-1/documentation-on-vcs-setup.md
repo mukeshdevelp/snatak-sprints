@@ -1,8 +1,8 @@
 # VCS (Version Control System) Setup
 
-**Design, POC, and step-by-step setup for a Version Control System (Git) on Linux.**
 
-Works on **Linux** and **macOS**. Uses **Git** as the reference VCS.
+
+
 
 ---
 
