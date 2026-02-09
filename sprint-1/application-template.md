@@ -80,14 +80,16 @@ The purpose of this Application Template is to:
 These are the tools or libraries needed while building or packaging the application.
 
 | Name | Version | Description |
-|-----------|--------------|----------------|
-|   |    |    |
+|------|--------|-------------|
+| &lt;application&gt; | &lt;version&gt; | &lt;Description&gt; |
+| &lt;application&gt; | &lt;version&gt; | &lt;Description&gt; |
 
 ### 3.2 Run-time Dependencies
 
-| Name  | Version | Description |
-|-----------|--------------|----------------|
-|  |   |     |
+| Name | Version | Description |
+|------|--------|-------------|
+| &lt;application&gt; | &lt;version&gt; | &lt;Description&gt; |
+| &lt;application&gt; | &lt;version&gt; | &lt;Description&gt; |
 
 ### 3.3 Important Ports
 
@@ -198,11 +200,11 @@ Include possible causes, log file references, and solution steps for quick debug
 
 ## 10. FAQ
 
-| Questions |Answers |
-|----------------|----------------|
-|Is this application free?||
-|Can it run on all cloud platforms?||
-|Is there an enterprise version?||
+| Questions | Answers |
+|------------|---------|
+| Is this application free? | Yes, it is an open-source application. |
+| Can it run on all cloud platforms? | Yes, it can be deployed on any cloud platform. |
+| Is there an enterprise version? | No, this is open-source contribution. No enterprise version available. |
 
 
 
