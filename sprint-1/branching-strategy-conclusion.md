@@ -25,9 +25,12 @@ Subtask: **Conclusion doc**. Applies to **Git** and similar VCS.
 
 ## 1. Intro
 
+This document is a **conclusion doc**: it summarises how to choose a branching strategy and compares common approaches so you can pick or adapt one for your team.
+
+
 A **branching strategy** is a set of rules and conventions for how teams create, name, and merge branches in a version control system. It defines where work happens (e.g. feature branches, release branches), how changes flow (e.g. into `main` or into a release branch), and how often you integrate. Choosing a strategy affects release cadence, code review, and how much merge and conflict work you take on.
 
-This document is a **conclusion doc**: it summarises how to choose a branching strategy and compares common approaches so you can pick or adapt one for your team.
+
 
 ---
 
