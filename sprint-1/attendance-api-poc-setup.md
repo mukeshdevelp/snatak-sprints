@@ -59,6 +59,7 @@ Deploy the **Attendance API** (Python, Flask, PostgreSQL, Redis) on AWS for a PO
 ## Architecture
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
 
+<img width="1536" height="1024" alt="e1f38ea0-17a0-4416-bc14-2d43a21c4787" src="https://github.com/user-attachments/assets/89e0f54b-0efc-4705-9f2a-737bbf172012" />
 
 
 ## Dataflow Diagram
