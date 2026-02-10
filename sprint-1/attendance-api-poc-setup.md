@@ -57,6 +57,7 @@ Deploy the **Attendance API** (Python, Flask, PostgreSQL, Redis) on AWS for a PO
 | Liquibase | 4.24.0 (install in steps) |
 
 ## Architecture
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
 
 
 
