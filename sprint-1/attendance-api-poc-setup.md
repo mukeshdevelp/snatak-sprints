@@ -56,6 +56,14 @@ Deploy the **Attendance API** (Python, Flask, PostgreSQL, Redis) on AWS for a PO
 | Poetry | Latest (install in steps) |
 | Liquibase | 4.24.0 (install in steps) |
 
+## Architecture
+
+
+
+## Dataflow Diagram
+<img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
+
+
 ## 4. Step 1: Create and Access EC2 Instances
 
 ### 4.1 Launch two EC2 instances
