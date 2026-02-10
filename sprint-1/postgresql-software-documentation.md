@@ -136,12 +136,15 @@ Configuration refers to the process of setting up and customizing a program or s
 
 ## 7. Maintenance
 
-Follow these commands: # For Update # To upgrade software version # For restart
+Follow these commands:  For update  to upgrade software version snd for restart
 
 ```bash
+# for update and upgrade
 sudo apt update && sudo apt upgrade -y postgresql postgresql-contrib
+
+# for restart
 sudo systemctl restart postgresql
-sudo -u postgres psql -c "VACUUM ANALYZE;"
+
 ```
 
 ## 8. Monitoring
