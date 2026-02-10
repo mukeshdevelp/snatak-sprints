@@ -80,7 +80,19 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 | Poetry | Latest (install in steps) |
 | Liquibase | 4.24.0 (install in steps) |
 
+<<<<<<< HEAD
 ---
+=======
+## Architecture
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
+
+<img width="1536" height="1024" alt="e1f38ea0-17a0-4416-bc14-2d43a21c4787" src="https://github.com/user-attachments/assets/89e0f54b-0efc-4705-9f2a-737bbf172012" />
+
+
+## Dataflow Diagram
+<img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
+
+>>>>>>> 2e9ab8c0e7be0c730deb6145e8ec4bc6e4adec3a
 
 ## 4. Step 1: Create and Access EC2 Instances
 
@@ -447,5 +459,8 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 | [Redis Linux](https://redis.io/docs/getting-started/installation/install-redis-on-linux/) | Install Redis on Linux |
 | [Poetry](https://python-poetry.org/docs/) | Python dependency management |
 | [Liquibase](https://docs.liquibase.com/) | Database migrations |
+<<<<<<< HEAD
 
 ---
+=======
+>>>>>>> 2e9ab8c0e7be0c730deb6145e8ec4bc6e4adec3a
