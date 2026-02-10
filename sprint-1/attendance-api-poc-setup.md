@@ -85,6 +85,7 @@ ssh -i /path/to/your-key.pem ubuntu@<BASTION-PUBLIC-IP>
 # On the bastion: ensure the .pem key is present (e.g. copy via scp from your machine first), then:
 # SSH to DB server (private IP)
 ssh -i /path/to/your-key.pem ubuntu@10.0.1.25
+
 # Or SSH to API server (private IP)
 ssh -i /path/to/your-key.pem ubuntu@10.0.2.75
 ```
@@ -95,8 +96,10 @@ If you use **agent forwarding** (no need to copy the key to the bastion), from y
 # Start agent and add key (on your machine)
 eval $(ssh-agent -s)
 ssh-add /path/to/your-key.pem
+
 # SSH to bastion with forwarding
 ssh -A -i /path/to/your-key.pem ubuntu@<BASTION-PUBLIC-IP>
+
 # Then on the bastion you can run:
 ssh ubuntu@10.0.1.25
 ssh ubuntu@10.0.2.75
@@ -113,18 +116,24 @@ All commands in this section on **DB server**.
 ```bash
 # Refresh package lists
 sudo apt update
+
 # Install helper for adding PG repo
 sudo apt install -y postgresql-common
+
 # Add PostgreSQL 16 official repo for this Ubuntu release
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
 # Add PostgreSQL signing key
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 sudo apt update
+
 # Install PostgreSQL 16 and contrib
 sudo apt install -y postgresql-16 postgresql-contrib-16
+
 # Start and enable PostgreSQL service
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
+
 # Confirm version 16 is installed
 ls /etc/postgresql/
 ```
@@ -144,8 +153,10 @@ ls /etc/postgresql/
    Save and exit.
 
 ```bash
+
 # Restart PostgreSQL to apply config changes
 sudo systemctl restart postgresql
+
 # Set postgres user password for remote auth
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '12345';"
 ```
@@ -169,10 +180,13 @@ export POSTGRESQL_HOST=localhost
 Then run:
 
 ```bash
+
 # Load new env vars in current shell
 source ~/.bashrc
+
 # Create the attendance database (table created later by Liquibase)
 psql -U postgres -h localhost -c 'CREATE DATABASE attendance_db;'
+
 # Verify database exists
 sudo -u postgres psql -c "\l" | grep attendance_db
 ```
@@ -201,10 +215,13 @@ Change these three settings (find the existing line and edit, or add if missing)
 Save and exit (`:wq`), then run:
 
 ```bash
+
 # Restart Redis to apply config
 sudo systemctl restart redis-server
+
 # Start Redis on boot
 sudo systemctl enable redis-server
+
 # Test Redis with password (expect PONG)
 redis-cli -a 12345 ping
 ```
@@ -218,29 +235,41 @@ All commands in this section on **API server**.
 ### 6.1 Install tools, clone repo, build
 
 ```bash
+
 # Refresh packages and install Python 3.11, pip, curl, Java (for Liquibase), unzip
 sudo apt update
 sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre unzip
+
 # Install Poetry (Python dependency manager)
 curl -sSL https://install.python-poetry.org | python3 -
+
 # Add Poetry to PATH and load in current shell
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 cd ~
+
 # Download and install Liquibase for DB migrations
 wget -q https://github.com/liquibase/liquibase/releases/download/v4.24.0/liquibase-4.24.0.tar.gz
+
 tar xzf liquibase-4.24.0.tar.gz
+
 sudo mv liquibase /opt/
+
 echo 'export PATH="/opt/liquibase:$PATH"' >> ~/.bashrc
+
 source ~/.bashrc
+
 # Verify Liquibase is on PATH
 liquibase --version
 cd ~
+
 # Clone the Attendance API repo
 git clone https://github.com/OT-MICROSERVICES/attendance-api.git
 cd attendance-api
+
 # Install Make and pylint (Makefile build runs pylint before poetry install)
 sudo apt install -y make pylint
+
 # Install project dependencies via Makefile (runs fmt then poetry install)
 make build
 ```
@@ -281,6 +310,7 @@ Set **url** to the DB server (e.g. `jdbc:postgresql://10.0.1.25:5432/attendance_
 ```bash
 # Run Liquibase migrations to create the records table
 liquibase update --driver-properties-file=liquibase.properties
+
 # Alternative: make run-migrations
 ```
 
@@ -303,7 +333,7 @@ After=network.target
 Type=simple
 User=ubuntu
 Group=ubuntu
-WorkingDirectory=/home/ubuntu/attendance-api
+WorkingDirectory=/home/ubuntu/attendance/attendance-api
 ExecStart=/home/ubuntu/.local/bin/gunicorn app:app --log-config log.conf -b 0.0.0.0:8080
 Restart=always
 RestartSec=5
@@ -312,14 +342,19 @@ WantedBy=multi-user.target
 ```
 
 ```bash
+
 # Reload systemd after adding new unit file
 sudo systemctl daemon-reload
+
 # Enable service to start on boot
 sudo systemctl enable attendance-api
+
 # Start the API service now
 sudo systemctl start attendance-api
+
 # Check service status
 sudo systemctl status attendance-api
+
 # Follow service logs (Ctrl+C to exit)
 sudo journalctl -u attendance-api -f
 ```
