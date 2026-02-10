@@ -1,13 +1,16 @@
 # Setup and Run the App for POC — Attendance API
 
-| Author | Created on | Version | Last updated by | Last edited on |
-|--------|------------|---------|-----------------|----------------|
-| Mukesh Sharma | 03-02-2026 | 1.0 | Mukesh Sharma | 03-02-2026 |
+| Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
+|--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
+| Mukesh Sharma | 03-02-2026 | v1.0 | Mukesh Sharma | 03-02-2026 |  |  |  |  |
+
 
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
 2. [POC Architecture (AWS)](#2-poc-architecture-aws)
+   - 2.1 [Architecture](#21-architecture)
+   - 2.2 [Dataflow Diagram](#22-dataflow-diagram)
 3. [Prerequisites](#3-prerequisites)
 4. [Step 1: Create and Access EC2 Instances](#4-step-1-create-and-access-ec2-instances)
    - 4.1 [Launch two EC2 instances](#41-launch-two-ec2-instances)
@@ -27,9 +30,13 @@
 9. [Contact Information](#9-contact-information)
 10. [References](#10-references)
 
+---
+
 ## 1. Introduction
 
 Deploy the **Attendance API** (Python, Flask, PostgreSQL, Redis) on AWS for a POC: two Ubuntu EC2s — **DB server** (PostgreSQL 5432, Redis 6379) and **API server** (API on 8080). Follow steps in order.
+
+---
 
 ## 2. POC Architecture (AWS)
 
@@ -40,6 +47,23 @@ Deploy the **Attendance API** (Python, Flask, PostgreSQL, Redis) on AWS for a PO
 | **API server** | Private subnet B | Attendance API (8080). SG: 22 from bastion, 8080 if needed. |
 
 **IPs used in this doc:** Bastion has a **public IP** (use your own). DB server **10.0.1.25**, API server **10.0.2.75** (private).
+
+### 2.1 Architecture
+
+The diagram below shows the POC layout on AWS: the **bastion** in a public subnet with a public IP; the **DB server** (PostgreSQL and Redis) and **API server** (Attendance API) in separate private subnets. Administrators reach the bastion over SSH, then jump to the DB or API server using private IPs. The API server is the only component that talks to the DB server (ports 5432 and 6379).
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
+
+<img width="1536" height="1024" alt="e1f38ea0-17a0-4416-bc14-2d43a21c4787" src="https://github.com/user-attachments/assets/89e0f54b-0efc-4705-9f2a-737bbf172012" />
+
+### 2.2 Dataflow Diagram
+
+
+The diagram below illustrates how traffic flows in this POC: clients (or a load balancer) send HTTP requests to the **API server** on port 8080; the API server uses **PostgreSQL** for persistent attendance data and **Redis** for caching. All access to the DB server (10.0.1.25) is from the API server only; user access to the instances is via the **bastion** over SSH.
+
+<img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
+
+---
 
 ## 3. Prerequisites
 
@@ -56,19 +80,24 @@ Deploy the **Attendance API** (Python, Flask, PostgreSQL, Redis) on AWS for a PO
 | Poetry | Latest (install in steps) |
 | Liquibase | 4.24.0 (install in steps) |
 
+---
+
 ## 4. Step 1: Create and Access EC2 Instances
 
 ### 4.1 Launch two EC2 instances
 
 **Bastion (optional but used in this POC):** One EC2 in a **public subnet** with a public IP. SG: SSH (22) from your IP. Use the same key pair. You SSH to the bastion first, then from the bastion to the DB and API servers (in private subnets).
 
-**DB server:** `attendance-poc-db-redis`, Ubuntu 22.04, t3.small, private subnet A. SG: SSH (22) from **bastion** (or bastion SG), 5432 and 6379 from API server (set after creating API server). Note **private IP**. **API server:** `attendance-poc-api`, Ubuntu 22.04, t3.small, same key, private subnet B. SG: SSH (22) from **bastion**, 8080 if needed. Note **private IP**.
+**DB server:** `attendance-poc-db-redis`, Ubuntu 22.04, t3.small, private subnet A. SG: SSH (22) from **bastion** (or bastion SG), 5432 and 6379 from API server (set after creating API server). Note **private IP**.
+
+**API server:** `attendance-poc-api`, Ubuntu 22.04, t3.small, same key, private subnet B. SG: SSH (22) from **bastion**, 8080 if needed. Note **private IP**.
 
 ### 4.2 Update DB server Security Group
 
 Set source for 5432 and 6379 to API server private IP (e.g. `10.0.2.75/32`) or Subnet B CIDR.
 
 ### 4.3 SSH into the instances (via bastion)
+
 
 Access is through a **bastion server** (public). From your machine, SSH to the bastion; then from the bastion, SSH to the DB or API server using their **private IPs**. Use the same `.pem` key (copy it to the bastion or use agent forwarding).
 
@@ -85,6 +114,7 @@ ssh -i /path/to/your-key.pem ubuntu@<BASTION-PUBLIC-IP>
 # On the bastion: ensure the .pem key is present (e.g. copy via scp from your machine first), then:
 # SSH to DB server (private IP)
 ssh -i /path/to/your-key.pem ubuntu@10.0.1.25
+
 # Or SSH to API server (private IP)
 ssh -i /path/to/your-key.pem ubuntu@10.0.2.75
 ```
@@ -95,14 +125,18 @@ If you use **agent forwarding** (no need to copy the key to the bastion), from y
 # Start agent and add key (on your machine)
 eval $(ssh-agent -s)
 ssh-add /path/to/your-key.pem
+
 # SSH to bastion with forwarding
 ssh -A -i /path/to/your-key.pem ubuntu@<BASTION-PUBLIC-IP>
+
 # Then on the bastion you can run:
 ssh ubuntu@10.0.1.25
 ssh ubuntu@10.0.2.75
 ```
 
 User is `ubuntu` on all hosts. Run **Step 2** on DB server, **Step 3** on API server.
+
+---
 
 ## 5. Step 2: Set Up DB & Redis (DB server)
 
@@ -113,18 +147,24 @@ All commands in this section on **DB server**.
 ```bash
 # Refresh package lists
 sudo apt update
+
 # Install helper for adding PG repo
 sudo apt install -y postgresql-common
+
 # Add PostgreSQL 16 official repo for this Ubuntu release
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
 # Add PostgreSQL signing key
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 sudo apt update
+
 # Install PostgreSQL 16 and contrib
 sudo apt install -y postgresql-16 postgresql-contrib-16
+
 # Start and enable PostgreSQL service
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
+
 # Confirm version 16 is installed
 ls /etc/postgresql/
 ```
@@ -144,8 +184,10 @@ ls /etc/postgresql/
    Save and exit.
 
 ```bash
+
 # Restart PostgreSQL to apply config changes
 sudo systemctl restart postgresql
+
 # Set postgres user password for remote auth
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '12345';"
 ```
@@ -153,6 +195,7 @@ sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '12345';"
 ### 5.2 Bashrc and create database
 
 Edit your shell config so the same credentials are available in every session:
+
 
 ```bash
 vi ~/.bashrc
@@ -169,10 +212,13 @@ export POSTGRESQL_HOST=localhost
 Then run:
 
 ```bash
+
 # Load new env vars in current shell
 source ~/.bashrc
+
 # Create the attendance database (table created later by Liquibase)
 psql -U postgres -h localhost -c 'CREATE DATABASE attendance_db;'
+
 # Verify database exists
 sudo -u postgres psql -c "\l" | grep attendance_db
 ```
@@ -201,15 +247,20 @@ Change these three settings (find the existing line and edit, or add if missing)
 Save and exit (`:wq`), then run:
 
 ```bash
+
 # Restart Redis to apply config
 sudo systemctl restart redis-server
+
 # Start Redis on boot
 sudo systemctl enable redis-server
+
 # Test Redis with password (expect PONG)
 redis-cli -a 12345 ping
 ```
 
 Expect `PONG`. DB server IP used below: **10.0.1.25**.
+
+---
 
 ## 6. Step 3: Set Up and Run the API (API server)
 
@@ -218,29 +269,41 @@ All commands in this section on **API server**.
 ### 6.1 Install tools, clone repo, build
 
 ```bash
+
 # Refresh packages and install Python 3.11, pip, curl, Java (for Liquibase), unzip
 sudo apt update
 sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre unzip
+
 # Install Poetry (Python dependency manager)
 curl -sSL https://install.python-poetry.org | python3 -
+
 # Add Poetry to PATH and load in current shell
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 cd ~
+
 # Download and install Liquibase for DB migrations
 wget -q https://github.com/liquibase/liquibase/releases/download/v4.24.0/liquibase-4.24.0.tar.gz
+
 tar xzf liquibase-4.24.0.tar.gz
+
 sudo mv liquibase /opt/
+
 echo 'export PATH="/opt/liquibase:$PATH"' >> ~/.bashrc
+
 source ~/.bashrc
+
 # Verify Liquibase is on PATH
 liquibase --version
 cd ~
+
 # Clone the Attendance API repo
 git clone https://github.com/OT-MICROSERVICES/attendance-api.git
 cd attendance-api
+
 # Install Make and pylint (Makefile build runs pylint before poetry install)
 sudo apt install -y make pylint
+
 # Install project dependencies via Makefile (runs fmt then poetry install)
 make build
 ```
@@ -248,6 +311,7 @@ make build
 ### 6.2 Configure config.yaml
 
 Edit the API configuration so it connects to the DB server. From the project root (`~/attendance-api`), run:
+
 
 ```bash
 vi config.yaml
@@ -272,6 +336,7 @@ redis:
 
 Liquibase needs the DB connection details. Edit the properties file from the project root:
 
+
 ```bash
 vi liquibase.properties
 ```
@@ -281,12 +346,14 @@ Set **url** to the DB server (e.g. `jdbc:postgresql://10.0.1.25:5432/attendance_
 ```bash
 # Run Liquibase migrations to create the records table
 liquibase update --driver-properties-file=liquibase.properties
+
 # Alternative: make run-migrations
 ```
 
 ### 6.4 Systemd service and start API
 
 Create a systemd unit so the API runs as a service and starts on boot. Create the unit file:
+
 
 ```bash
 # Create systemd unit file for the API service
@@ -303,7 +370,7 @@ After=network.target
 Type=simple
 User=ubuntu
 Group=ubuntu
-WorkingDirectory=/home/ubuntu/attendance-api
+WorkingDirectory=/home/ubuntu/attendance/attendance-api
 ExecStart=/home/ubuntu/.local/bin/gunicorn app:app --log-config log.conf -b 0.0.0.0:8080
 Restart=always
 RestartSec=5
@@ -312,19 +379,26 @@ WantedBy=multi-user.target
 ```
 
 ```bash
+
 # Reload systemd after adding new unit file
 sudo systemctl daemon-reload
+
 # Enable service to start on boot
 sudo systemctl enable attendance-api
+
 # Start the API service now
 sudo systemctl start attendance-api
+
 # Check service status
 sudo systemctl status attendance-api
+
 # Follow service logs (Ctrl+C to exit)
 sudo journalctl -u attendance-api -f
 ```
 
 Restart after changes: `sudo systemctl restart attendance-api`. Swagger: `http://10.0.2.75:8080/apidocs`.
+
+---
 
 ## 7. Step 4: Verify the Deployment
 
@@ -341,6 +415,8 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 
 **Swagger UI:** `http://10.0.2.75:8080/apidocs`
 
+---
+
 ## 8. Troubleshooting
 
 | Issue | What to check |
@@ -352,11 +428,15 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 | **502 / API refused** | `sudo systemctl status attendance-api`; `sudo systemctl start attendance-api`; `sudo journalctl -u attendance-api -n 50`; SG allows 8080. |
 | **Health postgres/redis down** | Check config.yaml and DB server firewall. |
 
+---
+
 ## 9. Contact Information
 
 | Name | Email |
 |------|-------|
 | Mukesh Kumar Sharma | msmukeshkumarsharma95@gmail.com |
+
+---
 
 ## 10. References
 
@@ -367,3 +447,5 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 | [Redis Linux](https://redis.io/docs/getting-started/installation/install-redis-on-linux/) | Install Redis on Linux |
 | [Poetry](https://python-poetry.org/docs/) | Python dependency management |
 | [Liquibase](https://docs.liquibase.com/) | Database migrations |
+
+---
