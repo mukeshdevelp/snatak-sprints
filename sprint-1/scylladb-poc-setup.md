@@ -181,7 +181,7 @@ CREATE ROLE my_user WITH PASSWORD = 'my_password' AND LOGIN = true;
 -- Create it as superuser
 ALTER ROLE my_user WITH SUPERUSER = true;
 
--- Grant permission on a keyspace. replace `my_keyspace` with `employee` and `my_user` with `scylla`
+-- Grant permission on a keyspace. replace `my_keyspace` with `employee` (or a keyspace present in scylla) and `my_user` with `scylla` (or desired username)
 GRANT ALL PERMISSIONS ON KEYSPACE my_keyspace TO my_user;
 
 -- Show the cluster name and version
@@ -199,7 +199,9 @@ DESCRIBE TABLES;
 -- Exit cqlsh
 EXIT;
 ```
-<img width="1920" height="745" alt="Screenshot from 2026-02-11 12-22-31" src="https://github.com/user-attachments/assets/ab8e3674-7834-4fc7-8c33-93781d92d4b6" />
+*** Examplar Output***
+<img width="1920" height="907" alt="Screenshot from 2026-02-11 12-46-00" src="https://github.com/user-attachments/assets/958279c8-d664-4e31-b1c6-92e6e7e0eb4a" />
+
 
 
 If `cqlsh` is not installed, install the Python driver and cqlsh, or use another CQL client pointing at `10.0.1.25:9042`.
