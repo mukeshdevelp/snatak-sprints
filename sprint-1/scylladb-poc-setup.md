@@ -163,20 +163,33 @@ sudo systemctl status scylla-server
 
 ```bash
 # Connect to ScyllaDB on this host using CQL port 9042
-cqlsh 10.0.1.25 9042
+cqlsh -u cassandra -p cassandra
+
 # At cqlsh> prompt: DESCRIBE CLUSTER; DESCRIBE KEYSPACES; EXIT;
 ```
 
 At the `cqlsh>` prompt you can run:
 
 ```cql
+-- Create a role, replace "my_user" to "scylla" and "my_password" to "12345"
+CREATE ROLE my_user WITH PASSWORD = 'my_password' AND LOGIN = true;
+-- Create it as superuser
+ALTER ROLE my_user WITH SUPERUSER = true;
+-- Grant permission on a keyspace. replace `my_keyspace` with `employee` and `my_user` with `scylla`
+GRANT ALL PERMISSIONS ON KEYSPACE my_keyspace TO my_user;
 -- Show the cluster name and version
 DESCRIBE CLUSTER;
 -- List keyspaces (default ones should appear)
 DESCRIBE KEYSPACES;
+--- Use a Keyspace
+use `<keyspace_name>`; ex - employee
+--- Show all tables in keyspace 
+DESCRIBE TABLES;
 -- Exit cqlsh
 EXIT;
 ```
+<img width="1920" height="745" alt="Screenshot from 2026-02-11 12-22-31" src="https://github.com/user-attachments/assets/ab8e3674-7834-4fc7-8c33-93781d92d4b6" />
+
 
 If `cqlsh` is not installed, install the Python driver and cqlsh, or use another CQL client pointing at `10.0.1.25:9042`.
 
