@@ -80,7 +80,9 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 | Poetry | Latest (install in steps) |
 | Liquibase | 4.24.0 (install in steps) |
 
-
+<<<<<<< HEAD
+---
+=======
 ## Architecture
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
 
@@ -90,7 +92,7 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 ## Dataflow Diagram
 <img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
 
-
+>>>>>>> 2e9ab8c0e7be0c730deb6145e8ec4bc6e4adec3a
 
 ## 4. Step 1: Create and Access EC2 Instances
 

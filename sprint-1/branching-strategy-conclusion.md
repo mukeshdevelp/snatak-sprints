@@ -2,7 +2,6 @@
 
 **Conclusion document on branching strategies: how to choose one and how common strategies compare.**
 
-Subtask: **Conclusion doc**. Applies to **Git** and similar VCS.
 
 ---
 
@@ -25,26 +24,23 @@ Subtask: **Conclusion doc**. Applies to **Git** and similar VCS.
 
 ## 1. Intro
 
-This document is a **conclusion doc**: it summarises how to choose a branching strategy and compares common approaches so you can pick or adapt one for your team.
-
-
 A **branching strategy** is a set of rules and conventions for how teams create, name, and merge branches in a version control system. It defines where work happens (e.g. feature branches, release branches), how changes flow (e.g. into `main` or into a release branch), and how often you integrate. Choosing a strategy affects release cadence, code review, and how much merge and conflict work you take on.
 
-
+This document is a **conclusion doc**: it summarises how to choose a branching strategy and compares common approaches so you can pick or adapt one for your team.
 
 ---
 
 ## 2. How to choose a branching strategy
 
-**Team size and structure** — Small teams or solo developers often prefer fewer branches (e.g. GitHub Flow or trunk-based). Large or distributed teams may need more structure (e.g. Git Flow or GitLab Flow) so release and feature work stay clear.
+**1. Team size and structure** — Small teams or solo developers often prefer fewer branches (e.g. GitHub Flow or trunk-based). Large or distributed teams may need more structure (e.g. Git Flow or GitLab Flow) so release and feature work stay clear.
 
-**Release cadence** — If you ship often (continuous deployment or multiple releases per week), a simple model with a single long-lived branch (e.g. trunk-based or GitHub Flow) usually fits. If you have scheduled releases (e.g. every few weeks or months), a strategy with dedicated release branches (e.g. Git Flow) can help stabilise and version code.
+**2. Release cadence** — If you ship often (continuous deployment or multiple releases per week), a simple model with a single long-lived branch (e.g. trunk-based or GitHub Flow) usually fits. If you have scheduled releases (e.g. every few weeks or months), a strategy with dedicated release branches (e.g. Git Flow) can help stabilise and version code.
 
-**Stability vs speed** — Strategies with release branches and more gates (e.g. Git Flow) favour stability and controlled releases. Trunk-based or GitHub Flow favour speed and frequent integration; they rely on feature flags, tests, and small changes to keep the main line stable.
+**3. Stability vs speed** — Strategies with release branches and more gates (e.g. Git Flow) favour stability and controlled releases. Trunk-based or GitHub Flow favour speed and frequent integration; they rely on feature flags, tests, and small changes to keep the main line stable.
 
-**Tooling and process** — Your CI/CD, code review, and ticket workflow should support the strategy. For example, trunk-based needs strong automation and short-lived branches; Git Flow needs pipelines that understand `develop`, `release/*`, and `main`.
+**4. Tooling and process** — Your CI/CD, code review, and ticket workflow should support the strategy. For example, trunk-based needs strong automation and short-lived branches; Git Flow needs pipelines that understand `develop`, `release/*`, and `main`.
 
-**Existing habits** — Ease of adoption matters. Prefer a strategy that is close to what the team already does, then refine (e.g. add release branches or simplify to trunk-based) rather than a big-bang change.
+**5. Existing habits** — Ease of adoption matters. Prefer a strategy that is close to what the team already does, then refine (e.g. add release branches or simplify to trunk-based) rather than a big-bang change.
 
 **Summary:** Match the strategy to team size, release cadence, and how much structure you need; then align tooling and process so the strategy is sustainable.
 
@@ -52,26 +48,31 @@ A **branching strategy** is a set of rules and conventions for how teams create,
 
 ## 3. Comparison table
 
-| Strategy | Main branches | Typical use | Pros | Cons |
-|----------|----------------|-------------|------|------|
-| **Git Flow** | `main`, `develop`, plus `feature/*`, `release/*`, `hotfix/*` | Scheduled releases, versioned products | Clear roles for each branch; supports multiple releases in parallel | More branches and steps; can be heavy for small teams or fast releases |
-| **GitHub Flow** | `main` plus short-lived `feature/*` (or similar) | Continuous deployment, simple release model | Simple; one production branch; easy to reason about | No dedicated release branch; less structure for versioned or long stabilisation |
-| **GitLab Flow** | `main` plus optional `production`, `release/*`, or environment branches | Mix of CD and release-based; staging/production promotion | Flexible; can add release or environment branches when needed | More options can mean more decisions and inconsistency |
-| **Trunk-based development** | Single long-lived branch (e.g. `main`); very short-lived feature branches or none | High-frequency releases, strong CI/CD | Fast feedback; minimal merge debt; encourages small changes | Needs strong automation, feature flags, and discipline; can be hard for large or distributed teams |
-| **One-flow (simplified)** | `main` plus short-lived branches; optional `release/*` for hotfixes | Teams wanting something between GitHub Flow and Git Flow | Fewer branches than Git Flow; still allows a release line when needed | Less standardised than “named” strategies; team must agree on rules |
+| Strategy | Branches | Use case | Pros | Cons |
+|----------|----------|----------|------|------|
+| **Feature branching** | Long-lived `feature/*` off `main` or `develop`; merge when done | Any workflow; isolate work per feature | Clear feature isolation; easy per-branch reasoning | Long-lived → merge debt and conflicts; keep short |
+| **Git Flow** | `main`, `develop`, `feature/*`, `release/*`, `hotfix/*` | Scheduled, versioned releases | Clear roles; multiple releases in parallel | Many branches; heavy for small teams |
+| **GitHub Flow** | `main` + short-lived `feature/*` | CD, simple releases | Simple; one production branch | No release branch; less for versioned stabilisation |
+| **GitLab Flow** | `main` + optional `production`, `release/*`, env branches | CD + release mix; staging→production | Flexible; add branches as needed | More choices → possible inconsistency |
+| **Trunk-based** | Single `main`; very short-lived or no feature branches | High-frequency releases, strong CI/CD | Fast feedback; minimal merge debt | Needs automation, feature flags, discipline |
+| **One-flow** | `main` + short-lived branches; optional `release/*` | Between GitHub and Git Flow | Fewer branches than Git Flow; release line when needed | Less standardised than “named” strategies; team must agree on rules |
 
 ---
 
 ## 4. Conclusion
 
 - There is no single “best” branching strategy; the right one depends on team size, release cadence, and how much structure you need.
-- **Small teams or continuous deployment** often fit **GitHub Flow** or **trunk-based development**.
-- **Larger teams or scheduled, versioned releases** often benefit from **Git Flow** or **GitLab Flow** with release branches.
-- Start from your current way of working, then adopt or adapt one of these models so that:
-  - Integration is frequent and predictable.
-  - Release and hotfix paths are clear.
-  - Tooling (CI/CD, review, tickets) supports the strategy.
-- Revisit the choice when team size, release frequency, or product needs change; the conclusion doc and comparison table can be used again to reassess.
+
+**Concrete choice by situation:**
+
+| If you need… | Choose this strategy |
+|---------------|----------------------|
+| **Simple, fast releases (small team or CD)** | **GitHub Flow** or **trunk-based development**. Use short-lived feature branches; merge to `main` often. |
+| **Scheduled releases with version numbers (e.g. quarterly)** | **Git Flow**. Use `develop` for integration, `release/*` for stabilisation, `main` for production. |
+| **Mix of CD and occasional release branches** | **GitLab Flow** or **One-flow**. Keep `main` as primary; add `release/*` or environment branches only when needed. |
+| **Feature isolation without full Git Flow** | **Feature branching** on top of **GitHub Flow**: branch from `main`, keep branches short (days), merge via PR. |
+
+**Decision rule:** Prefer **GitHub Flow** or **trunk-based** unless you have scheduled, versioned releases or multiple release lines—then use **Git Flow** or **GitLab Flow**. Use **feature branches** in all strategies, but keep them **short-lived** (merge within days) to avoid merge debt. Align CI/CD and branch protection with your choice, and revisit when team size or release cadence changes.
 
 ---
 

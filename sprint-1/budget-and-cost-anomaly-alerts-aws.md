@@ -27,9 +27,11 @@
 
 ## 1. Introduction
 
+This document covers what these features are, why to use them, how they fit into a typical workflow, **measures you can take to minimize AWS costs**, advantages, best practices, and references—so teams can run AWS accounts with better visibility and cost control.
+
+
 **AWS Budgets** and **Cost Anomaly Detection** are AWS cost-management tools that help you set spending limits, track usage against those limits, and get alerted when costs deviate from what you expect. **Budgets** let you define cost or usage thresholds (e.g. “alert when forecasted cost exceeds $X”) and receive email or SNS notifications. **Cost Anomaly Detection** uses machine learning to spot unusual spending patterns and alerts you when an anomaly is detected, so you can investigate and act before bills grow out of control.
 
-This document covers what these features are, why to use them, how they fit into a typical workflow, **measures you can take to minimize AWS costs**, advantages, best practices, and references—so teams can run AWS accounts with better visibility and cost control.
 
 ---
 

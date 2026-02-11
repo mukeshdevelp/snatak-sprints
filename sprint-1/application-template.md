@@ -67,7 +67,7 @@ The purpose of this Application Template is to:
 
 
 ### 2.2 Software Requirements
-  List the software tools, libraries, and runtime environments required before installation.
+List the software tools, libraries, and runtime environments required before installation.
 
 
 
