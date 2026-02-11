@@ -12,7 +12,7 @@
 4. [Step 1: Access the DB Server](#4-step-1-access-the-db-server)
    - 4.1 [SSH into the DB server (via bastion)](#41-ssh-into-the-db-server-via-bastion)
 5. [Step 2: Install ScyllaDB on the DB Server](#5-step-2-install-scylladb-on-the-db-server)
-   - 5.1 [Install ScyllaDB using the web installer](#51-install-scylladb-using-the-web-installer)
+   - 5.1 [Install ScyllaDB](#51-install-scylladb)
    - 5.2 [Configure ScyllaDB for the DB server IP](#52-configure-scylladb-for-the-db-server-ip)
    - 5.3 [Start and enable ScyllaDB](#53-start-and-enable-scylladb)
 6. [Step 3: Verify the Deployment](#6-step-3-verify-the-deployment)
@@ -32,8 +32,9 @@ This document describes how to install and run **ScyllaDB** on AWS for a **Proof
 |-----------|----------|------|
 | **Bastion** | Public subnet | Jump host for SSH. You connect here first (public IP), then SSH to the DB server. SG: 22 from your IP. |
 | **DB server** | Private subnet A | Runs ScyllaDB (CQL port 9042). SG: 22 from bastion; 9042 from clients that need to query ScyllaDB (e.g. application subnet). |
+| **API server(Optional)** | Private subnet B | Attendance API (8082). SG: 22 from bastion, 8080 if needed. |
 
-**IP used in this doc:** DB server **10.0.1.25** (private). Bastion has a **public IP** (which is chnaging).
+**IP used in this doc:** DB server **10.0.1.25** (private) and API server **10.0.2.75**. Bastion has a **public IP** (which is chnaging).
 
 ## 3. Prerequisites
 
@@ -79,7 +80,7 @@ User is `ubuntu` on both bastion and DB server. Once logged in to **10.0.1.25**,
 
 All commands in this section are run on the **DB server** (10.0.1.25).
 
-### 5.1 Install ScyllaDB using the web installer
+### 5.1 Install ScyllaDB
 
 The recommended way to install ScyllaDB on Linux is the official web installer. It adds the correct repository and installs the packages.
 
@@ -116,6 +117,7 @@ Set the following so that ScyllaDB listens on the DB server’s private IP. Find
 | `listen_address` | `10.0.1.25` | Address for inter-node communication (this POC is single-node). |
 | `rpc_address` | `10.0.1.25` | Address for client (CQL) connections. |
 | `seed_provider` / `seeds` | `10.0.1.25` | Seed list for cluster discovery (single node = self). |
+
 <img width="1876" height="146" alt="image" src="https://github.com/user-attachments/assets/a850cac6-c815-4d38-bbe6-54d978565a5c" />
 
 Example lines in `scylla.yaml` (use your DB server IP if different):
@@ -138,8 +140,10 @@ Start the ScyllaDB service and enable it to start on boot:
 ```bash
 # Start the ScyllaDB service now
 sudo systemctl start scylla-server
+
 # Enable ScyllaDB to start on boot
 sudo systemctl enable scylla-server
+
 # Check that the service is running (wait a minute on first start)
 sudo systemctl status scylla-server
 
@@ -171,20 +175,27 @@ cqlsh -u cassandra -p cassandra
 At the `cqlsh>` prompt you can run:
 
 ```cql
--- Create a role, replace "my_user" to "scylla" and "my_password" to "12345"
+-- Create a role, replace `my_user` to `scylla` and `my_password` to `12345`
 CREATE ROLE my_user WITH PASSWORD = 'my_password' AND LOGIN = true;
+
 -- Create it as superuser
 ALTER ROLE my_user WITH SUPERUSER = true;
+
 -- Grant permission on a keyspace. replace `my_keyspace` with `employee` and `my_user` with `scylla`
 GRANT ALL PERMISSIONS ON KEYSPACE my_keyspace TO my_user;
+
 -- Show the cluster name and version
 DESCRIBE CLUSTER;
+
 -- List keyspaces (default ones should appear)
 DESCRIBE KEYSPACES;
+
 --- Use a Keyspace
 use `<keyspace_name>`; ex - employee
+
 --- Show all tables in keyspace 
 DESCRIBE TABLES;
+
 -- Exit cqlsh
 EXIT;
 ```
