@@ -106,7 +106,7 @@ ScyllaDB must be configured to listen on the DB server’s IP so that clients ca
 ```bash
 # Open the ScyllaDB configuration file for editing
 sudo vi /etc/scylla/scylla.yaml
-# Set listen_address and broadcast address to 10.0.1.25 and rpc_address to 0.0.0.0 (see table above), then save and exit (:wq)
+
 ```
 <img width="1876" height="146" alt="image" src="https://github.com/user-attachments/assets/38e719cd-5861-4dd7-8195-fe1098c71045" />
 
@@ -169,7 +169,7 @@ sudo systemctl status scylla-server
 # Connect to ScyllaDB on this host using CQL port 9042
 cqlsh -u cassandra -p cassandra
 
-# At cqlsh> prompt: DESCRIBE CLUSTER; DESCRIBE KEYSPACES; EXIT;
+
 ```
 
 At the `cqlsh>` prompt you can run:
