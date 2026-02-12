@@ -22,8 +22,9 @@
     - [2.1 System Requirements](#21-system-requirements)
     - [2.2 Software Requirements](#22-software-requirements)
 3. [Dependencies](#3-dependencies)
-    - [3.1 Build-time Dependencies](#31-build-time-dependencies)
-    - [3.2 Run-time Dependencies](#32-run-time-dependencies)
+    
+    - [3.1 Run-time Dependencies](#31-run-time-dependencies)
+    - [3.2 Other Dependencies](#31-other-dependencies)
     - [3.3 Important Ports](#33-important-ports)
 4. [Architecture](#4-architecture)
     - [4.1 Diagram](#41-diagram)
@@ -32,16 +33,12 @@
     - [5.1 Step 1](#51-step-1-install-software-dependencies)
     - [5.2 Step 2](#52-step-2-build-or-artifact-generation)
     - [5.3 Step 3](#53-step-3-application-deployment)
-6. [Monitoring](#6-monitoring)
-    - [6.1 Metrics](#61-metrics)
-    - [6.2 Health check](#62-health-check)
-    - [6.3 Explanation of parameters](#63-explanation-of-parameters)
-7. [Disaster Recovery](#7-disaster-recovery)
-8. [High Availability](#8-high-availability)
-9. [Troubleshooting](#9-troubleshooting)
-10. [FAQ](#10-faq)
-11. [Contact Information](#11-contact-information)
-12. [References](#12-references)
+6. [Disaster Recovery](#6-disaster-recovery)
+7. [High Availability](#7-high-availability)
+8. [Troubleshooting](#8-troubleshooting)
+9. [FAQ](#9-faq)
+10. [Contact Information](#10-contact-information)
+11. [References](#11-references)
 
 ---
 
@@ -67,29 +64,38 @@ The purpose of this Application Template is to:
 
 
 ### 2.2 Software Requirements
-List the software tools, libraries, and runtime environments required before installation.
+  List the software tools, libraries, and runtime environments required before installation.
 
-
+| Requirement | Minimum Recommendation |
+|-------------|------------------------|
+| Processor/Instance Type | Dual-Core / t2.medium instance or equivalent |
+| RAM | 4 Gigabyte or higher (8 GB+ recommended for production) |
+| ROM (Disk Space) | 10 Gigabyte or higher (SSD recommended for production) |
+| OS Required | Ubuntu 22.04 LTS |
 
 ---
 
 ## 3. Dependencies
 
-### 3.1 Build-time Dependencies
+
+
+### 3.1 Run-time Dependencies
+
+| Run-time Dependency | Version | Description |
+|---------------------|---------|-------------|
+| libreadline | 8.x | Terminal line editing (optional, for psql) |
+| zlib | 1.2.x | Compression support |
+| OpenSSL | 1.1.x / 3.x | Encrypted connections (optional but recommended) |
+
+
+### 3.1 Other Dependencies
 
 These are the tools or libraries needed while building or packaging the application.
 
 | Name | Version | Description |
-|------|--------|-------------|
-|  |  |  |
-| | | |
+|-----------|--------------|----------------|
+|  make |  4.0+  | Required to build Makefile command   |
 
-### 3.2 Run-time Dependencies
-
-| Name | Version | Description |
-|------|--------|-------------|
-|  |  | |
-|  |  |  |
 
 ### 3.3 Important Ports
 
@@ -104,6 +110,7 @@ These are the tools or libraries needed while building or packaging the applicat
 
 ### 4.1 Diagram
 Insert your architecture diagram here (a simple block diagram works).
+<img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/6445cbd8-5054-4145-8c6f-45340b336a35" />
 
 ### 4.2 Data Flow
 
@@ -139,66 +146,39 @@ Include the process of cloning the repository, building, or generating the artif
 Provide the deployment commands and steps to ensure the application runs successfully.
 Include how to verify that it is deployed correctly.
 
----
-
-## 6. Monitoring
-
-Continuously observe application health, performance, and availability via metrics, events, and logs. Track key parameters and use health checks (readiness/liveness) to detect issues early.
-
-### 6.1 Metrics
-
-| Parameter | Description | Priority | Threshold |
-|-----------|-------------|----------|-----------|
-| Disk Utilization | Disk space used by the application. | High | >90% |
-| Availability | Time the application is available. | High | >= 99.9% |
-| Memory / CPU | Memory and CPU used by the application. | Medium | >80% / >70% |
-| Latency | Response time. | High | < 300ms |
-| Errors / Throughput | Errors per minute; requests per minute. | High | > 5/min; > 1000/min |
-| Security | Auth, authorization, encryption. | High | Continuous |
-
-### 6.2 Health check
-
-| Name | Type | InitialDelaySeconds | PeriodSeconds | TimeoutSeconds | SuccessThreshold | FailureThreshold |
-|------|------|--------------------|---------------|----------------|------------------|------------------|
-| App name | ReadinessProbe | 10 | 10 | 5 | 1 | 3 |
-| App name | LivenessProbe | 10 | 10 | — | 5 | 1 |
-
-### 6.3 Explanation of parameters
-
-**ReadinessProbe** — Application ready to receive traffic. **LivenessProbe** — Application running and responding. **InitialDelaySeconds** — Wait before first check. **PeriodSeconds** — Check frequency. **TimeoutSeconds** — Max wait for response. **SuccessThreshold** / **FailureThreshold** — Consecutive success/failure count to mark healthy/unhealthy.
 
 ---
 
-## 7. Disaster Recovery
+## 6. Disaster Recovery
 Describe the disaster recovery plan to restore functionality in case of a failure.
 Include backup strategy, data restoration steps, and fallback systems.
 
 ---
 
-## 8. High Availability
+## 7. High Availability
 Explain how the system ensures minimal downtime through redundancy or load balancing.
 Mention how failover or scaling mechanisms are configured.
 
 ---
 
-## 9. Troubleshooting
+## 8. Troubleshooting
 Document common issues faced during installation or runtime and their resolutions.
 Include possible causes, log file references, and solution steps for quick debugging.
 
 ---
 
-## 10. FAQ
+## 9. FAQ
 
-| Questions | Answers |
-|------------|---------|
-| Is this application free? | Yes, it is an open-source application. |
-| Can it run on all cloud platforms? | Yes, it can be deployed on any cloud platform. |
-| Is there an enterprise version? | No, this is open-source contribution. No enterprise version available. |
+| Questions |Answers |
+|----------------|----------------|
+|Is this application free?||
+|Can it run on all cloud platforms?||
+|Is there an enterprise version?||
 
 
----
 
-## 11. Contact Information
+
+## 10. Contact Information
 
 
 | Name|Email Address |
@@ -208,7 +188,7 @@ Include possible causes, log file references, and solution steps for quick debug
 
 ---
 
-## 12. References
+## 11. References
 
 | Reference Type | Link / Document |
 |----------------|----------------|
