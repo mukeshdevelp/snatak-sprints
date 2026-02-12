@@ -6,9 +6,9 @@
 
 ---
 
-| Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
-|--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
-| Mukesh Sharma | 03-02-2026 | v1.0 | Mukesh Sharma | 03-02-2026 |  |  |  |  |
+| Author | Created on | Version | Last updated by | Last edited on |  L0 Reviewer | L1 Reviewer | L2 Reviewer |
+|--------|------------|---------|-----------------|----------------|-------------|-------------|-------------|
+| Mukesh Sharma | 03-02-2026 | v1.0 | Mukesh Sharma | 03-02-2026  |  |  |  |
 
 ## Table of Contents
 
@@ -33,6 +33,8 @@
 ---
 
 ## 1. What is VCS
+This document explains the complete step-by-step setup of a vcs on a machine. The purpose of the document is to expain what are general temrminologies related to VCS and common commands related to git as a vcs reference.
+
 
 A **Version Control System (VCS)** is software that records and manages changes to files and folders over time. Instead of overwriting or losing earlier work, a VCS keeps a history of changes so you can go back to any previous version, see what changed and by whom, and work with others on the same project without clashing. It is commonly used for source code, documents, and any set of files that evolve over time. This document uses **Git** as the VCS for setup and examples.
 
@@ -55,14 +57,12 @@ A **Version Control System (VCS)** is software that records and manages changes 
 | **Staging** | Choose which changes go into the next commit (add → commit). |
 | **Remote sync** | Push to and pull from a remote (e.g. GitHub) for backup and sharing. |
 | **Tagging** | Mark releases (e.g. `v1.0`) for easy reference. |
-| **Conflict handling** | Merge conflicts surfaced and resolved before completing merge. |
 | **Diff** | See line-by-line changes between commits, branches, or working copy. |
 | **Revert** | Restore files or the whole repo to a previous commit; undo changes safely. |
 | **Stash** | Temporarily set aside uncommitted changes and reapply or drop them later. |
 | **Blame / Annotate** | See who last changed each line in a file and when. |
 | **Distributed** | Full copy of history on each machine; work offline and sync when connected. |
 | **Integrity** | Content-addressed storage (hashes); tampering or corruption is detectable. |
-| **Ignore / Exclude** | Exclude files from tracking (e.g. build output, secrets, local config). |
 | **Hooks** | Run scripts on events (pre-commit, post-merge) for linting, tests, or automation. |
 
 ---
@@ -103,6 +103,7 @@ sudo dnf install -y git
 # Install Git via Homebrew
 brew install git
 ```
+<img width="1888" height="964" alt="Screenshot from 2026-02-12 10-02-38" src="https://github.com/user-attachments/assets/beffc377-6c69-4b4a-8ca2-666d484bc33a" />
 
 ---
 
@@ -132,6 +133,7 @@ git config --global user.email "your.email@example.com"
 # Set default branch name for new repos
 git config --global init.defaultBranch main
 ```
+<img width="1888" height="310" alt="Screenshot from 2026-02-12 10-04-25" src="https://github.com/user-attachments/assets/cd958ded-c718-4b94-97e1-9a3a9ad2acb1" />
 
 ---
 
@@ -153,16 +155,22 @@ cd my-project
 # Initialize a new Git repository
 git init
 ```
+<img width="1888" height="435" alt="Screenshot from 2026-02-12 10-09-32" src="https://github.com/user-attachments/assets/c34a624c-2420-4425-b25b-33de091caa2c" />
+
+
 
 **Option B – Clone existing repo:**
 
 ```bash
 # Download repo and create local copy
 git clone https://github.com/username/repo-name.git
-
+ex - git clone https://github.com/opstree/OT-Microservices.git
 # Change into the cloned repository directory
 cd repo-name
+ex -  cd OT-Microservices/
+
 ```
+<img width="1888" height="435" alt="Screenshot from 2026-02-12 10-08-07" src="https://github.com/user-attachments/assets/25aafba1-fe6c-4d88-b5d5-9fcdf58cdd57" />
 
 ---
 
@@ -173,6 +181,8 @@ cd repo-name
 **Why:** Git only stores history for changes you explicitly stage and commit.
 
 ```bash
+# create a file
+echo "hello world" > hello.txt
 
 
 # Stage all modified and new files
@@ -186,6 +196,7 @@ git add path/to/file
 # Save staged changes to history with a message
 git commit -m "Initial commit"
 ```
+<img width="1888" height="435" alt="Screenshot from 2026-02-12 10-11-30" src="https://github.com/user-attachments/assets/b83f841e-5c98-412b-b7dc-b77c8d26f977" />
 
 ---
 
@@ -198,7 +209,11 @@ git commit -m "Initial commit"
 ```bash
 # Add remote named 'origin' with the repo URL
 git remote add origin https://github.com/username/repo-name.git
+# or use ssh link more secure
+ex - git remote add origin git@github.com:mukeshdevelp/demo-repo.git
+
 ```
+<img width="1888" height="435" alt="Screenshot from 2026-02-12 10-13-10" src="https://github.com/user-attachments/assets/a3e8df61-3c09-4f74-94e2-5aa1dfa863ba" />
 
 ---
 
@@ -212,6 +227,7 @@ git remote add origin https://github.com/username/repo-name.git
 # Push local 'main' branch to remote 'origin' and set it as upstream
 git push -u origin main
 ```
+
 
 ---
 
@@ -234,9 +250,9 @@ git push -u origin main
 | **git: command not found** | Install Git (Step 1); ensure `PATH` includes Git. |
 | **Permission denied (publickey)** | Use SSH key with remote, or use HTTPS and credentials. |
 | **Updates were rejected** | Pull first: `git pull origin main`, resolve conflicts, then push. |
-| **Please tell me who you are** | Run Step 2: set `user.name` and `user.email`. |
+
 | **Wrong remote URL** | `git remote set-url origin <new-url>`. |
-| **Merge conflict** | 1) `git status` to see conflicted files. 2) Open each file, edit to keep correct content, remove markers `<<<<<<<`, `=======`, `>>>>>>>`. 3) `git add <file>`, then `git commit`. To abort: `git merge --abort`. |
+
 
 ---
 
