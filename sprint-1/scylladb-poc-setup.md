@@ -199,7 +199,7 @@ DESCRIBE TABLES;
 -- Exit cqlsh
 EXIT;
 ```
-*** Examplar Output***
+**Examplar Output**
 <img width="1920" height="907" alt="Screenshot from 2026-02-11 12-46-00" src="https://github.com/user-attachments/assets/958279c8-d664-4e31-b1c6-92e6e7e0eb4a" />
 
 
