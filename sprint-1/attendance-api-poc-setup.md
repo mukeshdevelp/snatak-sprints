@@ -71,10 +71,8 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 |-------------|-----------------|
 | AWS account | With permissions for VPC, subnets, EC2 |
 | Private subnets | Two in same VPC (with routing) |
-| SSH key pair | For EC2 login (.pem) |
 | Ubuntu | 22.04 LTS |
-| PostgreSQL | 16 |
-| Redis | From apt (e.g. 6.x / 7.x) |
+| PostgreSQL | 16.0+ |
 | Python | 3.11 |
 | Poetry | Latest (install in steps) |
 | Liquibase | 4.24.0 (install in steps) |
@@ -234,6 +232,7 @@ sudo -u postgres psql -c "\l" | grep attendance_db
 # Install Redis server
 sudo apt install -y redis-server
 ```
+<img width="1904" height="246" alt="Screenshot from 2026-02-13 13-30-13" src="https://github.com/user-attachments/assets/4e781bbf-6f99-4fb9-8f0c-63ef5f79a004" />
 
 Edit the Redis config so the API server can connect and a password is set:
 
@@ -245,9 +244,12 @@ Change these three settings (find the existing line and edit, or add if missing)
 
 | Setting | Value | Purpose |
 |---------|--------|---------|
-| `supervised` | `systemd` | Use systemd for supervision |
-| `bind` | `0.0.0.0 -::1` | Listen on all interfaces |
+| `bind` | `127.0.01 10.0.1.25` | Listen on all interfaces |
 | `requirepass` | `12345` | Password (must match config.yaml on API server) |
+| port | 6379 | port should be different if some serive is listening on 6379 |
+
+
+<img width="1904" height="246" alt="Screenshot from 2026-02-13 13-31-59" src="https://github.com/user-attachments/assets/8a17dc49-6c01-4790-8741-dd2a902f97ac" />
 
 Save and exit (`:wq`), then run:
 
@@ -287,23 +289,15 @@ curl -sSL https://install.python-poetry.org | python3 -
 
 
 # Download and install Liquibase for DB migrations
-wget -q https://github.com/liquibase/liquibase/releases/download/v4.24.0/liquibase-4.24.0.tar.gz
-
-tar xzf liquibase-4.24.0.tar.gz
-
-sudo mv liquibase /opt/
-
-echo 'export PATH="/opt/liquibase:$PATH"' >> ~/.bashrc
-
-source ~/.bashrc
+sudo snap install liquibase
 
 # Verify Liquibase is on PATH
 liquibase --version
-cd ~
+
 
 # Clone the Attendance API repo
 git clone https://github.com/OT-MICROSERVICES/attendance-api.git
-cd attendance-api
+cd ~/attendance/attendance-api
 
 # Install Make and pylint (Makefile build runs pylint before poetry install)
 sudo apt install -y make pylint
@@ -330,15 +324,23 @@ Use the structure below. Set **postgres.host** and **redis.host** to the DB serv
 
 ```yaml
 postgres:
-  database: attendance_db   # database name (create on DB server)
-  host: "10.0.1.25"         # DB server private IP
-  port: 5432                 # PostgreSQL default port
-  user: postgres            # DB user (same as on DB server)
-  password: "12345"         # must match ALTER USER on DB server
+  # database name (create on DB server)
+  database: attendance_db
+  # DB server private IP
+  host: "10.0.1.25"
+  # PostgreSQL default port        
+  port: 5432
+  # DB user (same as on DB server)                
+  user: postgres
+  # must match ALTER USER on DB server          
+  password: "12345"         
 redis:
-  host: "10.0.1.25"         # DB server private IP (Redis on same host)
-  port: 6379                 # Redis default port
-  password: "12345"         # must match requirepass in redis.conf on DB server
+  # DB server private IP (Redis on same host)
+  host: "10.0.1.25"
+  # Redis default port   
+  port: 6379
+  # must match requirepass in redis.conf on DB server             
+  password: "12345"         
 ```
 <img width="1904" height="466" alt="Screenshot from 2026-02-13 12-51-13" src="https://github.com/user-attachments/assets/7bbad585-a761-466a-b467-2ec145beccd9" />
 
