@@ -1,4 +1,4 @@
-# Setup and Run the App for POC — Attendance API
+# Setup and Run the App for POC — Attendance API Final working V1
 
 | Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
 |--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
@@ -68,16 +68,16 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 |-------------|-----------------|
 | AWS account | With permissions for VPC, subnets, EC2 |
 | Private subnets | Two in same VPC (with routing) |
-| SSH key pair | For EC2 login (.pem) |
-| SSH, terminal, editor | Basic use of SSH and vi or nano |
 | Ubuntu | 22.04 LTS |
 | PostgreSQL | 16 |
-| Redis | From apt  |
+| Redis | From apt (e.g. 6.x / 7.x) |
 | Python | 3.11 |
-| Poetry | Latest |
-| Liquibase | 4.24.0  |
+| Poetry | Latest (install in steps) |
+| Liquibase | 4.24.0 (install in steps) |
 
-
+<<<<<<< HEAD
+---
+=======
 ## Architecture
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
 
@@ -87,7 +87,7 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 ## Dataflow Diagram
 <img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
 
-
+>>>>>>> 2e9ab8c0e7be0c730deb6145e8ec4bc6e4adec3a
 
 ## 4. Step 1: Create and Access EC2 Instances
 
@@ -141,9 +141,131 @@ ssh ubuntu@10.0.1.25
 ssh ubuntu@10.0.2.75
 ```
 
-User is `ubuntu` on all hosts. Run **Step 2** on the API server to deploy the Attendance API (PostgreSQL and Redis must already be running on a DB server; use that server’s IP and credentials in config below).
+User is `ubuntu` on all hosts. Run **Step 2** on DB server, **Step 3** on API server.
 
-**Prerequisite:** A DB server must already have **PostgreSQL** (port 5432) and **Redis** (port 6379) running, with the `attendance_db` database and credentials known. Use that DB server’s IP (e.g. **10.0.1.25**) and credentials in **config.yaml** and **liquibase.properties** in Step 2.
+---
+
+## 5. Step 2: Set Up DB & Redis (DB server)
+
+All commands in this section on **DB server**.
+
+### 5.1 Install and configure PostgreSQL 16
+
+```bash
+# Refresh package lists
+sudo apt update
+
+# Install helper for adding PG repo
+sudo apt install -y postgresql-common
+
+# Add PostgreSQL 16 official repo for this Ubuntu release
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+# Add PostgreSQL signing key
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo apt update
+
+# Install PostgreSQL 16 and contrib
+sudo apt install -y postgresql-16 postgresql-contrib-16
+
+# Start and enable PostgreSQL service
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# Confirm version 16 is installed
+ls /etc/postgresql/
+```
+
+**Edit PostgreSQL so it accepts network connections:**
+
+1. Open the main config: `sudo vi /etc/postgresql/16/main/postgresql.conf`  
+   Find the line `#listen_addresses = 'localhost'`, remove the `#` and change to `listen_addresses = '*'`. Save and exit.
+
+2. Open the access config: `sudo vi /etc/postgresql/16/main/pg_hba.conf`  
+   Add the following line at the end of the file (use your API server subnet if not 10.0.2.0/24):
+
+   ```text
+   host    all    all    10.0.2.0/24    scram-sha-256
+   ```
+
+   Save and exit.
+
+```bash
+
+# Restart PostgreSQL to apply config changes
+sudo systemctl restart postgresql
+
+# Set postgres user password for remote auth
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '12345';"
+```
+
+### 5.2 Bashrc and create database
+
+Edit your shell config so the same credentials are available in every session:
+
+
+```bash
+vi ~/.bashrc
+```
+
+Add these lines at the **end** of the file (save and exit with `:wq`):
+
+```text
+export POSTGRESQL_USERNAME=postgres
+export PGPASSWORD=12345
+export POSTGRESQL_HOST=localhost
+```
+
+Then run:
+
+```bash
+
+# Load new env vars in current shell
+source ~/.bashrc
+
+# Create the attendance database (table created later by Liquibase)
+psql -U postgres -h localhost -c 'CREATE DATABASE attendance_db;'
+
+# Verify database exists
+sudo -u postgres psql -c "\l" | grep attendance_db
+```
+
+### 5.3 Install and configure Redis
+
+```bash
+# Install Redis server
+sudo apt install -y redis-server
+```
+
+Edit the Redis config so the API server can connect and a password is set:
+
+```bash
+sudo vi /etc/redis/redis.conf
+```
+
+Change these three settings (find the existing line and edit, or add if missing):
+
+| Setting | Value | Purpose |
+|---------|--------|---------|
+| `supervised` | `systemd` | Use systemd for supervision |
+| `bind` | `0.0.0.0 -::1` | Listen on all interfaces |
+| `requirepass` | `12345` | Password (must match config.yaml on API server) |
+
+Save and exit (`:wq`), then run:
+
+```bash
+
+# Restart Redis to apply config
+sudo systemctl restart redis-server
+
+# Start Redis on boot
+sudo systemctl enable redis-server
+
+# Test Redis with password (expect PONG)
+redis-cli -a 12345 ping
+```
+
+Expect `PONG`. DB server IP used below: **10.0.1.25**.
 
 ---
 
@@ -162,29 +284,17 @@ sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre unzi
 # Install Poetry (Python dependency manager)
 curl -sSL https://install.python-poetry.org | python3 -
 
-# Add Poetry to PATH and load in current shell
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-cd ~
 
 # Download and install Liquibase for DB migrations
-wget -q https://github.com/liquibase/liquibase/releases/download/v4.24.0/liquibase-4.24.0.tar.gz
-
-tar xzf liquibase-4.24.0.tar.gz
-
-sudo mv liquibase /opt/
-
-echo 'export PATH="/opt/liquibase:$PATH"' >> ~/.bashrc
-
-source ~/.bashrc
+sudo snap install liquibase
 
 # Verify Liquibase is on PATH
 liquibase --version
-cd ~
+
 
 # Clone the Attendance API repo
 git clone https://github.com/OT-MICROSERVICES/attendance-api.git
-cd attendance-api
+cd ~/attendance/attendance-api
 
 # Install Make and pylint (Makefile build runs pylint before poetry install)
 sudo apt install -y make pylint
@@ -192,8 +302,9 @@ sudo apt install -y make pylint
 # Install project dependencies via Makefile (runs fmt then poetry install)
 make build
 ```
+<img width="1904" height="729" alt="Screenshot from 2026-02-13 12-35-39" src="https://github.com/user-attachments/assets/02f7cedc-2611-45f0-bc75-e01d62fb15c8" />
 
-### 5.2 Configure config.yaml
+### 6.2 Configure config.yaml
 
 Edit the API configuration so it connects to the DB server. From the project root (`~/attendance-api`), run:
 
@@ -206,16 +317,25 @@ Use the structure below. Set **postgres.host** and **redis.host** to the DB serv
 
 ```yaml
 postgres:
-  database: attendance_db   # database name (create on DB server)
-  host: "10.0.1.25"         # DB server private IP
-  port: 5432                 # PostgreSQL default port
-  user: postgres            # DB user (same as on DB server)
-  password: "12345"         # must match ALTER USER on DB server
+  # database name (create on DB server)
+  database: attendance_db
+  # DB server private IP
+  host: "10.0.1.25"
+  # PostgreSQL default port        
+  port: 5432
+  # DB user (same as on DB server)                
+  user: postgres
+  # must match ALTER USER on DB server          
+  password: "12345"         
 redis:
-  host: "10.0.1.25"         # DB server private IP (Redis on same host)
-  port: 6379                 # Redis default port
-  password: "12345"         # must match requirepass in redis.conf on DB server
+  # DB server private IP (Redis on same host)
+  host: "10.0.1.25"
+  # Redis default port   
+  port: 6379
+  # must match requirepass in redis.conf on DB server             
+  password: "12345"         
 ```
+<img width="1904" height="466" alt="Screenshot from 2026-02-13 12-51-13" src="https://github.com/user-attachments/assets/7bbad585-a761-466a-b467-2ec145beccd9" />
 
 ### 5.3 Run Liquibase migrations
 
@@ -234,6 +354,9 @@ liquibase update --driver-properties-file=liquibase.properties
 
 # Alternative: make run-migrations
 ```
+<img width="1904" height="276" alt="Screenshot from 2026-02-13 13-03-34" src="https://github.com/user-attachments/assets/d451f963-6fef-456e-a8d4-d95f02f22001" />
+
+
 
 ### 5.4 Systemd service and start API
 
@@ -262,10 +385,9 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 ```
+<img width="1904" height="687" alt="Screenshot from 2026-02-13 12-52-54" src="https://github.com/user-attachments/assets/929802c5-bf45-477d-a400-ec939a8fbce0" />
 
 ```bash
-# Reexec the service file
-sudo systemctl daemon-reexec
 
 # Reload systemd after adding new unit file
 sudo systemctl daemon-reload
@@ -282,6 +404,7 @@ sudo systemctl status attendance-api
 # Follow service logs (Ctrl+C to exit)
 sudo journalctl -u attendance-api -f
 ```
+<img width="1904" height="945" alt="Screenshot from 2026-02-13 12-55-04" src="https://github.com/user-attachments/assets/8546b0f7-b46a-4a90-879b-17f9e016c17c" />
 
 Restart after changes: `sudo systemctl restart attendance-api`. Swagger: `http://10.0.2.75:8080/apidocs`.
 
@@ -293,14 +416,16 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 
 | Purpose | Method | Command |
 |---------|--------|---------|
-| Shallow health check | GET | `curl http://10.0.2.75:8080/api/v1/attendance/health` |
-| Detailed health (PostgreSQL + Redis) | GET | `curl http://10.0.2.75:8080/api/v1/attendance/health/detail` |
-| Prometheus-style metrics | GET | `curl http://10.0.2.75:8080/metrics` |
-| Create a test attendance record | POST | `curl -X POST http://10.0.2.75:8080/api/v1/attendance/create -H "Content-Type: application/json" -d '{"id":"emp-001","name":"John Doe","status":"present","date":"2026-02-03"}'` |
-| Search by id | GET | `curl "http://10.0.2.75:8080/api/v1/attendance/search?id=emp-001"` |
-| Search all | GET | `curl "http://10.0.2.75:8080/api/v1/attendance/search/all"` |
+| Shallow health check | GET | `curl http://10.0.2.75:8081/api/v1/attendance/health` |
+| Detailed health (PostgreSQL + Redis) | GET | `curl http://10.0.2.75:8081/api/v1/attendance/health/detail` |
+| Prometheus-style metrics | GET | `curl http://10.0.2.75:8081/metrics` |
+| Create a test attendance record | POST | `curl -X POST http://10.0.2.75:8081/api/v1/attendance/create -H "Content-Type: application/json" -d '{"id":"emp-001","name":"John Doe","status":"present","date":"2026-02-03"}'` |
+| Search by id | GET | `curl "http://10.0.2.75:8081/api/v1/attendance/search?id=emp-001"` |
+| Search all | GET | `curl "http://10.0.2.75:8081/api/v1/attendance/search/all"` |
 
-**Swagger UI:** `http://10.0.2.75:8080/apidocs`
+**Swagger UI:** `http://10.0.2.75:8081/apidocs`
+<img width="1904" height="945" alt="Screenshot from 2026-02-13 12-57-18" src="https://github.com/user-attachments/assets/0af839f6-9231-4002-80e6-df4212acd986" />
+<img width="1904" height="597" alt="Screenshot from 2026-02-13 12-59-28" src="https://github.com/user-attachments/assets/ee861553-511b-4455-a3ba-5c92ddbfa5f8" />
 
 ---
 
@@ -312,7 +437,7 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 | **API → PostgreSQL** | DB SG allows 5432 from API server; `listen_addresses = '*'`; pg_hba has API subnet; config.yaml password `12345`. |
 | **API → Redis** | DB SG allows 6379 from API server; Redis `bind 0.0.0.0`; config.yaml password `12345`. |
 | **Liquibase fails** | liquibase.properties has DB server IP and password `12345`; DB `attendance_db` exists. If "Driver not found": install PostgreSQL JDBC driver (e.g. download jar and add to `/opt/liquibase/lib` or use `liquibase install jdbc-driver postgresql` if available). |
-| **502 / API refused** | `sudo systemctl status attendance-api`; `sudo systemctl start attendance-api`; `sudo journalctl -u attendance-api -n 50`; SG allows 8080. |
+| **502 / API refused** | `sudo systemctl status attendance-api`; `sudo systemctl start attendance-api`; `sudo journalctl -u attendance-api -n 50`; SG allows 8081. |
 | **Health postgres/redis down** | Check config.yaml and DB server firewall. |
 
 ---
