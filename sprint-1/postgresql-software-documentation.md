@@ -36,12 +36,9 @@
 ---
 
 ## 1. Introduction
-The purpose of this document is to give a proper undestanding postgresql with installation steps. This understanding is derived by me from OT-microservie app.
 
-Link for OT-microservice repo - [OT-microservice-repo](https://github.com/OT-MICROSERVICES)
 
-PostgreSQL is an open-source relational database with SQL and JSON support, ACID compliance, and extensibility. This document is a concise template for installation and configuration on **Ubuntu**.
-
+PostgreSQL is a powerful, open-source relational database management system (RDBMS) known for its reliability, extensibility, and standards compliance. It supports advanced SQL features, ACID-compliant transactions, complex queries, indexing and native JSON/JSONB handling. PostgreSQL is widely used in production environments for web, analytics and enterprise applications due to its stability and performance.
 
 ---
 ## 2. Purposes
@@ -213,18 +210,15 @@ sudo systemctl restart postgresql
 ## 8. Monitoring
 ---
 
-After installation of the software, we need to ensure the software is in a working state. You can mention the command to know the software is running correctly. In case of any issues related to the software, always check the log files for better understanding and troubleshooting the issue.
+After installation, ensure PostgreSQL is running and reachable. Use the checks below and consult log files when troubleshooting.
 
-```bash
-sudo systemctl status postgresql
-sudo -u postgres psql -c "SELECT version();"
-sudo ss -tlnp | grep 5432
-```
+| Check | Command / location | Purpose |
+|-------|--------------------|---------|
+| Service status | `sudo systemctl status postgresql` | Confirm the PostgreSQL service is active. |
+| Port listening | `sudo ss -tlnp \| grep 5432` | Confirm the server is listening on the expected port. |
+| Log file | `/var/log/postgresql/postgresql-16-main.log` (or `log_directory` in `postgresql.conf`) | Inspect errors and query logs for troubleshooting. |
 
 <img width="1844" height="391" alt="Screenshot from 2026-02-12 10-49-34" src="https://github.com/user-attachments/assets/9b0b3099-10a0-4cea-9649-4eba15c1317d" />
-
-
-Logs: `/var/log/postgresql/postgresql-16-main.log` (or see `log_directory` in `postgresql.conf`).
 
 ---
 
@@ -232,7 +226,16 @@ Logs: `/var/log/postgresql/postgresql-16-main.log` (or see `log_directory` in `p
 
 ---
 
-Disaster recovery refers to the processes, strategies, and tools used to ensure the continuity and recovery of software systems in the event of unexpected failures or data loss. For PostgreSQL: use `pg_dump` (single DB) and `pg_dumpall` (full cluster). Use WAL archiving and `pg_basebackup` for PITR. Restore with `psql` or `pg_restore`. Test restores and keep backups off-host. Ensure best DR practices are followed for your application.
+Disaster recovery refers to the processes, strategies, and tools used to ensure continuity and recovery of software systems after unexpected failures or data loss.
+
+| Aspect | Tool / method | Description |
+|--------|----------------|-------------|
+| **Logical backup (single DB)** | `pg_dump` | Dump one database to a script or custom format; restorable with `psql` or `pg_restore`. |
+| **Logical backup (full cluster)** | `pg_dumpall` | Dump all databases and global objects (roles, etc.); restorable with `psql`. |
+| **Physical backup / PITR** | `pg_basebackup` + WAL archiving | Full copy of data directory plus WAL; enables point-in-time recovery (PITR). |
+| **Restore (script)** | `psql -f backup.sql` | Restore a logical backup created as SQL script (e.g. from `pg_dump` or `pg_dumpall`). |
+| **Restore (custom format)** | `pg_restore` | Restore a logical backup in custom or directory format (e.g. from `pg_dump -Fc`). |
+
 
 ---
 
@@ -240,7 +243,20 @@ Disaster recovery refers to the processes, strategies, and tools used to ensure 
 
 ---
 
-High Availability refers to the strategies and measures implemented to ensure that software systems and applications remain operational and accessible with minimal downtime, even in the presence of hardware failures, software glitches, or other unexpected disruptions. For PostgreSQL: streaming replication; synchronous replication (`synchronous_commit`, `synchronous_standby_names`); failover tools (Patroni, repmgr); connection pooling (PgBouncer, pgpool-II); read replicas for read scaling.
+High Availability (HA) refers to the strategies and measures implemented to keep software systems operational and accessible with minimal downtime, even when hardware failures, software glitches, or other disruptions occur.
+
+| Aspect | PostgreSQL approach | Description |
+|--------|----------------------|-------------|
+| **Synchronous replication** | `synchronous_commit`, `synchronous_standby_names` | Transactions are considered committed only after one or more standbys confirm WAL receipt; reduces risk of data loss on failover. |
+| **Failover / automation** | Patroni, repmgr | Cluster managers that handle automatic failover, primary election, and health checks for PostgreSQL replication. |
+| **Connection pooling** | PgBouncer, pgpool-II | Pool client connections to the database to reduce overhead and support more clients; PgBouncer is transaction/session pooling; pgpool-II can also do load balancing and routing. |
+
+
+| Component | Purpose |
+|-----------|---------|
+| Primary + standbys | Provide redundancy; one standby can be promoted to primary on failure. |
+| Synchronous commit | Trade a small write latency increase for stronger durability guarantees. |
+| Pooler | Reduce connection count and improve throughput; place in front of primary and/or replicas. |
 
 ---
 

@@ -171,9 +171,9 @@ Include possible causes, log file references, and solution steps for quick debug
 
 | Questions |Answers |
 |----------------|----------------|
-|Is this application free?||
-|Can it run on all cloud platforms?||
-|Is there an enterprise version?||
+|Is this application free?| yes, it is free |
+|Can it run on all cloud platforms?| yes, it can tun on any cloud platform |
+|Is there an enterprise version?| No, there is no enterprise version |
 
 
 
@@ -192,7 +192,7 @@ Include possible causes, log file references, and solution steps for quick debug
 
 | Reference Type | Link / Document |
 |----------------|----------------|
-| Documentation Template | [Application Template](https://github.com/OT-MICROSERVICES/documentation-template/wiki/Application-Template) |
+| Documentation Template | [Application Template](https://github.com/OT-MICROSERVICES/documentation-template/wiki/Application-Template) | 
 | OT-microservices Repo | [OT-MICROSERVICES](https://github.com/OT-MICROSERVICES) |
 
 

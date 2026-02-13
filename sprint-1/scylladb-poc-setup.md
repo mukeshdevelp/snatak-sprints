@@ -22,63 +22,42 @@
 
 ---
 
+
 ## 1. Introduction
 
-This document describes how to install and run **ScyllaDB** on AWS for a **Proof of Concept (POC)**. ScyllaDB is a high-performance, Apache Cassandra–compatible NoSQL database. For this POC, ScyllaDB runs on a single **DB server** (Ubuntu 22.04) in a private subnet. Access to the DB server is through a **bastion host** in a public subnet. The purpose of this document is to give a step-by-step, beginner-friendly guide so that anyone with the listed prerequisites can connect to the DB server, install ScyllaDB using the official installer, configure it to listen on the DB server’s IP, start the service, and verify that it is running using the CQL shell. Follow the sections and steps in order; later steps depend on earlier ones.
+ScyllaDB is a high-performance, open-source NoSQL database designed for low latency and high throughput at scale. It is API-compatible with Apache Cassandra and Amazon DynamoDB, allowing seamless migration from those systems while delivering significantly improved performance. Written in C++, ScyllaDB supports CQL (Cassandra Query Language), strong and eventual consistency models, replication, and multi–data center deployments.
+
 
 ## 2. POC Architecture (AWS)
 
-| Component | Location | Role |
-|-----------|----------|------|
-| **Bastion** | Public subnet | Jump host for SSH. You connect here first (public IP), then SSH to the DB server. SG: 22 from your IP. |
-| **DB server** | Private subnet A | Runs ScyllaDB (CQL port 9042). SG: 22 from bastion; 9042 from clients that need to query ScyllaDB (e.g. application subnet). |
-| **API server(Optional)** | Private subnet B | Attendance API (8082). SG: 22 from bastion, 8080 if needed. |
+ScyllaDB is kept by me in an ec2 in the private subnet. This db subnet is accessed through bastion host or jump server.
 
-**IP used in this doc:** DB server **10.0.1.25** (private) and API server **10.0.2.75**. Bastion has a **public IP** (which is chnaging).
+<img width="1657" height="686" alt="Screenshot from 2026-02-13 10-41-16" src="https://github.com/user-attachments/assets/3a4698ee-576b-4408-bf73-487236366171" />
+
 
 ## 3. Prerequisites
 
 | Requirement | Version / Notes |
 |-------------|-----------------|
-| AWS account | With an existing DB server EC2 (or permissions to create one). |
-| Bastion host | One EC2 in a public subnet with SSH (22) from your IP. Same key pair as DB server. |
-| DB server | Ubuntu 22.04 LTS EC2 in a private subnet. Private IP used in this doc: **10.0.1.25**. |
-| SSH key pair | For EC2 login (.pem). |
-| SSH, terminal, editor | Basic use of SSH and vi or nano. |
 | Ubuntu | 22.04 LTS on the DB server. |
-| ScyllaDB | Installed in Step 2 (latest stable via web installer). |
+| Memory | 16 GB or more |
+
+
 
 ## 4. Step 1: Access the DB Server
 
 All steps in this POC are performed on the **DB server**. You must first SSH to the bastion, then from the bastion SSH to the DB server.
 
+
 ### 4.1 SSH into the DB server (via bastion)
 
 Access is through a **bastion server** (public). From your machine, SSH to the bastion; then from the bastion, SSH to the DB server using its **private IP**. Use the same `.pem` key (copy it to the bastion or use agent forwarding).
 
-**Step 1 — SSH to the bastion (from your laptop):**
-
-```bash
-# Replace with your .pem path and bastion public IP or hostname
-ssh -i /path/to/your-key.pem ubuntu@<BASTION-PUBLIC-IP>
-```
-<img width="973" height="726" alt="image" src="https://github.com/user-attachments/assets/fb56ce10-b9f7-4157-b2e3-2551327e895d" />
-
-**Step 2 — From the bastion, SSH to the DB server:**
-
-```bash
-# On the bastion: ensure the .pem key is present (e.g. copy via scp from your machine first), then:
-# SSH to DB server (private IP)
-ssh -i /path/to/your-key.pem ubuntu@10.0.1.25
-```
-<img width="973" height="726" alt="Screenshot from 2026-02-11 11-56-09" src="https://github.com/user-attachments/assets/1f1218f5-4c8b-4545-83a5-48a320a9772c" />
-
-
-User is `ubuntu` on both bastion and DB server. Once logged in to **10.0.1.25**, proceed to Step 2.
 
 ## 5. Step 2: Install ScyllaDB on the DB Server
 
-All commands in this section are run on the **DB server** (10.0.1.25).
+All commands in this section are run on the **DB server** .
+
 
 ### 5.1 Install ScyllaDB
 
@@ -98,6 +77,7 @@ sudo reboot
 <img width="1876" height="856" alt="Screenshot from 2026-02-11 12-09-13" src="https://github.com/user-attachments/assets/dc469841-268f-4d05-9d05-c4321b76714b" />
 
 If the script asks for confirmation or your Ubuntu version, accept the defaults. Wait for the installation to finish.
+
 
 ### 5.2 Configure ScyllaDB for the DB server IP
 
@@ -133,6 +113,7 @@ Here is the complete **scylla.yml** file.
 
 **Security group:** Ensure the DB server’s security group allows **port 9042** (CQL) from the clients or subnets that will connect to ScyllaDB (e.g. an application server). For local verification only, you can skip this until you need remote access.
 
+<a id="53-start-and-enable-scylladb"></a>
 ### 5.3 Start and enable ScyllaDB
 
 Start the ScyllaDB service and enable it to start on boot:
@@ -150,11 +131,10 @@ sudo systemctl status scylla-server
 ```
 <img width="1876" height="856" alt="Screenshot from 2026-02-11 12-11-11" src="https://github.com/user-attachments/assets/ebc669d6-c024-4a13-ba69-f4f9a848d629" />
 
-When the service is **active (running)**, ScyllaDB is ready. Restart after any config change: `sudo systemctl restart scylla-server`.
 
 ## 6. Step 3: Verify the Deployment
 
-Run these on the **DB server** (10.0.1.25) to confirm ScyllaDB is running.
+Run these on the **DB server**  to confirm ScyllaDB is running.
 
 **Check service status:**
 
@@ -204,7 +184,6 @@ EXIT;
 
 
 
-If `cqlsh` is not installed, install the Python driver and cqlsh, or use another CQL client pointing at `10.0.1.25:9042`.
 
 | Purpose | Command |
 |---------|---------|
@@ -212,15 +191,14 @@ If `cqlsh` is not installed, install the Python driver and cqlsh, or use another
 | CQL shell | `cqlsh 10.0.1.25 9042` |
 | Follow logs | `sudo journalctl -u scylla-server -f` |
 
+
 ## 7. Troubleshooting
 
 | Issue | What to check |
 |-------|----------------|
-| **Cannot SSH to bastion** | `chmod 400 key.pem`; bastion SG allows your IP on 22; user `ubuntu`. |
-| **Cannot SSH to DB server from bastion** | Use private IP `10.0.1.25`; DB server SG allows SSH (22) from bastion; key is on bastion or use agent forwarding. |
 | **ScyllaDB fails to start** | Check `sudo journalctl -u scylla-server -n 100`; ensure `listen_address` and `rpc_address` in `/etc/scylla/scylla.yaml` are set to `10.0.1.25` (or this host’s IP). |
 | **cqlsh connection refused** | ScyllaDB may still be starting (wait 1–2 min); port 9042 open on firewall; `rpc_address` set correctly. |
-| **Clients cannot connect to 10.0.1.25:9042** | DB server SG must allow inbound 9042 from client subnet or IP. |
+
 
 ## 8. Contact Information
 
@@ -228,6 +206,7 @@ If `cqlsh` is not installed, install the Python driver and cqlsh, or use another
 |------|-------|
 | Mukesh Kumar Sharma | msmukeshkumarsharma95@gmail.com |
 
+<a id="9-references"></a>
 ## 9. References
 
 | Link | Description |
