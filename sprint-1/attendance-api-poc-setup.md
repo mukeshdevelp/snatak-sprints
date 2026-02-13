@@ -363,7 +363,8 @@ liquibase update --driver-properties-file=liquibase.properties
 
 # Alternative: make run-migrations
 ```
-<img width="1904" height="466" alt="Screenshot from 2026-02-13 12-51-47" src="https://github.com/user-attachments/assets/dd4a2650-ff3f-4dfe-8452-afcc8e69d6ed" />
+<img width="1904" height="276" alt="Screenshot from 2026-02-13 13-03-34" src="https://github.com/user-attachments/assets/d451f963-6fef-456e-a8d4-d95f02f22001" />
+
 
 ### 6.4 Systemd service and start API
 
