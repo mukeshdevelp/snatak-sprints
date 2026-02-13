@@ -283,7 +283,7 @@ All commands in this section on **API server**.
 
 # Refresh packages and install Python 3.11, pip, curl, Java (for Liquibase), unzip
 sudo apt update
-sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre unzip
+sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre
 
 # Install Poetry (Python dependency manager)
 curl -sSL https://install.python-poetry.org | python3 -
@@ -393,6 +393,9 @@ poetry run gunicorn app:app --log-config log.conf -b 0.0.0.0:8081
 - **app:app** — first `app` is the module (app.py), second is the Flask application instance.
 - **--log-config log.conf** — uses the project's logging configuration.
 - **-b 0.0.0.0:8080** — bind to all interfaces on port 8080.
+
+<img width="1920" height="1080" alt="Screenshot from 2026-02-13 14-29-34" src="https://github.com/user-attachments/assets/950c6a4e-9c02-42e7-a1d7-f36e95e687a1" />
+<img width="1904" height="496" alt="Screenshot from 2026-02-13 14-29-44" src="https://github.com/user-attachments/assets/5e77ec54-ea5b-4eff-a4c7-2824d4029dc5" />
 
 Leave this running in the foreground to test. In another terminal (or from another machine that can reach the API server), run a quick health check:
 
