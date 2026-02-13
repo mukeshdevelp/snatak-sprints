@@ -72,26 +72,17 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 | AWS account | With permissions for VPC, subnets, EC2 |
 | Private subnets | Two in same VPC (with routing) |
 | SSH key pair | For EC2 login (.pem) |
-| SSH, terminal, editor | Basic use of SSH and vi or nano |
 | Ubuntu | 22.04 LTS |
 | PostgreSQL | 16 |
 | Redis | From apt (e.g. 6.x / 7.x) |
 | Python | 3.11 |
 | Poetry | Latest (install in steps) |
 | Liquibase | 4.24.0 (install in steps) |
+| Redis | 7.0+ |
+| make | 4.0+|
 
 
 ---
-
-## Architecture
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
-
-<img width="1536" height="1024" alt="e1f38ea0-17a0-4416-bc14-2d43a21c4787" src="https://github.com/user-attachments/assets/89e0f54b-0efc-4705-9f2a-737bbf172012" />
-
-
-## Dataflow Diagram
-<img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
-
 
 
 ## 4. Step 1: Create and Access EC2 Instances
@@ -234,6 +225,8 @@ psql -U postgres -h localhost -c 'CREATE DATABASE attendance_db;'
 # Verify database exists
 sudo -u postgres psql -c "\l" | grep attendance_db
 ```
+<img width="1904" height="276" alt="Screenshot from 2026-02-13 13-07-17" src="https://github.com/user-attachments/assets/7883ff08-6fc2-401f-8438-4288cd41a812" />
+
 
 ### 5.3 Install and configure Redis
 
@@ -270,7 +263,10 @@ sudo systemctl enable redis-server
 redis-cli -a 12345 ping
 ```
 
-Expect `PONG`. DB server IP used below: **10.0.1.25**.
+**Expect output** **10.0.1.25**
+<img width="1904" height="133" alt="Screenshot from 2026-02-13 13-19-48" src="https://github.com/user-attachments/assets/6b640fd7-d7e1-45f5-b01e-5db54ac914e1" />
+
+
 
 ---
 
@@ -365,6 +361,7 @@ liquibase update --driver-properties-file=liquibase.properties
 ```
 <img width="1904" height="276" alt="Screenshot from 2026-02-13 13-03-34" src="https://github.com/user-attachments/assets/d451f963-6fef-456e-a8d4-d95f02f22001" />
 
+<img width="1904" height="626" alt="Screenshot from 2026-02-13 13-22-32" src="https://github.com/user-attachments/assets/5465d430-f32d-4a07-83a6-94d71c8a1113" />
 
 ### 6.4 Systemd service and start API
 
