@@ -396,6 +396,7 @@ poetry run gunicorn app:app --log-config log.conf -b 0.0.0.0:8081
 
 <img width="1920" height="1080" alt="Screenshot from 2026-02-13 14-29-34" src="https://github.com/user-attachments/assets/950c6a4e-9c02-42e7-a1d7-f36e95e687a1" />
 <img width="1904" height="496" alt="Screenshot from 2026-02-13 14-29-44" src="https://github.com/user-attachments/assets/5e77ec54-ea5b-4eff-a4c7-2824d4029dc5" />
+<img width="1904" height="316" alt="Screenshot from 2026-02-13 14-56-29" src="https://github.com/user-attachments/assets/080be8c1-7033-4b0b-99c0-0c7b9ab39696" />
 
 Leave this running in the foreground to test. In another terminal (or from another machine that can reach the API server), run a quick health check:
 
