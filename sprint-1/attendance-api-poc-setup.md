@@ -246,7 +246,7 @@ Change these three settings (find the existing line and edit, or add if missing)
 |---------|--------|---------|
 | `bind` | `127.0.01 10.0.1.25` | Listen on all interfaces |
 | `requirepass` | `12345` | Password (must match config.yaml on API server) |
-| port | 6379 | port should be different if some serive is listening on 6379 |
+| port | `6379` | port should be different if some serive is listening on 6379 |
 
 
 <img width="1904" height="246" alt="Screenshot from 2026-02-13 13-31-59" src="https://github.com/user-attachments/assets/8a17dc49-6c01-4790-8741-dd2a902f97ac" />
@@ -265,7 +265,7 @@ sudo systemctl enable redis-server
 redis-cli -a 12345 ping
 ```
 
-**Expect output** **10.0.1.25**
+**Expect output 10.0.1.25**
 <img width="1904" height="133" alt="Screenshot from 2026-02-13 13-19-48" src="https://github.com/user-attachments/assets/6b640fd7-d7e1-45f5-b01e-5db54ac914e1" />
 
 
