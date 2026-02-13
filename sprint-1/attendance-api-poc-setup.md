@@ -283,7 +283,7 @@ All commands in this section on **API server**.
 
 # Refresh packages and install Python 3.11, pip, curl, Java (for Liquibase), unzip
 sudo apt update
-sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre
+sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre unzip
 
 # Install Poetry (Python dependency manager)
 curl -sSL https://install.python-poetry.org | python3 -
@@ -314,6 +314,8 @@ make build
 <img width="1904" height="466" alt="Screenshot from 2026-02-13 12-39-17" src="https://github.com/user-attachments/assets/b46d2a92-f643-4a98-99e8-35ca24bf3076" />
 liquibase version
 <img width="1904" height="626" alt="Screenshot from 2026-02-13 13-22-32" src="https://github.com/user-attachments/assets/5465d430-f32d-4a07-83a6-94d71c8a1113" />
+
+
 ### 6.2 Configure config.yaml
 
 Edit the API configuration so it connects to the DB server. From the project root (`~/attendance-api`), run:
@@ -372,15 +374,23 @@ Before creating the systemd service, you can run the API manually with Poetry an
 
 ```bash
 # Ensure you are in the project directory
-cd ~/attendance/attendance-api
+cd ~/attendance/attendance_api
 
+# keep the poetry env activated
+source $(poetry env info --path)/bin/activate
 
+# or activate the env
 poetry env activate
 
+# install the dependency
 poetry install
 
+# show all the dependecies
 poetry show
 
+vi ~/.bashrc
+export CONFIG_FILE=/home/ubuntu/attendance/attendance_api/config.yaml
+exec bash
 
 # Run the app with Gunicorn (Poetry installs gunicorn; use the path where it is available)
 # If Poetry added gunicorn to PATH:
@@ -421,18 +431,27 @@ Paste the unit below. If your repo path is not `/home/ubuntu/attendance/attendan
 
 ```ini
 [Unit]
-Description=Attendance API (Gunicorn)
+Description=Attendance API Gunicorn Service
 After=network.target
+
 [Service]
-Type=simple
 User=ubuntu
-Group=ubuntu
-WorkingDirectory=/home/ubuntu/attendance/attendance-api
-ExecStart=/home/ubuntu/.local/bin/gunicorn app:app --log-config log.conf -b 0.0.0.0:8080
+Group=www-data
+WorkingDirectory=/home/ubuntu/attendance/attendance_api
+Environment="CONFIG_FILE=/home/ubuntu/attendance/attendance_api/config.yaml"
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/home/ubuntu/attendance/attendance_api/.venv/bin/gunicorn \
+          app:app \
+          --workers 4 \
+          --bind 0.0.0.0:8081 \
+          --log-config log.conf
+
 Restart=always
 RestartSec=5
+
 [Install]
 WantedBy=multi-user.target
+
 ```
 <img width="1904" height="687" alt="Screenshot from 2026-02-13 12-52-54" src="https://github.com/user-attachments/assets/929802c5-bf45-477d-a400-ec939a8fbce0" />
 
