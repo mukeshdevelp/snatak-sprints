@@ -24,7 +24,8 @@
    - 6.1 [Install tools, clone repo, build](#61-install-tools-clone-repo-build)
    - 6.2 [Configure config.yaml](#62-configure-configyaml)
    - 6.3 [Run Liquibase migrations](#63-run-liquibase-migrations)
-   - 6.4 [Systemd service and start API](#64-systemd-service-and-start-api)
+   - 6.4 [Run the app using Poetry and Gunicorn](#64-run-the-app-using-poetry-and-gunicorn)
+   - 6.5 [Systemd service and start API](#65-systemd-service-and-start-api)
 7. [Step 4: Verify the Deployment](#7-step-4-verify-the-deployment)
 8. [Troubleshooting](#8-troubleshooting)
 9. [Contact Information](#9-contact-information)
@@ -246,7 +247,7 @@ Change these three settings (find the existing line and edit, or add if missing)
 |---------|--------|---------|
 | `bind` | `127.0.01 10.0.1.25` | Listen on all interfaces |
 | `requirepass` | `12345` | Password (must match config.yaml on API server) |
-| port | `6379` | port should be different if some serive is listening on 6379 |
+| `port` | `6379` | port should be different if some serive is listening on 6379 |
 
 
 <img width="1904" height="246" alt="Screenshot from 2026-02-13 13-31-59" src="https://github.com/user-attachments/assets/8a17dc49-6c01-4790-8741-dd2a902f97ac" />
@@ -294,10 +295,11 @@ sudo snap install liquibase
 # Verify Liquibase is on PATH
 liquibase --version
 
-
+mkdir attendance
+cd attendance/
 # Clone the Attendance API repo
 git clone https://github.com/OT-MICROSERVICES/attendance-api.git
-cd ~/attendance/attendance-api
+cd attendance-api/
 
 # Install Make and pylint (Makefile build runs pylint before poetry install)
 sudo apt install -y make pylint
@@ -364,9 +366,44 @@ liquibase update --driver-properties-file=liquibase.properties
 ```
 <img width="1904" height="276" alt="Screenshot from 2026-02-13 13-03-34" src="https://github.com/user-attachments/assets/d451f963-6fef-456e-a8d4-d95f02f22001" />
 
+### 6.4 Run the app using Poetry and Gunicorn
+
+Before creating the systemd service, you can run the API manually with Poetry and Gunicorn to confirm it starts and connects to PostgreSQL and Redis. From the project root (e.g. `~/attendance/attendance-api`):
+
+```bash
+# Ensure you are in the project directory
+cd ~/attendance/attendance-api
 
 
-### 6.4 Systemd service and start API
+poetry env activate
+
+poetry install
+
+poetry show
+
+
+# Run the app with Gunicorn (Poetry installs gunicorn; use the path where it is available)
+# If Poetry added gunicorn to PATH:
+gunicorn app:app --log-config log.conf -b 0.0.0.0:8081
+
+# Or run via Poetry's environment (if using a venv):
+poetry run gunicorn app:app --log-config log.conf -b 0.0.0.0:8081
+```
+
+- **app:app** — first `app` is the module (app.py), second is the Flask application instance.
+- **--log-config log.conf** — uses the project's logging configuration.
+- **-b 0.0.0.0:8080** — bind to all interfaces on port 8080.
+
+Leave this running in the foreground to test. In another terminal (or from another machine that can reach the API server), run a quick health check:
+
+```bash
+curl http://localhost:8080/api/v1/attendance/health
+# Or use the server's IP, e.g. curl http://10.0.2.75:8080/api/v1/attendance/health
+```
+
+
+
+### 6.5 Systemd service and start API
 
 Create a systemd unit so the API runs as a service and starts on boot. Create the unit file:
 
@@ -376,7 +413,7 @@ Create a systemd unit so the API runs as a service and starts on boot. Create th
 sudo vi /etc/systemd/system/attendance-api.service
 ```
 
-Paste the unit below. If your repo path is not `/home/ubuntu/attendance-api` or Gunicorn is elsewhere (e.g. in a venv), change **WorkingDirectory** and **ExecStart** accordingly. Save and exit (`:wq`).
+Paste the unit below. If your repo path is not `/home/ubuntu/attendance/attendance-api` or Gunicorn is elsewhere (e.g. in a venv), change **WorkingDirectory** and **ExecStart** accordingly. Save and exit (`:wq`).
 
 ```ini
 [Unit]
