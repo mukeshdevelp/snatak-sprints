@@ -80,9 +80,9 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 | Poetry | Latest (install in steps) |
 | Liquibase | 4.24.0 (install in steps) |
 
-<<<<<<< HEAD
+
 ---
-=======
+
 ## Architecture
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
 
@@ -92,7 +92,7 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 ## Dataflow Diagram
 <img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
 
->>>>>>> 2e9ab8c0e7be0c730deb6145e8ec4bc6e4adec3a
+
 
 ## 4. Step 1: Create and Access EC2 Instances
 
@@ -289,10 +289,6 @@ sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre unzi
 # Install Poetry (Python dependency manager)
 curl -sSL https://install.python-poetry.org | python3 -
 
-# Add Poetry to PATH and load in current shell
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-cd ~
 
 # Download and install Liquibase for DB migrations
 wget -q https://github.com/liquibase/liquibase/releases/download/v4.24.0/liquibase-4.24.0.tar.gz
@@ -319,6 +315,11 @@ sudo apt install -y make pylint
 # Install project dependencies via Makefile (runs fmt then poetry install)
 make build
 ```
+<img width="1904" height="729" alt="Screenshot from 2026-02-13 12-35-39" src="https://github.com/user-attachments/assets/02f7cedc-2611-45f0-bc75-e01d62fb15c8" />
+
+<img width="1904" height="729" alt="image" src="https://github.com/user-attachments/assets/21f67cb5-12d6-41e4-adeb-eb2f4f8c9f42" />
+<img width="1904" height="466" alt="Screenshot from 2026-02-13 12-38-08" src="https://github.com/user-attachments/assets/bdf03068-2826-4140-82cc-98df07ba4e54" />
+<img width="1904" height="466" alt="Screenshot from 2026-02-13 12-39-17" src="https://github.com/user-attachments/assets/b46d2a92-f643-4a98-99e8-35ca24bf3076" />
 
 ### 6.2 Configure config.yaml
 
@@ -343,6 +344,7 @@ redis:
   port: 6379                 # Redis default port
   password: "12345"         # must match requirepass in redis.conf on DB server
 ```
+<img width="1904" height="466" alt="Screenshot from 2026-02-13 12-51-13" src="https://github.com/user-attachments/assets/7bbad585-a761-466a-b467-2ec145beccd9" />
 
 ### 6.3 Run Liquibase migrations
 
@@ -361,6 +363,7 @@ liquibase update --driver-properties-file=liquibase.properties
 
 # Alternative: make run-migrations
 ```
+<img width="1904" height="466" alt="Screenshot from 2026-02-13 12-51-47" src="https://github.com/user-attachments/assets/dd4a2650-ff3f-4dfe-8452-afcc8e69d6ed" />
 
 ### 6.4 Systemd service and start API
 
@@ -389,8 +392,11 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 ```
+<img width="1904" height="687" alt="Screenshot from 2026-02-13 12-52-54" src="https://github.com/user-attachments/assets/929802c5-bf45-477d-a400-ec939a8fbce0" />
 
 ```bash
+
+sudo systemctl daemon-reexec
 
 # Reload systemd after adding new unit file
 sudo systemctl daemon-reload
@@ -407,6 +413,7 @@ sudo systemctl status attendance-api
 # Follow service logs (Ctrl+C to exit)
 sudo journalctl -u attendance-api -f
 ```
+<img width="1904" height="945" alt="Screenshot from 2026-02-13 12-55-04" src="https://github.com/user-attachments/assets/8546b0f7-b46a-4a90-879b-17f9e016c17c" />
 
 Restart after changes: `sudo systemctl restart attendance-api`. Swagger: `http://10.0.2.75:8080/apidocs`.
 
@@ -418,14 +425,16 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 
 | Purpose | Method | Command |
 |---------|--------|---------|
-| Shallow health check | GET | `curl http://10.0.2.75:8080/api/v1/attendance/health` |
-| Detailed health (PostgreSQL + Redis) | GET | `curl http://10.0.2.75:8080/api/v1/attendance/health/detail` |
-| Prometheus-style metrics | GET | `curl http://10.0.2.75:8080/metrics` |
-| Create a test attendance record | POST | `curl -X POST http://10.0.2.75:8080/api/v1/attendance/create -H "Content-Type: application/json" -d '{"id":"emp-001","name":"John Doe","status":"present","date":"2026-02-03"}'` |
-| Search by id | GET | `curl "http://10.0.2.75:8080/api/v1/attendance/search?id=emp-001"` |
-| Search all | GET | `curl "http://10.0.2.75:8080/api/v1/attendance/search/all"` |
+| Shallow health check | GET | `curl http://10.0.2.75:8081/api/v1/attendance/health` |
+| Detailed health (PostgreSQL + Redis) | GET | `curl http://10.0.2.75:8081/api/v1/attendance/health/detail` |
+| Prometheus-style metrics | GET | `curl http://10.0.2.75:8081/metrics` |
+| Create a test attendance record | POST | `curl -X POST http://10.0.2.75:8081/api/v1/attendance/create -H "Content-Type: application/json" -d '{"id":"emp-001","name":"John Doe","status":"present","date":"2026-02-03"}'` |
+| Search by id | GET | `curl "http://10.0.2.75:8081/api/v1/attendance/search?id=emp-001"` |
+| Search all | GET | `curl "http://10.0.2.75:8081/api/v1/attendance/search/all"` |
 
-**Swagger UI:** `http://10.0.2.75:8080/apidocs`
+**Swagger UI:** `http://10.0.2.75:8081/apidocs`
+<img width="1904" height="945" alt="Screenshot from 2026-02-13 12-57-18" src="https://github.com/user-attachments/assets/0af839f6-9231-4002-80e6-df4212acd986" />
+<img width="1904" height="597" alt="Screenshot from 2026-02-13 12-59-28" src="https://github.com/user-attachments/assets/ee861553-511b-4455-a3ba-5c92ddbfa5f8" />
 
 ---
 
@@ -437,7 +446,7 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 | **API → PostgreSQL** | DB SG allows 5432 from API server; `listen_addresses = '*'`; pg_hba has API subnet; config.yaml password `12345`. |
 | **API → Redis** | DB SG allows 6379 from API server; Redis `bind 0.0.0.0`; config.yaml password `12345`. |
 | **Liquibase fails** | liquibase.properties has DB server IP and password `12345`; DB `attendance_db` exists. If "Driver not found": install PostgreSQL JDBC driver (e.g. download jar and add to `/opt/liquibase/lib` or use `liquibase install jdbc-driver postgresql` if available). |
-| **502 / API refused** | `sudo systemctl status attendance-api`; `sudo systemctl start attendance-api`; `sudo journalctl -u attendance-api -n 50`; SG allows 8080. |
+| **502 / API refused** | `sudo systemctl status attendance-api`; `sudo systemctl start attendance-api`; `sudo journalctl -u attendance-api -n 50`; SG allows 8081. |
 | **Health postgres/redis down** | Check config.yaml and DB server firewall. |
 
 ---
