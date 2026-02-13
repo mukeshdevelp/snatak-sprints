@@ -310,7 +310,8 @@ make build
 <img width="1904" height="729" alt="image" src="https://github.com/user-attachments/assets/21f67cb5-12d6-41e4-adeb-eb2f4f8c9f42" />
 <img width="1904" height="466" alt="Screenshot from 2026-02-13 12-38-08" src="https://github.com/user-attachments/assets/bdf03068-2826-4140-82cc-98df07ba4e54" />
 <img width="1904" height="466" alt="Screenshot from 2026-02-13 12-39-17" src="https://github.com/user-attachments/assets/b46d2a92-f643-4a98-99e8-35ca24bf3076" />
-
+liquibase version
+<img width="1904" height="626" alt="Screenshot from 2026-02-13 13-22-32" src="https://github.com/user-attachments/assets/5465d430-f32d-4a07-83a6-94d71c8a1113" />
 ### 6.2 Configure config.yaml
 
 Edit the API configuration so it connects to the DB server. From the project root (`~/attendance-api`), run:
@@ -363,7 +364,7 @@ liquibase update --driver-properties-file=liquibase.properties
 ```
 <img width="1904" height="276" alt="Screenshot from 2026-02-13 13-03-34" src="https://github.com/user-attachments/assets/d451f963-6fef-456e-a8d4-d95f02f22001" />
 
-<img width="1904" height="626" alt="Screenshot from 2026-02-13 13-22-32" src="https://github.com/user-attachments/assets/5465d430-f32d-4a07-83a6-94d71c8a1113" />
+
 
 ### 6.4 Systemd service and start API
 
