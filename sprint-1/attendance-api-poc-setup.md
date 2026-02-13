@@ -459,8 +459,4 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 | [Redis Linux](https://redis.io/docs/getting-started/installation/install-redis-on-linux/) | Install Redis on Linux |
 | [Poetry](https://python-poetry.org/docs/) | Python dependency management |
 | [Liquibase](https://docs.liquibase.com/) | Database migrations |
-<<<<<<< HEAD
 
----
-=======
->>>>>>> 2e9ab8c0e7be0c730deb6145e8ec4bc6e4adec3a
