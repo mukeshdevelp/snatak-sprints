@@ -15,18 +15,15 @@
 4. [Step 1: Create and Access EC2 Instances](#4-step-1-create-and-access-ec2-instances)
    - 4.1 [Launch two EC2 instances](#41-launch-two-ec2-instances)
    - 4.2 [Update DB server Security Group](#42-update-db-server-security-group)
-   - 4.3 [SSH into the instances](#43-ssh-into-the-instances)
-5. [Step 2: Set Up DB & Redis (DB server)](#5-step-2-set-up-db--redis-db-server)
-   - 5.1 [Install and configure PostgreSQL 16](#51-install-and-configure-postgresql-16)
-   - 5.2 [Bashrc and create database](#52-bashrc-and-create-database)
-   - 5.3 [Install and configure Redis](#53-install-and-configure-redis)
-6. [Step 3: Set Up and Run the API (API server)](#6-step-3-set-up-and-run-the-api-api-server)
-   - 6.1 [Install tools, clone repo, build](#61-install-tools-clone-repo-build)
-   - 6.2 [Configure config.yaml](#62-configure-configyaml)
-   - 6.3 [Run Liquibase migrations](#63-run-liquibase-migrations)
-   - 6.4 [Systemd service and start API](#64-systemd-service-and-start-api)
-7. [Step 4: Verify the Deployment](#7-step-4-verify-the-deployment)
-8. [Troubleshooting](#8-troubleshooting)
+   - 4.3 [SSH into the instances (via bastion)](#43-ssh-into-the-instances-via-bastion)
+5. [Step 2: Set Up and Run the API (API server)](#5-step-2-set-up-and-run-the-api-api-server)
+   - 5.1 [Install tools, clone repo, build](#51-install-tools-clone-repo-build)
+   - 5.2 [Configure config.yaml](#52-configure-configyaml)
+   - 5.3 [Run Liquibase migrations](#53-run-liquibase-migrations)
+   - 5.4 [Systemd service and start API](#54-systemd-service-and-start-api)
+6. [Step 3: Verify the Deployment](#6-step-3-verify-the-deployment)
+7. [Troubleshooting](#7-troubleshooting)
+8. [FAQ](#8-faq)
 9. [Contact Information](#9-contact-information)
 10. [References](#10-references)
 
@@ -75,14 +72,12 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 | SSH, terminal, editor | Basic use of SSH and vi or nano |
 | Ubuntu | 22.04 LTS |
 | PostgreSQL | 16 |
-| Redis | From apt (e.g. 6.x / 7.x) |
+| Redis | From apt  |
 | Python | 3.11 |
-| Poetry | Latest (install in steps) |
-| Liquibase | 4.24.0 (install in steps) |
+| Poetry | Latest |
+| Liquibase | 4.24.0  |
 
-<<<<<<< HEAD
----
-=======
+
 ## Architecture
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
 
@@ -92,7 +87,7 @@ The diagram below illustrates how traffic flows in this POC: clients (or a load 
 ## Dataflow Diagram
 <img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
 
->>>>>>> 2e9ab8c0e7be0c730deb6145e8ec4bc6e4adec3a
+
 
 ## 4. Step 1: Create and Access EC2 Instances
 
@@ -146,139 +141,17 @@ ssh ubuntu@10.0.1.25
 ssh ubuntu@10.0.2.75
 ```
 
-User is `ubuntu` on all hosts. Run **Step 2** on DB server, **Step 3** on API server.
+User is `ubuntu` on all hosts. Run **Step 2** on the API server to deploy the Attendance API (PostgreSQL and Redis must already be running on a DB server; use that server’s IP and credentials in config below).
+
+**Prerequisite:** A DB server must already have **PostgreSQL** (port 5432) and **Redis** (port 6379) running, with the `attendance_db` database and credentials known. Use that DB server’s IP (e.g. **10.0.1.25**) and credentials in **config.yaml** and **liquibase.properties** in Step 2.
 
 ---
 
-## 5. Step 2: Set Up DB & Redis (DB server)
-
-All commands in this section on **DB server**.
-
-### 5.1 Install and configure PostgreSQL 16
-
-```bash
-# Refresh package lists
-sudo apt update
-
-# Install helper for adding PG repo
-sudo apt install -y postgresql-common
-
-# Add PostgreSQL 16 official repo for this Ubuntu release
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-
-# Add PostgreSQL signing key
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-sudo apt update
-
-# Install PostgreSQL 16 and contrib
-sudo apt install -y postgresql-16 postgresql-contrib-16
-
-# Start and enable PostgreSQL service
-sudo systemctl start postgresql
-sudo systemctl enable postgresql
-
-# Confirm version 16 is installed
-ls /etc/postgresql/
-```
-
-**Edit PostgreSQL so it accepts network connections:**
-
-1. Open the main config: `sudo vi /etc/postgresql/16/main/postgresql.conf`  
-   Find the line `#listen_addresses = 'localhost'`, remove the `#` and change to `listen_addresses = '*'`. Save and exit.
-
-2. Open the access config: `sudo vi /etc/postgresql/16/main/pg_hba.conf`  
-   Add the following line at the end of the file (use your API server subnet if not 10.0.2.0/24):
-
-   ```text
-   host    all    all    10.0.2.0/24    scram-sha-256
-   ```
-
-   Save and exit.
-
-```bash
-
-# Restart PostgreSQL to apply config changes
-sudo systemctl restart postgresql
-
-# Set postgres user password for remote auth
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '12345';"
-```
-
-### 5.2 Bashrc and create database
-
-Edit your shell config so the same credentials are available in every session:
-
-
-```bash
-vi ~/.bashrc
-```
-
-Add these lines at the **end** of the file (save and exit with `:wq`):
-
-```text
-export POSTGRESQL_USERNAME=postgres
-export PGPASSWORD=12345
-export POSTGRESQL_HOST=localhost
-```
-
-Then run:
-
-```bash
-
-# Load new env vars in current shell
-source ~/.bashrc
-
-# Create the attendance database (table created later by Liquibase)
-psql -U postgres -h localhost -c 'CREATE DATABASE attendance_db;'
-
-# Verify database exists
-sudo -u postgres psql -c "\l" | grep attendance_db
-```
-
-### 5.3 Install and configure Redis
-
-```bash
-# Install Redis server
-sudo apt install -y redis-server
-```
-
-Edit the Redis config so the API server can connect and a password is set:
-
-```bash
-sudo vi /etc/redis/redis.conf
-```
-
-Change these three settings (find the existing line and edit, or add if missing):
-
-| Setting | Value | Purpose |
-|---------|--------|---------|
-| `supervised` | `systemd` | Use systemd for supervision |
-| `bind` | `0.0.0.0 -::1` | Listen on all interfaces |
-| `requirepass` | `12345` | Password (must match config.yaml on API server) |
-
-Save and exit (`:wq`), then run:
-
-```bash
-
-# Restart Redis to apply config
-sudo systemctl restart redis-server
-
-# Start Redis on boot
-sudo systemctl enable redis-server
-
-# Test Redis with password (expect PONG)
-redis-cli -a 12345 ping
-```
-
-Expect `PONG`. DB server IP used below: **10.0.1.25**.
-
----
-
-## 6. Step 3: Set Up and Run the API (API server)
+## 5. Step 2: Set Up and Run the API (API server)
 
 All commands in this section on **API server**.
 
-### 6.1 Install tools, clone repo, build
+### 5.1 Install tools, clone repo, build
 
 ```bash
 
@@ -320,7 +193,7 @@ sudo apt install -y make pylint
 make build
 ```
 
-### 6.2 Configure config.yaml
+### 5.2 Configure config.yaml
 
 Edit the API configuration so it connects to the DB server. From the project root (`~/attendance-api`), run:
 
@@ -344,7 +217,7 @@ redis:
   password: "12345"         # must match requirepass in redis.conf on DB server
 ```
 
-### 6.3 Run Liquibase migrations
+### 5.3 Run Liquibase migrations
 
 Liquibase needs the DB connection details. Edit the properties file from the project root:
 
@@ -362,7 +235,7 @@ liquibase update --driver-properties-file=liquibase.properties
 # Alternative: make run-migrations
 ```
 
-### 6.4 Systemd service and start API
+### 5.4 Systemd service and start API
 
 Create a systemd unit so the API runs as a service and starts on boot. Create the unit file:
 
@@ -382,7 +255,7 @@ After=network.target
 Type=simple
 User=ubuntu
 Group=ubuntu
-WorkingDirectory=/home/ubuntu/attendance/attendance-api
+WorkingDirectory=/home/ubuntu/attendance-api
 ExecStart=/home/ubuntu/.local/bin/gunicorn app:app --log-config log.conf -b 0.0.0.0:8080
 Restart=always
 RestartSec=5
@@ -391,6 +264,8 @@ WantedBy=multi-user.target
 ```
 
 ```bash
+# Reexec the service file
+sudo systemctl daemon-reexec
 
 # Reload systemd after adding new unit file
 sudo systemctl daemon-reload
@@ -412,7 +287,7 @@ Restart after changes: `sudo systemctl restart attendance-api`. Swagger: `http:/
 
 ---
 
-## 7. Step 4: Verify the Deployment
+## 6. Step 3: Verify the Deployment
 
 Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://10.0.2.75:8080`.
 
@@ -429,7 +304,7 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 
 ---
 
-## 8. Troubleshooting
+## 7. Troubleshooting
 
 | Issue | What to check |
 |-------|----------------|
@@ -439,6 +314,20 @@ Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://
 | **Liquibase fails** | liquibase.properties has DB server IP and password `12345`; DB `attendance_db` exists. If "Driver not found": install PostgreSQL JDBC driver (e.g. download jar and add to `/opt/liquibase/lib` or use `liquibase install jdbc-driver postgresql` if available). |
 | **502 / API refused** | `sudo systemctl status attendance-api`; `sudo systemctl start attendance-api`; `sudo journalctl -u attendance-api -n 50`; SG allows 8080. |
 | **Health postgres/redis down** | Check config.yaml and DB server firewall. |
+
+---
+
+## 8. FAQ
+
+| Question | Answer |
+|----------|--------|
+| **Do I need to install PostgreSQL and Redis to deploy the API?** | No. This guide only covers deploying the Attendance API on the API server. PostgreSQL and Redis must already be running on a DB server (or elsewhere); use that server’s IP and credentials in config.yaml and liquibase.properties. |
+| **Which ports does the API use?** | The API listens on **8080**. It connects to PostgreSQL on **5432** and Redis on **6379** on the DB server. |
+| **How do I access the API from my laptop?** | SSH to the bastion, then to the API server. From a machine that can reach the API server (e.g. via VPN or port forwarding), use the base URL `http://<API-SERVER-IP>:8080`. Swagger UI: `http://<API-SERVER-IP>:8080/apidocs`. |
+| **Where do I set the DB and Redis credentials?** | In **config.yaml** (postgres and redis sections) on the API server, and in **liquibase.properties** for the JDBC URL, username, and password. |
+| **How do I restart the API after a config change?** | Run `sudo systemctl restart attendance-api`. Check status with `sudo systemctl status attendance-api` and logs with `sudo journalctl -u attendance-api -f`. |
+| **What if Liquibase says “Driver not found”?** | Install the PostgreSQL JDBC driver (e.g. download the JAR and place it in `/opt/liquibase/lib`, or use `liquibase install jdbc-driver postgresql` if supported by your Liquibase version). |
+| **Can I run the API without a bastion?** | Yes, if your API and DB servers have another way to be reached (e.g. public IPs or direct VPN). The steps are the same; only the SSH path and security groups change. |
 
 ---
 
