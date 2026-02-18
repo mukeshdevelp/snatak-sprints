@@ -1,6 +1,6 @@
-# Authz Documentation on VCS Authn and Authz
+# Authz Documentation
 
-**Authentication (Authn) and Authorization (Authz) in Version Control Systems: access control, audit, and identity integration.**
+**Topic:** Authz documentation — Authentication and Authorization in Version Control Systems (VCS): access control, audit trails, and identity integration.
 
 ---
 
@@ -10,18 +10,41 @@
 
 ---
 
+## Detailed documentation
+
+This document provides detailed **Authz documentation** for Version Control Systems (VCS). It covers the following:
+
+| Section | Description |
+|---------|-------------|
+| **Introduction** | What authentication (Authn) and authorization (Authz) mean in VCS and why they matter. |
+| **Why** | Reasons authn and authz are essential in VCS (security, policy, accountability, least privilege, compliance). |
+| **Access Levels** | Repository and branch-level permissions (read, write, maintain, admin) and branch protection. |
+| **Audit Trails** | What is logged (commits, pushes, merges, access) and how to use it for accountability and compliance. |
+| **Integration with Identity Providers** | SSO, group mapping, JIT provisioning, and IdP integration with GitHub, GitLab, Bitbucket. |
+| **Advantages** | Benefits of strong authz (security, traceability, controlled releases, scalability, IdP). |
+| **Disadvantages** | Trade-offs (complexity, friction, IdP dependency, over-restriction). |
+| **Best Practices** | One identity per person, least privilege, branch protection, MFA, service accounts, access reviews, audit retention. |
+| **Conclusion** | Summary and recommendations. |
+| **FAQ** | Frequently asked questions on authn, authz, access levels, audit, and IdP. |
+| **Contact Information** | Author contact. |
+| **References** | Links to official and standards documentation. |
+
+---
+
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
-2. [Why Authn and Authz Matter in VCS](#2-why-authn-and-authz-matter-in-vcs)
+2. [Why Authorization (Authz) Matters in VCS](#2-why-authorization-authz-matters-in-vcs)
 3. [Access Levels](#3-access-levels)
 4. [Audit Trails](#4-audit-trails)
 5. [Integration with Identity Providers](#5-integration-with-identity-providers)
-6. [Advantages and Disadvantages](#6-advantages-and-disadvantages)
-7. [Best Practices](#7-best-practices)
-8. [Conclusion](#8-conclusion)
-9. [Contact Information](#9-contact-information)
-10. [References](#10-references)
+6. [Advantages](#6-advantages)
+7. [Disadvantages](#7-disadvantages)
+8. [Best Practices](#8-best-practices)
+9. [Conclusion](#9-conclusion)
+10. [FAQ](#10-faq)
+11. [Contact Information](#11-contact-information)
+12. [References](#12-references)
 
 ---
 
@@ -29,34 +52,36 @@
 
 **Authentication (Authn)** answers “Who are you?”—it verifies the identity of a user or system (e.g. via username/password, SSH keys, or tokens). **Authorization (Authz)** answers “What are you allowed to do?”—it determines which actions an authenticated identity is permitted to perform (e.g. read a repo, push to a branch, or change settings).
 
-In **Version Control Systems (VCS)** such as Git used with GitHub, GitLab, or Bitbucket, authn and authz control who can clone, push, create branches, open pull requests, merge, and manage the repository. This document describes access levels, audit trails, integration with identity providers (IdPs), trade-offs, and best practices so teams can design and operate secure, traceable VCS access.
+In **Version Control Systems (VCS)** such as Git used with GitHub, GitLab, or Bitbucket, authn and authz control who can clone, push, create branches, open pull requests, merge, and manage the repository. This document describes access levels, audit trails, integration with identity providers (IdPs), advantages and disadvantages, and best practices so teams can design and operate secure, traceable VCS access.
 
 ---
 
-## 2. Why Authn and Authz Matter in VCS
+## 2. Why Authorization (Authz) Matters in VCS
+
+Authorization determines what each user or system is allowed to do in the repository—for example who can read, push, merge, or change settings. Clear, well-defined permissions are important for the following reasons:
 
 | Reason | Description |
 |--------|-------------|
-| **Protect source code** | Repos hold business logic and sometimes secrets; unauthorized access or changes can cause security or compliance issues. |
-| **Enforce policy** | Branch protection, required reviews, and merge rules only work when identities are known and permissions are enforced. |
-| **Accountability** | Every commit and merge should be attributable to an identity so that changes can be traced and reviewed. |
-| **Least privilege** | Grant only the access needed for a role (e.g. read-only for external auditors, write for developers, admin for maintainers). |
-| **Compliance** | Many standards (e.g. SOC 2, ISO 27001) require access control and audit logs; VCS authn/authz and audit trails support this. |
+| **Protect source code** | Repositories hold business logic and sometimes secrets. Limiting who can read or change code (via read-only, write, or admin roles) reduces the risk of unauthorized access or changes and helps avoid security and compliance issues. |
+| **Enforce policy** | Branch protection, required reviews, and merge rules depend on permissions: only users with the right role can bypass or change them. Authorization ensures that only allowed people can merge to protected branches, approve PRs, or alter repo settings. |
+| **Accountability** | When permissions are tied to individual identities (rather than shared accounts), every commit and merge can be attributed to someone with a known level of access. That supports traceability and review. |
+| **Least privilege** | Grant only the access needed for each role—for example read-only for auditors or contractors, write for developers, admin for maintainers. Restricting permissions to what is necessary limits the impact of mistakes or compromised accounts. |
 
-Without clear authn and authz, shared accounts, weak or missing auth, or over‑broad permissions increase the risk of accidental or malicious misuse of the repository.
+
+Without clear authorization, over‑broad or poorly defined permissions increase the risk of accidental or malicious misuse of the repository. Defining and enforcing roles (read, write, maintain, admin) and branch-level rules keeps access under control.
 
 ---
 
 ## 3. Access Levels
 
-Typical permission levels in hosted VCS (e.g. GitHub, GitLab) are summarised below. Exact names and options vary by product.
+**What it is:** Each person or bot is assigned a **role** (access level) that defines what they can do in the repo. Higher roles include all abilities of lower ones. Typical levels in hosted VCS (e.g. GitHub, GitLab) are below; exact names vary by product.
 
-| Level | Typical name | Description | Common use |
-|-------|--------------|-------------|------------|
-| **Read** | Read / Viewer | Clone, pull, view code and history; no push or settings. | Contractors, auditors, read-only automation. |
-| **Write / Push** | Write / Developer | Read plus push commits, create branches, open MRs/PRs. | Developers, CI bots that push (e.g. version bumps). |
-| **Maintain** | Maintain / Maintainer | Write plus merge to protected branches, manage issues/labels. | Senior devs, release managers. |
-| **Admin / Owner** | Admin / Owner | Full control: repo settings, membership, branch protection, delete repo. | Repo owners, platform admins. |
+| Level | Typical name | What they can do | Who typically gets it |
+|-------|--------------|------------------|------------------------|
+| **Read** | Read / Viewer | View and download code and history only; cannot push, change settings, or merge. | Contractors, auditors, read-only bots. |
+| **Write / Push** | Write / Developer | Everything in Read, plus: push commits, create branches, open pull/merge requests. Cannot merge to protected branches or change repo settings. | Day-to-day developers, CI bots that push (e.g. version bumps). |
+| **Maintain** | Maintain / Maintainer | Everything in Write, plus: merge to protected branches, manage issues and labels. Cannot change repo membership or delete the repo. | Senior devs, release managers. |
+| **Admin / Owner** | Admin / Owner | Full control: change repo settings, add/remove people, configure branch protection, delete the repo. | Repo owners, platform admins. |
 
 **Branch protection** adds another layer of authz: who can push or merge into a given branch (e.g. `main`). Common rules include:
 
@@ -109,9 +134,9 @@ When using an IdP, define groups that match your intended VCS roles (e.g. “rep
 
 ---
 
-## 6. Advantages and Disadvantages
+## 6. Advantages
 
-### Advantages of strong Authn and Authz in VCS
+Strong authorization (and authentication) in VCS brings the following benefits:
 
 | Advantage | Description |
 |-----------|-------------|
@@ -121,7 +146,11 @@ When using an IdP, define groups that match your intended VCS roles (e.g. “rep
 | **Scalability** | Role- and group-based access scales better than per-repo manual grants when many repos and people are involved. |
 | **Centralised identity** | IdP integration means one place to onboard/offboard and enforce MFA; consistent identity across tools. |
 
-### Disadvantages / trade-offs
+---
+
+## 7. Disadvantages
+
+Trade-offs of strong authz (and related authn/IdP use):
 
 | Disadvantage | Description |
 |--------------|-------------|
@@ -134,7 +163,7 @@ Balancing security and usability—e.g. strict rules on production branches but 
 
 ---
 
-## 7. Best Practices
+## 8. Best Practices
 
 | Practice | Description |
 |----------|-------------|
@@ -150,13 +179,45 @@ Balancing security and usability—e.g. strict rules on production branches but 
 
 ---
 
-## 8. Conclusion
+## 9. Conclusion
 
 Authentication and authorization in VCS are essential for protecting source code, enforcing workflow (e.g. reviews and branch protection), and meeting compliance. Use **access levels** (read, write, maintain, admin) and **branch protection** to apply least privilege; maintain **audit trails** (commits, merges, platform logs) for accountability; and integrate with an **Identity Provider** where possible for SSO, group-based access, and consistent identity across tools. Weigh **advantages** (security, traceability, controlled releases) against **trade-offs** (complexity, friction, IdP dependency), and follow **best practices**—one identity per person, MFA, periodic access reviews—so that VCS authn and authz remain effective and maintainable as the team and repo count grow.
 
 ---
 
-## 9. Contact Information
+## 10. FAQ
+
+**What is the difference between authentication and authorization?**
+
+Authentication (authn) verifies who you are—for example via password, SSH key, or token. Authorization (authz) decides what you are allowed to do once authenticated—for example read a repo, push to a branch, or change settings. In short: authn identifies you; authz permits or denies actions.
+
+**Why should we avoid shared accounts in VCS?**
+
+Shared accounts make it impossible to know who made a given change. Audit trails and compliance require one identity per person (or per system for bots). Use personal accounts for humans and dedicated service accounts or deploy keys for automation.
+
+**What access level should I give to a contractor or auditor?**
+
+Grant the minimum needed: usually **read** (viewer) so they can clone and inspect code without being able to push or change settings. Restrict to specific repos if possible.
+
+**How does branch protection relate to authorization?**
+
+Branch protection is an authorization layer on top of repo roles. It defines who can push or merge into a branch (e.g. `main`), and can require pull requests, approvals, and passing CI. So even someone with write access can be blocked from merging directly to protected branches.
+
+**What should we do if our Identity Provider (IdP) is down?**
+
+Users may not be able to log in via SSO. Mitigate by having a documented incident process, optional fallback auth if your platform supports it, and ensuring the IdP is highly available. Plan for IdP outages in your runbooks.
+
+**How often should we review VCS access?**
+
+Review at least periodically (e.g. quarterly or when people change roles) and whenever someone leaves the team. Check who has admin vs write vs read on each repo and remove or downgrade access that is no longer needed.
+
+**Do we need IdP integration for a small team?**
+
+It is not strictly required, but IdP integration (SSO, group sync) improves security and scales better as the team grows. Small teams can start with strong MFA and clear roles; plan IdP integration when you add more people or need compliance.
+
+---
+
+## 11. Contact Information
 
 | Name | Email |
 |------|-------|
@@ -164,7 +225,7 @@ Authentication and authorization in VCS are essential for protecting source code
 
 ---
 
-## 10. References
+## 12. References
 
 | Link | Description |
 |------|-------------|

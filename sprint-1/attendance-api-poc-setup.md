@@ -1,4 +1,4 @@
-# Setup and Run the App for POC — Attendance API Final working V1
+# Setup and Run the App for POC — Attendance API
 
 | Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
 |--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
@@ -26,7 +26,7 @@
    - 6.3 [Run Liquibase migrations](#63-run-liquibase-migrations)
    - 6.4 [Run the app using Poetry and Gunicorn](#64-run-the-app-using-poetry-and-gunicorn)
    - 6.5 [Systemd service and start API](#65-systemd-service-and-start-api)
-7. [Step 4: Verify the Deployment](#7-step-4-verify-the-deployment)
+7. [Verify the Deployment](#7-verify-the-deployment)
 8. [Troubleshooting](#8-troubleshooting)
 9. [Contact Information](#9-contact-information)
 10. [References](#10-references)
@@ -53,16 +53,16 @@ Deploy the **Attendance API** (Python, Flask, PostgreSQL, Redis) on AWS for a PO
 
 The diagram below shows the POC layout on AWS: the **bastion** in a public subnet with a public IP; the **DB server** (PostgreSQL and Redis) and **API server** (Attendance API) in separate private subnets. Administrators reach the bastion over SSH, then jump to the DB or API server using private IPs. The API server is the only component that talks to the DB server (ports 5432 and 6379).
 
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f35bef4-a3a0-4e77-a455-57d4287c649c" />
+<img width="1019" height="345" alt="Screenshot from 2026-02-16 23-11-11" src="https://github.com/user-attachments/assets/3047dff1-d459-4adf-a7b9-bfedac648e22" />
 
-<img width="1536" height="1024" alt="e1f38ea0-17a0-4416-bc14-2d43a21c4787" src="https://github.com/user-attachments/assets/89e0f54b-0efc-4705-9f2a-737bbf172012" />
 
 ### 2.2 Dataflow Diagram
 
 
 The diagram below illustrates how traffic flows in this POC: clients (or a load balancer) send HTTP requests to the **API server** on port 8080; the API server uses **PostgreSQL** for persistent attendance data and **Redis** for caching. All access to the DB server (10.0.1.25) is from the API server only; user access to the instances is via the **bastion** over SSH.
 
-<img width="1515" height="563" alt="Screenshot from 2026-02-10 21-47-55" src="https://github.com/user-attachments/assets/0b95d317-b76d-4804-8eef-fb018f265a1e" />
+<img width="1051" height="446" alt="Screenshot from 2026-02-16 22-00-36" src="https://github.com/user-attachments/assets/205cd122-7547-45e8-bbb0-d421e2702bc8" />
+
 
 ---
 
@@ -283,7 +283,7 @@ All commands in this section on **API server**.
 
 # Refresh packages and install Python 3.11, pip, curl, Java (for Liquibase), unzip
 sudo apt update
-sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre unzip
+sudo apt install -y python3.11 python3.11-venv python3-pip curl default-jre
 
 # Install Poetry (Python dependency manager)
 curl -sSL https://install.python-poetry.org | python3 -
@@ -314,8 +314,6 @@ make build
 <img width="1904" height="466" alt="Screenshot from 2026-02-13 12-39-17" src="https://github.com/user-attachments/assets/b46d2a92-f643-4a98-99e8-35ca24bf3076" />
 liquibase version
 <img width="1904" height="626" alt="Screenshot from 2026-02-13 13-22-32" src="https://github.com/user-attachments/assets/5465d430-f32d-4a07-83a6-94d71c8a1113" />
-
-
 ### 6.2 Configure config.yaml
 
 Edit the API configuration so it connects to the DB server. From the project root (`~/attendance-api`), run:
@@ -374,23 +372,15 @@ Before creating the systemd service, you can run the API manually with Poetry an
 
 ```bash
 # Ensure you are in the project directory
-cd ~/attendance/attendance_api
+cd ~/attendance/attendance-api
 
-# keep the poetry env activated
-source $(poetry env info --path)/bin/activate
 
-# or activate the env
 poetry env activate
 
-# install the dependency
 poetry install
 
-# show all the dependecies
 poetry show
 
-vi ~/.bashrc
-export CONFIG_FILE=/home/ubuntu/attendance/attendance_api/config.yaml
-exec bash
 
 # Run the app with Gunicorn (Poetry installs gunicorn; use the path where it is available)
 # If Poetry added gunicorn to PATH:
@@ -431,27 +421,18 @@ Paste the unit below. If your repo path is not `/home/ubuntu/attendance/attendan
 
 ```ini
 [Unit]
-Description=Attendance API Gunicorn Service
+Description=Attendance API (Gunicorn)
 After=network.target
-
 [Service]
+Type=simple
 User=ubuntu
-Group=www-data
-WorkingDirectory=/home/ubuntu/attendance/attendance_api
-Environment="CONFIG_FILE=/home/ubuntu/attendance/attendance_api/config.yaml"
-Environment="PYTHONUNBUFFERED=1"
-ExecStart=/home/ubuntu/attendance/attendance_api/.venv/bin/gunicorn \
-          app:app \
-          --workers 4 \
-          --bind 0.0.0.0:8081 \
-          --log-config log.conf
-
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/attendance/attendance-api
+ExecStart=/home/ubuntu/.local/bin/gunicorn app:app --log-config log.conf -b 0.0.0.0:8080
 Restart=always
 RestartSec=5
-
 [Install]
 WantedBy=multi-user.target
-
 ```
 <img width="1904" height="687" alt="Screenshot from 2026-02-13 12-52-54" src="https://github.com/user-attachments/assets/929802c5-bf45-477d-a400-ec939a8fbce0" />
 
@@ -480,7 +461,7 @@ Restart after changes: `sudo systemctl restart attendance-api`. Swagger: `http:/
 
 ---
 
-## 7. Step 4: Verify the Deployment
+## 7. Verify the Deployment
 
 Run from a machine that can reach the API server (10.0.2.75). Base URL: `http://10.0.2.75:8080`.
 
