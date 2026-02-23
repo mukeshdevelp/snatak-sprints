@@ -12,22 +12,6 @@ This document provides a **30,000-foot view** of the cloud infrastructure and sy
 
 
 
----
-
-## Detailed documentation
-
-This document provides detailed documentation for the **30k Feet** (high-level) view. It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | What the 30k-feet view is and why it is used. |
-| **Prerequisites** | What you need to know or have before using this document. |
-| **System development approaches** | Overview of approaches (e.g. waterfall, agile, DevOps) in context of the design. |
-| **30k-feet details** | High-level architecture and design details. |
-| **Infra diagram** | Infrastructure diagram and how components relate. |
-| **Conclusion** | Summary and next steps. |
-| **Contact Information** | Author contact. |
-| **References** | Links to related documentation. |
 
 ---
 
