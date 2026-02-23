@@ -64,6 +64,8 @@ Follow these steps and commands to work on a feature branch and prepare it for a
 git checkout main
 git pull origin main
 ```
+<img width="1917" height="792" alt="image" src="https://github.com/user-attachments/assets/cd51d69e-8cd4-4650-ac3f-f74a86e41bab" />
+
 
 **Step 2 — Create and switch to a feature branch (or switch to an existing one):**
 
@@ -74,8 +76,10 @@ git checkout -b feature-XXX
 # Or switch to an existing feature branch
 # git checkout feature-XXX
 ```
+<img width="1917" height="254" alt="image" src="https://github.com/user-attachments/assets/236119b9-eef3-4960-8820-54911b072733" />
 
-**Step 3 — Make your changes** in the working directory (edit files as needed).
+
+**Step 3 — Make your changes** in the working directory.
 
 **Step 4 — Stage the changes you want to commit:**
 
@@ -86,12 +90,15 @@ git add .
 # Or stage specific files only
 # git add path/to/file1 path/to/file2
 ```
+<img width="1917" height="254" alt="image" src="https://github.com/user-attachments/assets/9f26157c-355a-4e6e-88df-c4c5b84bb522" />
+
 
 **Step 5 — Commit with a clear, descriptive message:**
 
 ```bash
 git commit -m "Short description of the change (e.g. Add login form validation)"
 ```
+<img width="1917" height="254" alt="image" src="https://github.com/user-attachments/assets/76f924b4-8414-4881-9b68-241798bdb3c7" />
 
 **Step 6 — Push the feature branch to the remote:**
 
@@ -99,9 +106,8 @@ git commit -m "Short description of the change (e.g. Add login form validation)"
 # First push: set upstream so future pushes can use just 'git push'
 git push -u origin feature-XXX
 
-# Later pushes on the same branch
-# git push
 ```
+<img width="1917" height="716" alt="image" src="https://github.com/user-attachments/assets/d018b479-c174-4d13-ae67-7175006f65b2" />
 
 **Step 7 — Keep the branch in sync with `main` (optional but recommended before opening a PR):**
 
@@ -109,14 +115,11 @@ git push -u origin feature-XXX
 # Fetch latest from remote
 git fetch origin
 
-# Option A: Rebase your commits on top of main (keeps history linear)
-git rebase origin/main
 
-# Option B: Merge main into your branch (creates a merge commit)
+
+# Option A: Merge main into your branch (creates a merge commit)
 # git merge origin/main
 
-# If you rebased, force-push (only on your feature branch; avoid on shared branches)
-git push --force-with-lease
 ```
 
 **Step 8 — Open a Pull Request** in the VCS UI (GitHub, GitLab, etc.): create a PR with **source branch** = `feature-XXX` and **target branch** = `main`.
@@ -126,9 +129,11 @@ git push --force-with-lease
 1. **Ensure your feature branch is ready** — All commits are pushed; branch is up to date with `main` (rebase or merge from `main` if needed).
 2. **Open the PR** — In the VCS UI (e.g. GitHub, GitLab), create a new Pull Request. Set **source branch** to your `feature-XXX` branch and **target branch** to `main`.
 3. **Fill in the PR description** — Summarise what changed, why, and how to verify (e.g. testing steps, screenshots). Link any related tickets or issues.
-4. **Request reviewers** — Add at least two reviewers. CI (e.g. Jenkins) will run automatically when the PR is opened or updated.
-5. **Address review feedback** — If reviewers request changes, update the branch (commit and push), then re-request review or notify in the PR.
-6. **Wait for checks** — Ensure all required status checks (e.g. Jenkins) pass and reviews are complete. The PR is then ready for merge by an authorised person (e.g. Lead).
+
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8a6a130b-53c3-4185-a4be-d7a09c2c8e38" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/57c51841-851e-4a0a-b428-8bf476f8bac5" />
 
 ---
 
