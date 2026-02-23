@@ -1,4 +1,4 @@
-# VCS Implementation | Setup Workflow | Setup Commit & PR (Pull Request) Workflow
+# Setup Commit & PR (Pull Request) Workflow
 
 This document describes the **Commit and Pull Request (PR) workflow** for VCS implementation: steps to create a PR and get it ready for merge.
 
@@ -14,20 +14,7 @@ This document describes the **Commit and Pull Request (PR) workflow** for VCS im
 
 ---
 
-## Detailed documentation
 
-This document describes the **Setup Commit and PR Workflow** for VCS implementation. It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | Feature-branch model and how work is merged into `main` via Pull Requests. |
-| **Setting up a PR** | Step-by-step guide to create a commit (all Git commands) and steps to create a PR. |
-| **Conclusion** | Summary of the workflow. |
-| **FAQ** | Frequently asked questions on commits and PRs. |
-| **Contact Information** | Author contact. |
-| **References** | Links to Git and VCS documentation. |
-
----
 
 ## Table of Contents
 
