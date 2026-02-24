@@ -100,37 +100,8 @@ High-level flow for **login** and **permission check** in Jenkins:
 [User] → [Jenkins] → [Security Realm: verify identity] → [Authz Strategy: check permission] → [Allow / Deny]
 ```
 
-```
-                    ┌─────────────┐
-                    │    User     │
-                    │ (browser/   │
-                    │  API/token) │
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │  Jenkins    │
-                    │  (request)  │
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │   Security  │  Authn: who are you?
-                    │   Realm     │  (DB / LDAP / SAML / OAuth)
-                    └──────┬──────┘
-                           │ identity + groups
-                           ▼
-                    ┌─────────────┐
-                    │ Authorization│  Authz: what can you do?
-                    │  Strategy   │  (Matrix / Project Matrix / Role-based)
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │ Allow or   │
-                    │   Deny     │
-                    └─────────────┘
-```
+<img width="250" height="680" alt="authjenkins drawio (1)" src="https://github.com/user-attachments/assets/758645eb-17e3-42da-bf8a-b55a9dbda5c5" />
+
 
 ---
 
