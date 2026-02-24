@@ -1,6 +1,5 @@
 #  Feature document of GitLab
 
-This document describes **GitLab** as a CI orchestration tool: introduction, what it is, why use it, workflow diagram, advantages, best practices, conclusion, contact information, and references.
 
 ---
 
@@ -10,25 +9,6 @@ This document describes **GitLab** as a CI orchestration tool: introduction, wha
 | Mukesh Sharma | 03-02-2026 | v1.0 | Mukesh Sharma | 03-02-2026 |  | aniruddh sir | faisal sir | ashwani sir |
 
 
-
-
----
-
-## Detailed documentation
-
-This document provides detailed documentation for **GitLab** as a CI orchestration tool. It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | Overview of GitLab and its role in CI/CD orchestration. |
-| **What is GitLab (for CI)** | What GitLab is and what it provides for CI. |
-| **Why use GitLab for CI** | Reasons to use GitLab for CI orchestration. |
-| **Workflow diagram** | How GitLab CI fits into the development and deployment workflow. |
-| **Advantages** | Benefits of using GitLab for CI. |
-| **Best practices** | Recommendations for using GitLab CI effectively. |
-| **Conclusion** | Summary and recommendations. |
-| **Contact Information** | Author contact. |
-| **References** | Links to GitLab and related documentation. |
 
 ---
 
@@ -94,31 +74,9 @@ GitLab CI fits into the application CI workflow as follows:
 [Developer: push / MR] → [GitLab] → [Parse .gitlab-ci.yml] → [Schedule jobs] → [Runner: run build/test] → [Report status & artifacts] → [Optional: deploy / merge]
 ```
 
-High-level flow:
+**High-level flow:**
 
-```
-                    ┌─────────────┐
-                    │  Developer  │
-                    │ push / MR   │
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐     .gitlab-ci.yml
-                    │   GitLab    │◄──────────────────
-                    │  (CI/CD)    │
-                    └──────┬──────┘
-                           │ schedule jobs
-                           ▼
-                    ┌─────────────┐
-                    │   Runner    │  (e.g. EC2 from Generic CI AMI)
-                    │ build/test  │
-                    └──────┬──────┘
-                           │ logs, artifacts, status
-                           ▼
-                    ┌─────────────┐
-                    │   GitLab    │  → MR status, merge, deploy
-                    └─────────────┘
-```
+<img width="1043" height="545" alt="image" src="https://github.com/user-attachments/assets/0904e692-c5f8-415f-9585-c9ffa7052171" />
 
 ---
 
