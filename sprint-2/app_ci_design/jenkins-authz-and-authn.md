@@ -100,7 +100,7 @@ High-level flow for **login** and **permission check** in Jenkins:
 [User] → [Jenkins] → [Security Realm: verify identity] → [Authz Strategy: check permission] → [Allow / Deny]
 ```
 
-<img width="742" height="645" alt="image" src="https://github.com/user-attachments/assets/e642900f-0eb1-45e5-8788-5be8810cd067" />
+<img width="721" height="627" alt="image" src="https://github.com/user-attachments/assets/7fd7c303-59a4-47c1-9a42-3796c0f875da" />
 
 
 ---
