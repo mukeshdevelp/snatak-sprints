@@ -42,15 +42,15 @@ Jenkins uses a **Security Realm** for authentication and an **Authorization Stra
 **Jenkins authentication and authorization** consist of:
 
 - **Security Realm (Authn)** — The component that verifies identity. Jenkins supports:
-  - **Jenkins’ own user database** — Users created and stored inside Jenkins (default).
-  - **LDAP** — Bind to an LDAP/Active Directory server to validate usernames and passwords.
-  - **SAML / OAuth / OIDC** — Integrate with an identity provider (IdP) for SSO via plugins (e.g. SAML, Google Login, GitHub Authentication).
-  - **Unix user/group database** — Use the server’s Unix users (less common for web UI).
+  1. **Jenkins’ own user database** — Users created and stored inside Jenkins (default).
+  2. **LDAP** — Bind to an LDAP/Active Directory server to validate usernames and passwords.
+  3. **SAML / OAuth / OIDC** — Integrate with an identity provider (IdP) for SSO via plugins (e.g. SAML, Google Login, GitHub Authentication).
+  4. **Unix user/group database** — Use the server’s Unix users (less common for web UI).
 
 - **Authorization Strategy (Authz)** — The component that decides what an authenticated user can do. Examples:
-  - **Logged-in users can do anything** — Any authenticated user has full access (simple but rarely appropriate for production).
-  - **Matrix-based / Project-based Matrix** — Fine-grained permissions per user/group (Overall and optionally per job).
-  - **Role-based (Role-Based Strategy plugin)** — Assign roles (e.g. Developer, Admin) and map them to permissions.
+  1. **Logged-in users can do anything** — Any authenticated user has full access (simple but rarely appropriate for production).
+  2. **Matrix-based / Project-based Matrix** — Fine-grained permissions per user/group (Overall and optionally per job).
+  3. **Role-based (Role-Based Strategy plugin)** — Assign roles (e.g. Developer, Admin) and map them to permissions.
 
 - **Flow** — User hits Jenkins → Security Realm verifies identity → Authorization Strategy checks permissions for each action (view, run, configure, admin).
 
