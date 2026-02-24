@@ -128,7 +128,6 @@ High-level flow:
 |-----------|-------------|
 | **Unified VCS and CI** | No separate CI server to sync with Git; same permissions and repo context. |
 | **Pipeline as code** | Pipelines live in the repo; easy to branch and test pipeline changes. |
-| **MR gating** | Enforce "pipeline must pass" before merge; improves main-branch quality. |
 | **Scalable runners** | Add more runners or use autoscaling (e.g. with Generic CI AMI) as load grows. |
 | **Artifacts and caching** | Store build outputs and caches between jobs; faster subsequent runs. |
 | **Visibility** | One place to see pipeline status, logs, and history for auditing and troubleshooting. |
