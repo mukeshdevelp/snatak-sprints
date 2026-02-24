@@ -1,6 +1,5 @@
-# Jenkins Authentication and Authorization
+# Jenkins Authentication and Authorization Documetation
 
-This document describes **Jenkins authentication (Authn)** and **authorization (Authz)**: introduction, what they are, why they matter, workflow diagram, different types (security realms and authorization strategies), comparison table, best practices, recommendation/conclusion, contact information, and references.
 
 ---
 
@@ -14,30 +13,12 @@ This document describes **Jenkins authentication (Authn)** and **authorization (
 
 ---
 
-## Detailed documentation
-
-This document provides detailed documentation for **Jenkins Authn and Authz**. It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | What authentication and authorization mean in Jenkins and why they matter. |
-| **What** | What Jenkins Authn and Authz are and how they work. |
-| **Why** | Reasons to configure Authn and Authz properly in Jenkins. |
-| **Workflow diagram** | How login and permission checks flow in Jenkins. |
-| **Different types** | Security realms (Authn) and authorization strategies (Authz) available in Jenkins. |
-| **Comparison table** | Comparison of security realms and authorization strategies. |
-| **Best practices** | Recommendations for securing Jenkins access. |
-| **Recommendation / Conclusion** | Summary and recommendations. |
-| **Contact Information** | Author contact. |
-| **References** | Links to Jenkins and plugin documentation. |
-
----
 
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
-2. [What](#2-what)
-3. [Why](#3-why)
+2. [What is jenkins authn and authz](#2-what-is-jenkins-authn-and-authz)
+3. [Why use authn and auhz](#3-why-use-authn-and-auhz)
 4. [Workflow diagram](#4-workflow-diagram)
 5. [Different types](#5-different-types)
 6. [Comparison table](#6-comparison-table)
@@ -56,7 +37,7 @@ Jenkins uses a **Security Realm** for authentication and an **Authorization Stra
 
 ---
 
-## 2. What
+## 2. What is jenkins authn and authz
 
 **Jenkins authentication and authorization** consist of:
 
@@ -75,7 +56,7 @@ Jenkins uses a **Security Realm** for authentication and an **Authorization Stra
 
 ---
 
-## 3. Why
+## 3. Why use authn and auhz
 
 | Reason | Description |
 |--------|-------------|
