@@ -14,25 +14,6 @@ This document describes **Jenkins authentication (Authn)** and **authorization (
 
 ---
 
-## Detailed documentation
-
-This document provides detailed documentation for **Jenkins Authn and Authz**. It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | What authentication and authorization mean in Jenkins and why they matter. |
-| **What** | What Jenkins Authn and Authz are and how they work. |
-| **Why** | Reasons to configure Authn and Authz properly in Jenkins. |
-| **Workflow diagram** | How login and permission checks flow in Jenkins. |
-| **Different types** | Security realms (Authn) and authorization strategies (Authz) available in Jenkins. |
-| **Comparison table** | Comparison of security realms and authorization strategies. |
-| **Best practices** | Recommendations for securing Jenkins access. |
-| **Recommendation / Conclusion** | Summary and recommendations. |
-| **Contact Information** | Author contact. |
-| **References** | Links to Jenkins and plugin documentation. |
-
----
-
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
