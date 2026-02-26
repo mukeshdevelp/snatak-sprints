@@ -201,13 +201,18 @@ This setup provides a **least-privilege** SonarQube infra on AWS: one **VPC**, o
 
 ## 9. FAQ
 
-| Question | Answer |
-|----------|--------|
-| **Why use a private subnet for SonarQube and PostgreSQL?** | A private subnet has no direct route to the internet, so the SonarQube and PostgreSQL server is not reachable from the public internet. Access is only via the bastion, reducing attack surface and helping meet least-privilege and compliance requirements. |
-| **What is the difference between NACL and Security Group in AWS?** | **NACLs** are stateless, subnet-level firewalls: you must allow both inbound and outbound for each flow, and rules are evaluated in order. **Security Groups** are stateful, instance-level: allowing inbound automatically allows the return traffic. Both apply in this setup; NACLs add a second layer of control at the subnet. |
-| **Why allow PostgreSQL port 5432 from the bastion if SonarQube uses localhost?** | SonarQube connects to PostgreSQL on localhost and does not need 5432 open from the network. Opening 5432 from the bastion allows DBAs or admins to run `psql` or other tools from the bastion (e.g. backups, schema changes, troubleshooting). If you never need remote admin, you can omit the 5432 rule in the NACL and security group. |
-| **Can I use Amazon RDS for PostgreSQL instead of installing on the same server?** | Yes. You can create an RDS PostgreSQL instance in the same VPC (e.g. in the private subnet or a dedicated DB subnet), allow the SonarQube security group to connect to the RDS security group on port 5432, and point SonarQube’s JDBC URL to the RDS endpoint. You would then remove or tighten the 5432 rule from the bastion if only SonarQube needs access. |
-| **How do I connect to PostgreSQL from my laptop via the bastion?** | Use SSH port forwarding from your laptop: `ssh -L 5432:<private-ip-of-sonarqube-host>:5432 ec2-user@<bastion-public-ip>`. Then connect your local client to `localhost:5432`; traffic is tunnelled through the bastion to the SonarQube server’s PostgreSQL. |
+---
+
+- **Why use a private subnet for SonarQube and PostgreSQL?**
+  - A private subnet has no direct route to the internet, so the SonarQube and PostgreSQL server is not reachable from the public internet. Access is only via the bastion, reducing attack surface and helping meet least-privilege and compliance requirements.
+- **What is the difference between NACL and Security Group in AWS?**
+  - **NACLs** are stateless, subnet-level firewalls: you must allow both inbound and outbound for each flow, and rules are evaluated in order. **Security Groups** are stateful, instance-level: allowing inbound automatically allows the return traffic. Both apply in this setup; NACLs add a second layer of control at the subnet.
+- **Why allow PostgreSQL port 5432 from the bastion if SonarQube uses localhost?**
+  - SonarQube connects to PostgreSQL on localhost and does not need 5432 open from the network. Opening 5432 from the bastion allows DBAs or admins to run `psql` or other tools from the bastion (e.g. backups, schema changes, troubleshooting). If you never need remote admin, you can omit the 5432 rule in the NACL and security group.
+- **Can I use Amazon RDS for PostgreSQL instead of installing on the same server?**
+  - Yes. You can create an RDS PostgreSQL instance in the same VPC (e.g. in the private subnet or a dedicated DB subnet), allow the SonarQube security group to connect to the RDS security group on port 5432, and point SonarQube’s JDBC URL to the RDS endpoint. You would then remove or tighten the 5432 rule from the bastion if only SonarQube needs access.
+- **How do I connect to PostgreSQL from my laptop via the bastion?**
+  - Use SSH port forwarding from your laptop: `ssh -L 5432:<private-ip-of-sonarqube-host>:5432 ec2-user@<bastion-public-ip>`. Then connect your local client to `localhost:5432`; traffic is tunnelled through the bastion to the SonarQube server’s PostgreSQL.
 
 ---
 
