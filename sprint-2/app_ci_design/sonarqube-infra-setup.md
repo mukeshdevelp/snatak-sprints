@@ -41,6 +41,7 @@ This setup places **SonarQube** and **PostgreSQL** on the **same server** in a *
 
 ## 2. Architecture diagram
 
+<img width="851" height="851" alt="sonar-setup drawio (1)" src="https://github.com/user-attachments/assets/263d3a54-b3a3-45eb-883a-afa6e834b088" />
 
 The **private subnet** host runs **SonarQube** and **PostgreSQL** on the same EC2 instance: SonarQube uses the database on localhost (port 5432). Optionally, PostgreSQL (5432) is reachable from the bastion for administration (psql).
 
