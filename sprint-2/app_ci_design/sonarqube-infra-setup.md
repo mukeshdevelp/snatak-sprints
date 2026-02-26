@@ -1,6 +1,5 @@
 # SonarQube Infrastructure Setup on AWS
 
-This document describes the **SonarQube infrastructure setup on AWS**: VPC, Internet Gateway, public subnet (bastion), private subnet (SonarQube + PostgreSQL on the same server), NACLs and security groups with least-privilege rules, and PostgreSQL installation.
 
 ---
 
