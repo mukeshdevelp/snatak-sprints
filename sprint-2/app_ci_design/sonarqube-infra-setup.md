@@ -133,33 +133,61 @@ Using **Bastion SG** as source is preferred over subnet CIDR so only the bastion
 
 ## 7. PostgreSQL installation (same server as SonarQube)
 
-PostgreSQL is installed on the **same EC2 instance** as SonarQube in the private subnet. SonarQube connects to the database on **localhost:5432**. The steps below are for a typical Linux (e.g. Amazon Linux 2 or Ubuntu) host.
+PostgreSQL is installed on the **same EC2 instance** as SonarQube in the private subnet. SonarQube connects to the database on **localhost:5432**. The steps below are for a typical Linux host (Amazon Linux 2 or Ubuntu). SSH to the SonarQube host via the bastion before running the commands.
 
 ### 7.1 Install PostgreSQL
 
-| Step | Action |
-|------|--------|
-| 1 | SSH to the SonarQube host via the bastion. |
-| 2 | Install PostgreSQL (e.g. `sudo yum install -y postgresql15-server` on Amazon Linux 2, or `sudo apt install -y postgresql-14` on Ubuntu). |
-| 3 | Initialise the data directory if required (e.g. `sudo postgresql-setup initdb` or `sudo pg_createcluster`). |
-| 4 | Enable and start PostgreSQL: `sudo systemctl enable postgresql` (or `postgresql-14`), `sudo systemctl start postgresql`. |
-| 5 | Ensure PostgreSQL listens on localhost (default). In `postgresql.conf`, set `listen_addresses = 'localhost'` so the DB is not bound to the private IP unless you need remote access from bastion (port 5432 is already allowed from bastion in NACL/SG). |
+Install PostgreSQL, initialise the data directory if required, then enable and start the service. In `postgresql.conf`, set `listen_addresses = 'localhost'` so the DB listens only on localhost unless you need remote access from the bastion (port 5432 is already allowed from the bastion in NACL/SG).
+
+
+
+**Ubuntu:**
+
+```bash
+# install
+sudo apt update && sudo apt install -y postgresql-14 postgresql-contrib
+
+# enable and start (service may already be running)
+sudo systemctl enable postgresql
+sudo systemctl start postgresql
+
+# optional: update and restart later
+sudo apt update && sudo apt upgrade -y postgresql postgresql-contrib
+sudo systemctl restart postgresql
+```
 
 ### 7.2 Create database and user for SonarQube
 
-| Step | Action |
-|------|--------|
-| 1 | Switch to the postgres user: `sudo -u postgres psql`. |
-| 2 | Create a dedicated user and database: `CREATE USER sonarqube WITH PASSWORD '<secure-password>';` and `CREATE DATABASE sonarqube OWNER sonarqube;`. |
-| 3 | Grant required privileges if needed (e.g. for SonarQube 10+: the user needs access to the database and schema). Revoke public access if desired: `REVOKE CONNECT ON DATABASE sonarqube FROM PUBLIC;` (leave `sonarqube` user with access). |
+Switch to the `postgres` user and create a dedicated user and database for SonarQube. Revoke public access on the database if desired so only the `sonarqube` user can connect.
+
+```bash
+sudo -u postgres psql
+```
+
+In the `psql` prompt:
+
+```sql
+CREATE USER sonarqube WITH PASSWORD '<secure-password>';
+CREATE DATABASE sonarqube OWNER sonarqube;
+
+-- optional: revoke public access
+REVOKE CONNECT ON DATABASE sonarqube FROM PUBLIC;
+```
 
 ### 7.3 Configure SonarQube to use PostgreSQL
 
-| Step | Action |
-|------|--------|
-| 1 | In SonarQube config (e.g. `$SONAR_HOME/conf/sonar.properties` or env), set the JDBC URL to use PostgreSQL on localhost: `sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube`. |
-| 2 | Set `sonar.jdbc.username=sonarqube` and `sonar.jdbc.password=<secure-password>`. |
-| 3 | Restart SonarQube so it connects to PostgreSQL instead of the default H2. |
+In SonarQube config (e.g. `$SONAR_HOME/conf/sonar.properties` or environment variables), set the JDBC URL, username, and password to use PostgreSQL on localhost. Then restart SonarQube so it uses PostgreSQL instead of the default H2.
+
+```properties
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+sonar.jdbc.username=sonarqube
+sonar.jdbc.password=<secure-password>
+```
+
+```bash
+# restart SonarQube (path depends on your install)
+sudo systemctl restart sonarqube
+```
 
 PostgreSQL port **5432** is included in the **private subnet NACL** and **SonarQube security group** so that, if needed, you can connect from the bastion (e.g. `psql -h <private-host-ip> -U sonarqube -d sonarqube`) for administration; day-to-day SonarQube traffic is localhost only.
 
@@ -173,13 +201,18 @@ This setup provides a **least-privilege** SonarQube infra on AWS: one **VPC**, o
 
 ## 9. FAQ
 
-| Question | Answer |
-|----------|--------|
-| **Why use a private subnet for SonarQube and PostgreSQL?** | A private subnet has no direct route to the internet, so the SonarQube and PostgreSQL server is not reachable from the public internet. Access is only via the bastion, reducing attack surface and helping meet least-privilege and compliance requirements. |
-| **What is the difference between NACL and Security Group in AWS?** | **NACLs** are stateless, subnet-level firewalls: you must allow both inbound and outbound for each flow, and rules are evaluated in order. **Security Groups** are stateful, instance-level: allowing inbound automatically allows the return traffic. Both apply in this setup; NACLs add a second layer of control at the subnet. |
-| **Why allow PostgreSQL port 5432 from the bastion if SonarQube uses localhost?** | SonarQube connects to PostgreSQL on localhost and does not need 5432 open from the network. Opening 5432 from the bastion allows DBAs or admins to run `psql` or other tools from the bastion (e.g. backups, schema changes, troubleshooting). If you never need remote admin, you can omit the 5432 rule in the NACL and security group. |
-| **Can I use Amazon RDS for PostgreSQL instead of installing on the same server?** | Yes. You can create an RDS PostgreSQL instance in the same VPC (e.g. in the private subnet or a dedicated DB subnet), allow the SonarQube security group to connect to the RDS security group on port 5432, and point SonarQube’s JDBC URL to the RDS endpoint. You would then remove or tighten the 5432 rule from the bastion if only SonarQube needs access. |
-| **How do I connect to PostgreSQL from my laptop via the bastion?** | Use SSH port forwarding from your laptop: `ssh -L 5432:<private-ip-of-sonarqube-host>:5432 ec2-user@<bastion-public-ip>`. Then connect your local client to `localhost:5432`; traffic is tunnelled through the bastion to the SonarQube server’s PostgreSQL. |
+---
+
+- **Why use a private subnet for SonarQube and PostgreSQL?**
+  - A private subnet has no direct route to the internet, so the SonarQube and PostgreSQL server is not reachable from the public internet. Access is only via the bastion, reducing attack surface and helping meet least-privilege and compliance requirements.
+- **What is the difference between NACL and Security Group in AWS?**
+  - **NACLs** are stateless, subnet-level firewalls: you must allow both inbound and outbound for each flow, and rules are evaluated in order. **Security Groups** are stateful, instance-level: allowing inbound automatically allows the return traffic. Both apply in this setup; NACLs add a second layer of control at the subnet.
+- **Why allow PostgreSQL port 5432 from the bastion if SonarQube uses localhost?**
+  - SonarQube connects to PostgreSQL on localhost and does not need 5432 open from the network. Opening 5432 from the bastion allows DBAs or admins to run `psql` or other tools from the bastion (e.g. backups, schema changes, troubleshooting). If you never need remote admin, you can omit the 5432 rule in the NACL and security group.
+- **Can I use Amazon RDS for PostgreSQL instead of installing on the same server?**
+  - Yes. You can create an RDS PostgreSQL instance in the same VPC (e.g. in the private subnet or a dedicated DB subnet), allow the SonarQube security group to connect to the RDS security group on port 5432, and point SonarQube’s JDBC URL to the RDS endpoint. You would then remove or tighten the 5432 rule from the bastion if only SonarQube needs access.
+- **How do I connect to PostgreSQL from my laptop via the bastion?**
+  - Use SSH port forwarding from your laptop: `ssh -L 5432:<private-ip-of-sonarqube-host>:5432 ec2-user@<bastion-public-ip>`. Then connect your local client to `localhost:5432`; traffic is tunnelled through the bastion to the SonarQube server’s PostgreSQL.
 
 ---
 
