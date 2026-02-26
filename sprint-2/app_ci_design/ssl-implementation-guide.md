@@ -74,18 +74,14 @@ This guide describes what SSL/TLS is, why to use it, how the handshake and data 
 4. **Key exchange** — Client and server agree on session keys (e.g. via Diffie–Hellman).
 5. **Encrypted application data** — Subsequent traffic is encrypted with the session keys.
 
-```
-[Client] ─── Client Hello ───► [Server]
-[Client] ◄── Server Hello + Certificate ─── [Server]
-[Client] ─── Key exchange ───► [Server]
-[Client] ◄──────────────────► [Server]   (encrypted application data)
-```
+
+<img width="1151" height="652" alt="image" src="https://github.com/user-attachments/assets/c1e6b046-e898-4bc9-9a68-e463ba3ff47a" />
+
 
 ### End-to-end HTTPS flow
 
-```
-[User / Browser] ── HTTPS (TLS) ──► [Web server / Reverse proxy] ── HTTP (optional) ──► [Backend]
-```
+<img width="1151" height="652" alt="image" src="https://github.com/user-attachments/assets/27dc05c9-eb08-42ff-b436-b349900b25ae" />
+
 
 TLS can **terminate** at the edge (load balancer or reverse proxy) or at the application server; internal traffic can stay HTTP or use TLS again depending on policy.
 
