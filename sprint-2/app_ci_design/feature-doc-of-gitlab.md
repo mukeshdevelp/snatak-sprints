@@ -70,9 +70,6 @@ GitLab CI fits into the application CI workflow as follows:
 5. **Results** — Logs and artifacts are sent back to GitLab; status is updated (passed/failed).
 6. **Downstream** — On success, later stages (e.g. deploy) can run; MR can be merged when pipeline succeeds.
 
-```
-[Developer: push / MR] → [GitLab] → [Parse .gitlab-ci.yml] → [Schedule jobs] → [Runner: run build/test] → [Report status & artifacts] → [Optional: deploy / merge]
-```
 
 **High-level flow:**
 
