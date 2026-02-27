@@ -10,27 +10,6 @@
 
 ---
 
-## Detailed documentation
-
-This document provides detailed **Authz documentation** for Version Control Systems (VCS). It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | What authentication (Authn) and authorization (Authz) mean in VCS and why they matter. |
-| **Why** | Reasons authn and authz are essential in VCS (security, policy, accountability, least privilege, compliance). |
-| **Access Levels** | Repository and branch-level permissions (read, write, maintain, admin) and branch protection. |
-| **Audit Trails** | What is logged (commits, pushes, merges, access) and how to use it for accountability and compliance. |
-| **Integration with Identity Providers** | SSO, group mapping, JIT provisioning, and IdP integration with GitHub, GitLab, Bitbucket. |
-| **Advantages** | Benefits of strong authz (security, traceability, controlled releases, scalability, IdP). |
-| **Disadvantages** | Trade-offs (complexity, friction, IdP dependency, over-restriction). |
-| **Best Practices** | One identity per person, least privilege, branch protection, MFA, service accounts, access reviews, audit retention. |
-| **Conclusion** | Summary and recommendations. |
-| **FAQ** | Frequently asked questions on authn, authz, access levels, audit, and IdP. |
-| **Contact Information** | Author contact. |
-| **References** | Links to official and standards documentation. |
-
----
-
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
