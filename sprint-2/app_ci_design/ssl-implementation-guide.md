@@ -1,6 +1,5 @@
 # SSL/TLS Implementation Guide
 
-This document is an **SSL/TLS implementation guide** for securing network traffic: introduction, what SSL/TLS is, why use it, workflow diagram, implementation options, step-by-step examples, best practices, conclusion, contact information, and references.
 
 ---
 
