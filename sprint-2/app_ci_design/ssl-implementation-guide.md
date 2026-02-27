@@ -117,17 +117,11 @@ sudo apt update && sudo apt install -y certbot
 sudo certbot certonly --standalone -d your-domain.example.com
 # Cert and key are typically under /etc/letsencrypt/live/your-domain.example.com/
 ```
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/cb9fdbed-6167-41e9-82c4-951b787af29d" />
+<img width="1920" height="362" alt="image" src="https://github.com/user-attachments/assets/caea4d71-6961-486c-be3e-1c396c89381b" />
+<img width="1920" height="554" alt="image" src="https://github.com/user-attachments/assets/e6c76196-4b1d-4849-bec2-8ea9f165649b" />
 
-**Private CA / self-signed (OpenSSL):**
 
-```bash
-# Generate private key and self-signed certificate (valid 365 days)
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout /etc/ssl/private/server.key -out /etc/ssl/certs/server.crt \
-  -subj "/CN=your-hostname.example.com"
-```
-
-Restrict key permissions: `chmod 600 /etc/ssl/private/server.key`.
 
 ### 6.2 Configure Nginx for HTTPS
 
@@ -142,15 +136,24 @@ server {
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
 
-    location / {
-        proxy_pass http://localhost:8080;   # backend
+    location /api/v1/employee/ {
+        proxy_pass http://10.0.2.75:8080/api/v1/employee/;
+        proxy_http_version 1.1;
+
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_connect_timeout 10s;
+        proxy_send_timeout 30s;
+        proxy_read_timeout 30s;
     }
+
 }
 ```
+<img width="1920" height="554" alt="image" src="https://github.com/user-attachments/assets/ce756f2e-0c4a-4370-9737-f431da0f0ea5" />
+<img width="1920" height="554" alt="image" src="https://github.com/user-attachments/assets/5fecbac4-df66-4c64-bed8-6e2fc39b7cf4" />
 
 Reload Nginx: `sudo nginx -t && sudo systemctl reload nginx`.
 
