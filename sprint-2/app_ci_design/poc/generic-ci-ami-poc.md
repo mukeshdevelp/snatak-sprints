@@ -14,24 +14,6 @@ This document describes the **Proof of Concept (POC)** for the Generic CI AMI: s
 
 ---
 
-## Detailed documentation
-
-This document provides the **POC (Proof of Concept)** for the Generic CI AMI. It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | Purpose of the POC and how it relates to the Generic CI AMI. |
-| **Scope** | What is in and out of scope for the POC. |
-| **Prerequisites** | AWS, CI system, and tooling requirements. |
-| **POC steps** | Step-by-step approach: define scope, build AMI, configure CI, run jobs, document. |
-| **Success criteria** | How to decide if the POC is successful. |
-| **Risks and limitations** | What to watch for and what is out of scope. |
-| **Conclusion** | Summary and next steps. |
-| **Contact Information** | Author contact. |
-| **References** | Links to related documentation. |
-
----
-
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
