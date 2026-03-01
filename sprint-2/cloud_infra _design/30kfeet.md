@@ -100,13 +100,9 @@ At a high level, the design is summarised as follows.
 
 **Diagram (text flow):**
 
-```
-[Users] → [Edge/DNS] → [Load Balancer] → [Application Layer (EC2/ECS/EKS)]
-                              ↓
-                    [Data Layer (RDS, S3, etc.)]
-                              ↑
-[CI/CD Pipeline] ──────────────┘
-```
+
+<img width="1351" height="803" alt="image" src="https://github.com/user-attachments/assets/9433879c-8849-496b-bb79-38207eecd59c" />
+
 
 
 
