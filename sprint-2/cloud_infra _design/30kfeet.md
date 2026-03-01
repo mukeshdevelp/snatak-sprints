@@ -101,7 +101,8 @@ At a high level, the design is summarised as follows.
 **Diagram (text flow):**
 
 
-<img width="1351" height="803" alt="image" src="https://github.com/user-attachments/assets/9433879c-8849-496b-bb79-38207eecd59c" />
+<img width="1351" height="803" alt="image" src="https://github.com/user-attachments/assets/cd576141-7ab0-480f-92bf-1d801a7ab502" />
+
 
 
 
