@@ -1,6 +1,5 @@
-# Generic CI AMI
+# Generic CI AMI Document
 
-This document describes the **Generic CI AMI** (Amazon Machine Image): what it is, why it is used, workflow, advantages, POC approach, best practices, and references.
 
 ---
 
@@ -17,8 +16,8 @@ This document describes the **Generic CI AMI** (Amazon Machine Image): what it i
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
-2. [What](#2-what)
-3. [Why](#3-why)
+2. [What is Generic CI AMI](#2-what-is-generic-ci-ami)
+3. [Why use Generic CI AMI](#3-why-use-generic-ci-ami)
 4. [Workflow diagram](#4-workflow-diagram)
 5. [Advantages](#5-advantages)
 6. [POC](#6-poc)
@@ -35,7 +34,7 @@ A **Generic CI AMI** is a preconfigured **Amazon Machine Image (AMI)** used to r
 
 ---
 
-## 2. What
+## 2. What is Generic CI AMI
 
 The **Generic CI AMI** is an Amazon Machine Image that includes:
 
@@ -48,7 +47,7 @@ Teams bake this image once, register it as an AMI, and configure their CI system
 
 ---
 
-## 3. Why
+## 3. Why use Generic CI AMI
 
 | Reason | Description |
 |--------|-------------|
@@ -90,15 +89,9 @@ The Generic CI AMI fits into the CI workflow as follows:
 
 ## 6. POC
 
-For a **proof of concept** with the Generic CI AMI:
+For a **proof of concept** with the Generic CI AMI, Check the Link:
 
-1. **Define scope** — Choose one or two pipelines (e.g. one Java, one Node) and one CI system (e.g. Jenkins or GitLab).
-2. **Build the AMI** — Start from a standard base (e.g. Amazon Linux 2), install required runtimes and the CI agent, document the steps (e.g. with Packer or a script), and create the AMI.
-3. **Configure CI** — Point the CI controller to launch agents/workers from this AMI (e.g. Jenkins EC2 plugin or GitLab Runner autoscale).
-4. **Run sample jobs** — Trigger builds and tests; confirm they pass and that startup time and behaviour are acceptable.
-5. **Document and iterate** — Document how to update the AMI and add new tools; refine based on feedback.
-
-Success criteria for the POC: jobs run successfully from the AMI, startup time is acceptable, and the process to update the AMI is clear.
+<LINK>
 
 ---
 
