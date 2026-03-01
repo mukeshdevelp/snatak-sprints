@@ -1,6 +1,6 @@
 # React CI Checks & DAST — POC (Proof of Concept)
 
-This document is the **POC (Proof of Concept)** for **React CI checks and DAST** in the context of the **API/frontend** application (OT-Microservices frontend): scope, prerequisites, step-by-step setup, and success criteria.
+This document is the **POC (Proof of Concept)** for **React CI checks and DAST** for the frontend application located at **~/frontend** (OT-Microservices React frontend): scope, prerequisites, step-by-step setup, and success criteria.
 
 ---
 
@@ -29,8 +29,8 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 | Item | Description |
 |------|-------------|
-| **Application** | **API/frontend** — React (react-scripts) frontend for OT-Microservices; depends on Employee, Attendance, and Salary APIs. |
-| **Repo location** | `API/frontend` (e.g. within snatak-sprints or OT-Microservices). |
+| **Application** | Frontend — React (react-scripts) frontend for OT-Microservices; depends on Employee, Attendance, and Salary APIs. |
+| **Repo location** | **~/frontend** (frontend application directory). |
 | **Build** | `npm install`, `npm run build` (or `make build`); output in `build/`. |
 | **Run** | `serve -s build` on port 3000 (or `npm run start` for dev). |
 | **POC goal** | Add React CI checks (lint, test, build) and DAST scan in CI, using the frontend as the target. |
@@ -42,7 +42,7 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 | Requirement | Description |
 |-------------|-------------|
 | **Node.js and npm** | Node 16+ (per frontend Dockerfile); npm for install and build. |
-| **API/frontend repo** | Clone or use the existing `API/frontend` directory; ensure `package.json` and `Makefile` are present. |
+| **Frontend repo** | Clone or use the existing **~/frontend** directory; ensure `package.json` and `Makefile` are present. |
 | **CI system** | GitLab CI, Jenkins, or similar (one pipeline for the POC). |
 | **DAST tool** | OWASP ZAP (Docker or CLI) or npm audit/Snyk for dependency checks; ZAP for dynamic scan of the running app. |
 
@@ -52,7 +52,7 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 1. Navigate to the frontend directory:
    ```bash
-   cd API/frontend
+   cd ~/frontend
    ```
 2. Install dependencies and build:
    ```bash
@@ -75,8 +75,8 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 ## 4. Step 2 — Add CI pipeline (lint, test, build)
 
 1. In your CI config (e.g. `.gitlab-ci.yml` or Jenkinsfile), add a job that:
-   - Checks out the repo (including `API/frontend` or the frontend-only repo).
-   - Runs `npm ci` or `npm install` in the frontend directory.
+   - Checks out the repo (or the frontend at **~/frontend**).
+   - Runs `npm ci` or `npm install` in ~/frontend.
    - Runs lint (if configured, e.g. `npm run lint` or ESLint).
    - Runs tests: `npm run test -- --watchAll=false` (or equivalent for react-scripts).
    - Runs `npm run build` and stores the `build/` artifact.
@@ -104,7 +104,7 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 1. **Thresholds** — Configure the pipeline to fail only on high/critical DAST findings; document the threshold in the main design doc ([React CI checks — DAST](../react-ci-checks-dast.md)).
 2. **Baseline** — If ZAP reports false positives (e.g. on static assets), use ZAP baseline or exclusions so the POC pipeline stays green for known-good state.
-3. **Docs** — Document in this file or in the CI config: frontend path (`API/frontend`), build command (`make build` / `npm run build`), serve command (`serve -s build`), and DAST command/options.
+3. **Docs** — Document in this file or in the CI config: frontend path (**~/frontend**), build command (`make build` / `npm run build`), serve command (`serve -s build`), and DAST command/options.
 4. **Optional** — If the frontend is deployed to a staging URL, run DAST against that URL instead of a CI-internal server for closer-to-production coverage.
 
 ---
@@ -113,7 +113,7 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 | Criterion | Status |
 |-----------|--------|
-| API/frontend builds successfully in CI (`make build` or `npm run build`). | ☐ |
+| Frontend at ~/frontend builds successfully in CI (`make build` or `npm run build`). | ☐ |
 | Lint and test jobs run and pass (if configured). | ☐ |
 | Build artifact is available to the DAST job. | ☐ |
 | DAST (e.g. OWASP ZAP) runs against the served frontend and produces a report. | ☐ |
@@ -134,8 +134,7 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 | Link | Description |
 |------|-------------|
-| [React CI checks — DAST](../react-ci-checks-dast.md) | Main design document for React CI checks and DAST. |
-| [API/frontend README](../../../API/frontend/README.md) | Frontend application build and run instructions (relative to repo root). |
+| [React CI checks — DAST](../react-ci-checks-dast.md) | Main design document for React CI checks and DAST (frontend at ~/frontend). |
 | [OWASP ZAP](https://www.zaproxy.org/) | OWASP ZAP — dynamic application security testing. |
 | [npm audit](https://docs.npmjs.com/cli/v8/commands/npm-audit) | npm audit for dependency vulnerabilities. |
 
