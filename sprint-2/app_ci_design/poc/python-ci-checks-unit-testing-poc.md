@@ -1,6 +1,6 @@
-# Application CI Design | Python CI Checks (Attendance & Notification) | Unit Testing — POC
+# Python CI Checks | Unit Testing — POC (Proof of Concept)
 
-This document is the **POC (Proof of Concept)** for **Python CI checks and unit testing** for the **Attendance API** and **Notification Worker**: scope, prerequisites, step-by-step setup, and success criteria.
+This document is the **POC (Proof of Concept)** for **Python CI checks and unit testing** for Python-based services (e.g. a Flask REST API and a Python background worker): scope, prerequisites, step-by-step setup, and success criteria.
 
 ---
 
@@ -15,8 +15,8 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 
 1. [Scope and context](#1-scope-and-context)
 2. [Prerequisites](#2-prerequisites)
-3. [Step 1 — Attendance API: build, lint, and unit tests](#3-step-1--attendance-api-build-lint-and-unit-tests)
-4. [Step 2 — Notification Worker: add tests and run in CI](#4-step-2--notification-worker-add-tests-and-run-in-ci)
+3. [Step 1 — Python API: build, lint, and unit tests](#3-step-1--python-api-build-lint-and-unit-tests)
+4. [Step 2 — Python worker: add tests and run in CI](#4-step-2--python-worker-add-tests-and-run-in-ci)
 5. [Step 3 — Integrate both into CI](#5-step-3--integrate-both-into-ci)
 6. [Step 4 — Coverage and thresholds](#6-step-4--coverage-and-thresholds)
 7. [Success criteria](#7-success-criteria)
@@ -29,9 +29,9 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 
 | Item | Description |
 |------|-------------|
-| **Attendance API** | Flask-based REST API; Poetry, pytest, pytest-cov, pytest-mock, pylint; tests in `router/`, `client/`, `models/`, `utils/`. |
-| **Notification Worker** | Python service (SMTP, Elasticsearch); pip + requirements.txt; currently no test suite in repo—POC adds minimal unit tests. |
-| **Repo locations** | `API/attendance-api`, `API/notification-worker`. |
+| **Python API** | Flask-based REST API; Poetry, pytest, pytest-cov, pytest-mock, pylint; tests in router, client, models, utils. |
+| **Python worker** | Python service (e.g. SMTP, Elasticsearch); pip + requirements.txt; POC adds minimal unit tests if none exist. |
+| **Repo locations** | Python API project directory (e.g. **~/python-api**); Python worker project directory (e.g. **~/python-worker**). |
 | **POC goal** | Run unit tests for both applications in CI; optionally enforce coverage thresholds. |
 
 ---
@@ -40,25 +40,25 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 
 | Requirement | Description |
 |-------------|-------------|
-| **Python** | Python 3.11 for Attendance API (per pyproject.toml); Python 3.6+ for Notification Worker (per Dockerfile). |
-| **Poetry** | For Attendance API dependency and test runs. |
-| **pip** | For Notification Worker (`pip install -r requirements.txt`). |
+| **Python** | Python 3.11+ for the API (or per pyproject.toml); Python 3.6+ for the worker (or per Dockerfile/requirements). |
+| **Poetry** | For the Python API dependency and test runs. |
+| **pip** | For the Python worker (`pip install -r requirements.txt`). |
 | **CI system** | GitLab CI, Jenkins, or similar (one pipeline or two jobs for the POC). |
 
 ---
 
-## 3. Step 1 — Attendance API: build, lint, and unit tests
+## 3. Step 1 — Python API: build, lint, and unit tests
 
-1. Navigate to the Attendance API directory:
+1. Navigate to the Python API project directory:
    ```bash
-   cd API/attendance-api
+   cd ~/python-api
    ```
 2. Install dependencies:
    ```bash
    make build
    # or: poetry config virtualenvs.create false && poetry install --no-root --no-interaction --no-ansi
    ```
-3. Run lint (pylint):
+3. Run lint (e.g. pylint):
    ```bash
    make fmt
    # or: pylint router/ client/ models/ utils/ app.py
@@ -71,15 +71,15 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
    ```bash
    python3 -m pytest --cov=.
    ```
-6. Tests are located under `router/tests/`, `client/tests/`, `models/tests/`, `utils/tests/` (e.g. test_cache, test_postgres_conn, test_validator, test_log_encoder). Ensure all pass locally before adding to CI.
+6. Tests are typically under `router/tests/`, `client/tests/`, `models/tests/`, `utils/tests/` (e.g. test_cache, test_postgres_conn, test_validator). Ensure all pass locally before adding to CI.
 
 ---
 
-## 4. Step 2 — Notification Worker: add tests and run in CI
+## 4. Step 2 — Python worker: add tests and run in CI
 
-1. Navigate to the Notification Worker directory:
+1. Navigate to the Python worker project directory:
    ```bash
-   cd API/notification-worker
+   cd ~/python-worker
    ```
 2. Install dependencies:
    ```bash
@@ -87,8 +87,8 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
    # or: pip3 install -r requirements.txt
    ```
 3. Add a minimal test suite (POC):
-   - Create a `tests/` directory and a `tests/test_notification.py` (or similar).
-   - Write one or two unit tests that mock SMTP and Elasticsearch (e.g. test config loading, or a helper that builds the mail payload).
+   - Create a `tests/` directory and a `tests/test_*.py` (e.g. test config loading or a helper that builds the mail payload).
+   - Mock SMTP and Elasticsearch (or other external services) in tests.
    - Use **pytest** (add `pytest` to `requirements.txt` or a dev-requirements file) or **unittest**.
 4. Run tests locally:
    ```bash
@@ -101,14 +101,14 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 
 ## 5. Step 3 — Integrate both into CI
 
-1. **Attendance API job** (example GitLab CI):
-   - Checkout repo; change to `API/attendance-api`.
+1. **Python API job** (example GitLab CI):
+   - Checkout repo; change to the Python API project directory.
    - Install: `poetry install --no-root` (or `make build`).
    - Lint: `make fmt` or `pylint router/ client/ models/ utils/ app.py`.
    - Test: `python3 -m pytest --cov=. --cov-report=xml` (or `--junitxml=report.xml` for JUnit).
    - Publish coverage and/or JUnit report as artifacts; fail the job if pytest exits non-zero.
-2. **Notification Worker job**:
-   - Checkout repo; change to `API/notification-worker`.
+2. **Python worker job**:
+   - Checkout repo; change to the Python worker project directory.
    - Install: `pip install -r requirements.txt` (and pytest if not in requirements).
    - Test: `python3 -m pytest tests/ -v` (or equivalent).
    - Fail the job if tests fail.
@@ -118,12 +118,12 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 
 ## 6. Step 4 — Coverage and thresholds
 
-1. For **Attendance API**, set a coverage threshold in CI (e.g. fail if coverage &lt; 70%). Example with pytest-cov:
+1. For the **Python API**, set a coverage threshold in CI (e.g. fail if coverage &lt; 70%). Example with pytest-cov:
    ```bash
    python3 -m pytest --cov=. --cov-fail-under=70
    ```
 2. Optionally publish coverage to a dashboard (e.g. GitLab coverage parsing, or a coverage server).
-3. For **Notification Worker**, coverage is optional in the POC; focus on tests passing. Add `--cov` and thresholds later if the test suite grows.
+3. For the **Python worker**, coverage is optional in the POC; focus on tests passing. Add `--cov` and thresholds later if the test suite grows.
 
 ---
 
@@ -131,11 +131,11 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 
 | Criterion | Status |
 |-----------|--------|
-| Attendance API: `make build` and `make fmt` succeed in CI. | ☐ |
-| Attendance API: `python3 -m pytest --cov=.` runs and all tests pass. | ☐ |
-| Attendance API: Coverage report (and optionally threshold) is enforced in CI. | ☐ |
-| Notification Worker: Dependencies install in CI. | ☐ |
-| Notification Worker: At least one unit test exists and runs in CI. | ☐ |
+| Python API: `make build` and `make fmt` succeed in CI. | ☐ |
+| Python API: `python3 -m pytest --cov=.` runs and all tests pass. | ☐ |
+| Python API: Coverage report (and optionally threshold) is enforced in CI. | ☐ |
+| Python worker: Dependencies install in CI. | ☐ |
+| Python worker: At least one unit test exists and runs in CI. | ☐ |
 | Both applications’ test jobs are part of the same pipeline or project. | ☐ |
 | Process is documented (commands, paths, thresholds). | ☐ |
 
@@ -154,9 +154,8 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 | Link | Description |
 |------|-------------|
 | [Python CI Checks — Unit Testing (main doc)](../python-ci-checks-unit-testing.md) | Main design document for Python CI checks and unit testing. |
-| [Attendance API README](../../../API/attendance-api/README.md) | Attendance API build, test, and run instructions. |
-| [Notification Worker README](../../../API/notification-worker/README.md) | Notification Worker build and run instructions. |
 | [pytest](https://docs.pytest.org/) | pytest — Python testing framework. |
 | [pytest-cov](https://pytest-cov.readthedocs.io/) | pytest-cov — coverage plugin for pytest. |
+| [coverage.py](https://coverage.readthedocs.io/) | coverage.py — code coverage measurement. |
 
 ---
