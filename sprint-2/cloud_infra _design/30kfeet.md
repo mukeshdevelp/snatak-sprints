@@ -23,18 +23,21 @@ This document provides a **30,000-foot view** of the cloud infrastructure and sy
 4. [30k-feet details](#4-30k-feet-details)
 5. [Infra diagram](#5-infra-diagram)
 6. [Conclusion](#6-conclusion)
-7. [Contact Information](#7-contact-information)
-8. [References](#8-references)
+7. [FAQ](#7-faq)
+8. [Contact Information](#8-contact-information)
+9. [References](#9-references)
 
 ---
 
 ## 1. Introduction
 
-A **30k-feet view** (or "30,000-foot view") is a high-level overview of a system or infrastructure—enough to understand the main components, how they connect, and how development and operations are organised, without diving into implementation details. This document describes the high-level cloud infrastructure and system design: what is in scope, what you need before you start, which system development approaches apply, the main architectural details, and an infrastructure diagram. Use it to onboard stakeholders, align on scope, or prepare for deeper design documents.
+A **30k-feet view** is a high-level overview of a system or infrastructure—enough to understand the main components, how they connect, and how development and operations are organised, without diving into implementation details. This document describes the high-level cloud infrastructure and system design: what is in scope, what you need before you start, which system development approaches apply, the main architectural details, and an infrastructure diagram. **Stable** sections (e.g. Introduction, Prerequisites, system development approaches) change rarely; **evolving** sections (e.g. 30k-feet details, infra diagram, references) are updated with iterations. Use it to onboard stakeholders, align on scope, or prepare for deeper design documents.
 
 ---
 
 ## 2. Prerequisites
+
+
 
 | Prerequisite | Description |
 |--------------|-------------|
@@ -43,78 +46,92 @@ A **30k-feet view** (or "30,000-foot view") is a high-level overview of a system
 | **Access to design artefacts** | Where applicable, access to diagrams, runbooks, or architecture docs referenced here. |
 | **Stakeholder alignment** | Agreement on scope (e.g. single region, multi-account) and non-goals for this high-level view. |
 
-This document does not assume deep implementation experience; it is aimed at a 30k-feet audience (product, management, new engineers).
-
 ---
 
 ## 3. System development approaches
 
-Different ways of developing and operating the system can influence how the infrastructure is used and evolved:
 
 | Approach | Brief description | Relevance to 30k-feet view |
 |----------|-------------------|----------------------------|
 | **Waterfall** | Sequential phases (requirements → design → build → test → deploy). | Infra is often designed up front; the 30k-feet view may reflect a fixed or slowly changing architecture. |
 | **Agile** | Iterative delivery in sprints; requirements and design evolve. | Infra may need to support frequent releases and changing scope; the 30k-feet view shows current state and main building blocks. |
 | **DevOps** | Development and operations combined; automation, CI/CD, and infra as code. | The 30k-feet view typically includes CI/CD, pipelines, and how infra is provisioned and updated. |
-| **Hybrid** | Mix of the above (e.g. agile for app, more formal for infra). | The document should make clear which parts are stable and which evolve with iterations. |
+
 
 
 ---
 
 ## 4. 30k-feet details
 
-At a high level, the design is summarised as follows. Adjust the bullets to match your actual setup.
+At a high level, the design is summarised as follows. 
 
-- **Cloud provider and scope** — e.g. AWS; single region or multi-region; single account or multi-account (dev/stage/prod).
-- **Networking** — VPC(s), public and private subnets, and how traffic is allowed (e.g. internet gateway, NAT, security groups).
-- **Compute** — What runs the workloads: e.g. EC2, containers (EKS/ECS), serverless (Lambda). High-level only (e.g. "EC2 for app servers, EKS for microservices").
-- **Data and storage** — Where persistent data lives (e.g. RDS, S3, NoSQL) and how it is accessed.
-- **CI/CD and pipelines** — How code is built, tested, and deployed (e.g. Jenkins or GitLab on EC2/AMI, pipelines deploying to EC2 or Kubernetes).
-- **Security and identity** — How access is controlled (e.g. IAM, SSO, network segmentation) at a high level.
-- **Observability** — Logging, metrics, and alerting (e.g. CloudWatch, centralised logging) without implementation detail.
 
-This section stays at a summary level; detailed design belongs in separate, focused documents.
+**1. Cloud provider and scope.** The system runs on a cloud provider (e.g. AWS) with a defined scope: whether it is single region or multi-region, and whether a single account or multiple accounts (e.g. dev, stage, prod) are used. This sets the boundary for where resources live and how environments are separated.
+
+**2. Networking.** Traffic is organised using VPC(s), with public and private subnets. How traffic is allowed in and out—for example via internet gateway, NAT, and security groups—is described at a high level, without listing every rule or subnet CIDR.
+
+**3. Compute.** The document describes what runs the workloads in broad terms: for example EC2 for virtual machines, containers (EKS/ECS) for containerised apps, or serverless (Lambda) for event-driven workloads. The level of detail is “EC2 for app servers, EKS for microservices,” not instance types or counts.
+
+**4. Data and storage.** It explains where persistent data lives (e.g. RDS for relational data, S3 for object storage, or other NoSQL stores) and how it is accessed in general terms, without schema or connection strings.
+
+**5. CI/CD and pipelines.** It outlines how code is built, tested, and deployed—for example Jenkins or GitLab on EC2 or a shared AMI, with pipelines that deploy to EC2 or Kubernetes. The focus is on which tools and targets are used, not job-level configuration.
+
+**6. Security and identity.** Access control is described at a high level: how identity and access are managed (e.g. IAM, SSO, network segmentation), without listing every policy or role.
+
+**7. Observability.** The view covers logging, metrics, and alerting (e.g. CloudWatch or centralised logging) and where they sit in the design, without implementation detail such as log formats or dashboard definitions.
+
+
 
 ---
 
 ## 5. Infra diagram
 
-The infrastructure diagram below shows the main components and their relationships at a high level. Use it to communicate the 30k-feet view to stakeholders.
 
-**Components (example — tailor to your environment):**
 
-- **Users / clients** — Access the system via internet or VPN.
-- **Edge / DNS** — e.g. Route 53 or CDN for DNS and optional edge caching.
-- **Load balancer** — Distributes traffic to compute (e.g. ALB/NLB).
-- **Application layer** — EC2, ECS/EKS, or serverless; the 30k-feet view does not specify instance counts or sizing.
-- **Data layer** — RDS, S3, caches, or other data stores.
-- **CI/CD** — Pipeline controller and agents (e.g. Jenkins, GitLab Runner) and how they deploy into the app/data layers.
-- **Security and monitoring** — IAM, security groups, and observability (logs, metrics).
+| Component | Description |
+|-----------|-------------|
+| **Users / clients** | Access the system via internet or VPN. |
+| **Edge / DNS** | e.g. Route 53 or CDN for DNS and optional edge caching. |
+| **Load balancer** | Distributes traffic to compute (e.g. ALB/NLB). |
+| **Application layer** | EC2, ECS/EKS, or serverless; the 30k-feet view does not specify instance counts or sizing. |
+| **Data layer** | RDS, S3, caches, or other data stores. |
+| **CI/CD** | Pipeline controller and agents (e.g. Jenkins, GitLab Runner) and how they deploy into the app/data layers. |
+| **Security and monitoring** | IAM, security groups, and observability (logs, metrics). |
 
 **Diagram (text flow):**
 
-```
-[Users] → [Edge/DNS] → [Load Balancer] → [Application Layer (EC2/ECS/EKS)]
-                              ↓
-                    [Data Layer (RDS, S3, etc.)]
-                              ↑
-[CI/CD Pipeline] ──────────────┘
-```
 
-For a visual diagram, attach or link to an image (e.g. draw.io, Lucidchart) that shows VPC, subnets, and the above components. Keep the diagram at 30k feet: no server IPs or low-level config.
+<img width="1351" height="803" alt="image" src="https://github.com/user-attachments/assets/cd576141-7ab0-480f-92bf-1d801a7ab502" />
+
+
+
+
 
 ---
 
 ## 6. Conclusion
 
-The **30k-feet view** is a high-level picture of the cloud infrastructure and system design—no implementation details, IPs, or low-level config. It shows what exists and how it fits together (scope, networking, compute, data, CI/CD, security, observability) so teams can align on scope, onboard quickly, and prepare for deeper design. For implementation details, refer to the specific design docs and **References** below.
+The **30k-feet view** summarises the overall picture: cloud scope (provider, region, account), networking (VPC, subnets, traffic), compute (EC2, containers, serverless), data and storage, CI/CD and pipelines, security and identity, and observability—how these building blocks fit together at a high level, without implementation details, IPs, or low-level config.
 
 
 
 
 ---
 
-## 7. Contact Information
+## 7. FAQ
+
+| Question | Answer |
+|----------|--------|
+| **What is a 30k-feet view?** | A high-level overview of a system or infrastructure that shows main components, how they connect, and how development/operations are organised, without implementation detail. |
+| **When should I use a 30k-feet view?** | When you need to align stakeholders on scope, onboard new people quickly, plan before diving into design, or communicate the big picture without technical depth. |
+| **What does a 30k-feet view typically include?** | Cloud scope, networking, compute, data/storage, CI/CD, security and identity, and observability—how these building blocks fit together, not IPs or low-level config. |
+| **What is left out of a 30k-feet view?** | Implementation details such as specific IPs, CIDR blocks, instance types, connection strings, job-level pipeline config, and detailed security policies. |
+| **How does a 30k-feet view differ from a detailed design?** | The 30k-feet view answers “what exists and how it fits together”; detailed design documents answer “how it is built and configured.” |
+| **Who benefits from a 30k-feet view?** | Product, management, new engineers, and anyone who needs to understand the system’s structure and scope before or alongside deeper technical docs. |
+
+---
+
+## 8. Contact Information
 
 
 | Name|Email Address |
@@ -124,7 +141,7 @@ The **30k-feet view** is a high-level picture of the cloud infrastructure and sy
 
 ---
 
-## 8. References
+## 9. References
 
 | Link | Description |
 |------|-------------|

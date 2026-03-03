@@ -14,25 +14,6 @@ This document describes the **Generic CI AMI** (Amazon Machine Image): what it i
 
 ---
 
-## Detailed documentation
-
-This document provides detailed documentation for the **Generic CI AMI**. It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | Overview of the Generic CI AMI and its role in CI/CD. |
-| **What** | What the Generic CI AMI is and what it contains. |
-| **Why** | Reasons to use a standardised AMI for CI pipelines. |
-| **Workflow diagram** | How the AMI fits into the CI workflow. |
-| **Advantages** | Benefits of using a Generic CI AMI. |
-| **POC** | Proof-of-concept approach and scope. |
-| **Best practices** | Recommendations for building and maintaining the AMI. |
-| **Conclusion** | Summary and recommendations. |
-| **Contact Information** | Author contact. |
-| **References** | Links to AWS and CI documentation. |
-
----
-
 ## Table of Contents
 
 1. [Introduction](#1-introduction)

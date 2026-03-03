@@ -1,6 +1,5 @@
-# Jenkins Authentication and Authorization
+# Jenkins Authentication and Authorization Documetation
 
-This document describes **Jenkins authentication (Authn)** and **authorization (Authz)**: introduction, what they are, why they matter, workflow diagram, different types (security realms and authorization strategies), comparison table, best practices, recommendation/conclusion, contact information, and references.
 
 ---
 
@@ -14,30 +13,12 @@ This document describes **Jenkins authentication (Authn)** and **authorization (
 
 ---
 
-## Detailed documentation
-
-This document provides detailed documentation for **Jenkins Authn and Authz**. It covers the following:
-
-| Section | Description |
-|---------|-------------|
-| **Introduction** | What authentication and authorization mean in Jenkins and why they matter. |
-| **What** | What Jenkins Authn and Authz are and how they work. |
-| **Why** | Reasons to configure Authn and Authz properly in Jenkins. |
-| **Workflow diagram** | How login and permission checks flow in Jenkins. |
-| **Different types** | Security realms (Authn) and authorization strategies (Authz) available in Jenkins. |
-| **Comparison table** | Comparison of security realms and authorization strategies. |
-| **Best practices** | Recommendations for securing Jenkins access. |
-| **Recommendation / Conclusion** | Summary and recommendations. |
-| **Contact Information** | Author contact. |
-| **References** | Links to Jenkins and plugin documentation. |
-
----
 
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
-2. [What](#2-what)
-3. [Why](#3-why)
+2. [What is jenkins authn and authz](#2-what-is-jenkins-authn-and-authz)
+3. [Why use authn and auhz](#3-why-use-authn-and-auhz)
 4. [Workflow diagram](#4-workflow-diagram)
 5. [Different types](#5-different-types)
 6. [Comparison table](#6-comparison-table)
@@ -56,26 +37,26 @@ Jenkins uses a **Security Realm** for authentication and an **Authorization Stra
 
 ---
 
-## 2. What
+## 2. What is jenkins authn and authz
 
 **Jenkins authentication and authorization** consist of:
 
 - **Security Realm (Authn)** — The component that verifies identity. Jenkins supports:
-  - **Jenkins’ own user database** — Users created and stored inside Jenkins (default).
-  - **LDAP** — Bind to an LDAP/Active Directory server to validate usernames and passwords.
-  - **SAML / OAuth / OIDC** — Integrate with an identity provider (IdP) for SSO via plugins (e.g. SAML, Google Login, GitHub Authentication).
-  - **Unix user/group database** — Use the server’s Unix users (less common for web UI).
+  1. **Jenkins’ own user database** — Users created and stored inside Jenkins (default).
+  2. **LDAP** — Bind to an LDAP/Active Directory server to validate usernames and passwords.
+  3. **SAML / OAuth / OIDC** — Integrate with an identity provider (IdP) for SSO via plugins (e.g. SAML, Google Login, GitHub Authentication).
+  4. **Unix user/group database** — Use the server’s Unix users (less common for web UI).
 
 - **Authorization Strategy (Authz)** — The component that decides what an authenticated user can do. Examples:
-  - **Logged-in users can do anything** — Any authenticated user has full access (simple but rarely appropriate for production).
-  - **Matrix-based / Project-based Matrix** — Fine-grained permissions per user/group (Overall and optionally per job).
-  - **Role-based (Role-Based Strategy plugin)** — Assign roles (e.g. Developer, Admin) and map them to permissions.
+  1. **Logged-in users can do anything** — Any authenticated user has full access (simple but rarely appropriate for production).
+  2. **Matrix-based / Project-based Matrix** — Fine-grained permissions per user/group (Overall and optionally per job).
+  3. **Role-based (Role-Based Strategy plugin)** — Assign roles (e.g. Developer, Admin) and map them to permissions.
 
 - **Flow** — User hits Jenkins → Security Realm verifies identity → Authorization Strategy checks permissions for each action (view, run, configure, admin).
 
 ---
 
-## 3. Why
+## 3. Why use authn and auhz
 
 | Reason | Description |
 |--------|-------------|
@@ -100,37 +81,8 @@ High-level flow for **login** and **permission check** in Jenkins:
 [User] → [Jenkins] → [Security Realm: verify identity] → [Authz Strategy: check permission] → [Allow / Deny]
 ```
 
-```
-                    ┌─────────────┐
-                    │    User     │
-                    │ (browser/   │
-                    │  API/token) │
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │  Jenkins    │
-                    │  (request)  │
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │   Security  │  Authn: who are you?
-                    │   Realm     │  (DB / LDAP / SAML / OAuth)
-                    └──────┬──────┘
-                           │ identity + groups
-                           ▼
-                    ┌─────────────┐
-                    │ Authorization│  Authz: what can you do?
-                    │  Strategy   │  (Matrix / Project Matrix / Role-based)
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │ Allow or   │
-                    │   Deny     │
-                    └─────────────┘
-```
+<img width="721" height="627" alt="image" src="https://github.com/user-attachments/assets/7fd7c303-59a4-47c1-9a42-3796c0f875da" />
+
 
 ---
 
