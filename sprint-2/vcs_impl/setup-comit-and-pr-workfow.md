@@ -1,5 +1,8 @@
 # Setup Commit & PR (Pull Request) Workflow
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4fbda50bf65e01ac8e7f9c6269829a53b0b04e96
 
 
 ---
@@ -145,6 +148,7 @@ git fetch origin
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8a6a130b-53c3-4185-a4be-d7a09c2c8e38" />
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/57c51841-851e-4a0a-b428-8bf476f8bac5" />
+<<<<<<< HEAD
 
 ### 3.3 Merge a PR
 
@@ -156,6 +160,8 @@ git fetch origin
 6. **Clean up (optional)** — Delete the feature branch after merge to keep the repo tidy; the PR page often offers a shortcut to delete the branch.
 
 
+=======
+>>>>>>> 4fbda50bf65e01ac8e7f9c6269829a53b0b04e96
 
 ---
 
