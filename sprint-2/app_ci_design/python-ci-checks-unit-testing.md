@@ -81,6 +81,10 @@ For a **Python API** (e.g. Flask, Poetry): `make build` (or `poetry install`), t
 | **coverage.py** | Standalone or via pytest-cov; measures line/branch coverage. |
 
 ---
+
+<img width="1919" height="155" alt="image" src="https://github.com/user-attachments/assets/61d69611-8d2c-4572-ac23-e1295087d57d" />
+
+
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/62a37b19-de09-458e-9452-47740f7d5cf0" />
 
 
