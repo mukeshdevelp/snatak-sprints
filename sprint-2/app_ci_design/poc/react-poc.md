@@ -19,7 +19,7 @@ This document describes the **steps to perform DAST (Dynamic Application Securit
 4. [Step 2 — Serve the frontend locally](#4-step-2--serve-the-frontend-locally)
 5. [Step 3 — Install OWASP ZAP locally](#5-step-3--install-owasp-zap-locally)
 6. [Step 4 — Run ZAP quick scan](#6-step-4--run-zap-quick-scan)
-7. [Step 5 — View and interpret the report](#7-step-5--view-and-interpret-the-report)
+7. [Step 5 — Generate_HTML report](#7-step-5--generate-html-report)
 8. [Success criteria](#8-success-criteria)
 9. [Contact Information](#9-contact-information)
 10. [References](#10-references)
@@ -141,29 +141,53 @@ cd /usr/local/zaproxy/
 sudo /usr/local/zaproxy/zap.sh -daemon -port 8090 -host 0.0.0.0 -config api.key=12345
 ```
 
+**Expected Output**
+
 <img width="1920" height="426" alt="image" src="https://github.com/user-attachments/assets/265d947c-45fc-4208-98d0-cd456a255d8a" />
+
 <img width="1920" height="755" alt="image" src="https://github.com/user-attachments/assets/3af708f1-28a8-4faf-a190-d9e054473b3b" />
+
 <img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/af77131d-ebb1-4cb6-a33c-e683f106b017" />
+
+
 <img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/f119bd86-d00a-4fd3-ae68-87de8c64142e" />
-
-
-
 
 
 
 ---
 
-## 7. Step 5 — View and interpret the report
+## 7. Step 5 — Generate HTML report
 
 Open the report:
 
 ```bash
-# Linux
-
-
-
+# saving HTML report
+curl "http://localhost:8090/OTHER/core/other/htmlreport/?apikey=12345" > zap_report.html
+# scp to bastion
+ scp -i secretkey.pem ubuntu@10.0.3.250:~/zap_report.html ./frontend_zap.html
+# scp to local
+scp -i secretkey.pem ubuntu@54.81.223.183:~/frontend_zap.html ./frontend.html
 
 ```
+
+**Expected Output**
+
+
+<img width="1920" height="139" alt="image" src="https://github.com/user-attachments/assets/07590315-66ec-47c6-92d1-3e4eaf55fcce" />
+
+<img width="1920" height="238" alt="image" src="https://github.com/user-attachments/assets/b9e9577e-d910-4508-be8c-6387cb73567b" />
+
+
+---
+
+## 7. Step 5 — Open HTML report in browser
+
+
+<img width="1920" height="991" alt="image" src="https://github.com/user-attachments/assets/84a75008-dde9-4d41-ab50-5c4cb5ed4fc6" />
+
+<img width="1920" height="991" alt="image" src="https://github.com/user-attachments/assets/f428757f-8fa0-40b2-b177-a760eb1f6a43" />
+
+<img width="1920" height="991" alt="image" src="https://github.com/user-attachments/assets/1fbd25fe-3232-46d2-8f94-622d991001ac" />
 
 
 **Risk levels:**
