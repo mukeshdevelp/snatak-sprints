@@ -136,18 +136,20 @@ Use the full path to `zap.sh` in the next steps if it is not on your `PATH`.
 With the frontend still running at `http://localhost:3000`, open a **new terminal** and run:
 
 ```bash
-zap.sh -cmd \
-  -quickurl http://localhost:3000 \
-  -quickout zap_quick_report.html \
-  -quickprogress
+cd /usr/local/zaproxy/
+# Enter any private key
+sudo /usr/local/zaproxy/zap.sh -daemon -port 8090 -host 0.0.0.0 -config api.key=12345
 ```
 
-- `-cmd` — headless (no GUI)
-- `-quickurl` — target URL
-- `-quickout` — HTML report path
-- `-quickprogress` — show progress in the terminal
+<img width="1920" height="426" alt="image" src="https://github.com/user-attachments/assets/265d947c-45fc-4208-98d0-cd456a255d8a" />
+<img width="1920" height="755" alt="image" src="https://github.com/user-attachments/assets/3af708f1-28a8-4faf-a190-d9e054473b3b" />
+<img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/af77131d-ebb1-4cb6-a33c-e683f106b017" />
+<img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/f119bd86-d00a-4fd3-ae68-87de8c64142e" />
 
-When it finishes, `zap_quick_report.html` is in the current directory.
+
+
+
+
 
 ---
 
@@ -157,10 +159,12 @@ Open the report:
 
 ```bash
 # Linux
-xdg-open zap_quick_report.html
-# macOS
-open zap_quick_report.html
+
+
+
+
 ```
+
 
 **Risk levels:**
 
