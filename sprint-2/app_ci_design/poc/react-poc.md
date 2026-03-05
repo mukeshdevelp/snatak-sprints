@@ -91,7 +91,7 @@ Leave this terminal open. In **browser**, check that the app responds:
 
 **Ubuntu (ZIP from website):**
 
-1. Download using `curl` (example for latest cross-platform ZIP):
+1. Download using `wget` (example for latest cross-platform ZIP):
    ```bash
    mkdir -p ~/tools
    cd ~/tools
@@ -101,19 +101,31 @@ Leave this terminal open. In **browser**, check that the app responds:
    ./ZAP_2_17_0_unix.sh
    
    ```
-   (Adjust the version/URL if needed based on the ZAP download page.)
-2. Extract the ZIP, e.g. to `~/tools/zap`:
-   ```bash
-   unzip zap.zip -d zap
-   ```
-2. Use `~/tools/zap/zap.sh` (Linux/macOS) or `zap.bat` (Windows).
+
+**Expected Output**
+
+<img width="1920" height="889" alt="image" src="https://github.com/user-attachments/assets/840cefc1-b4eb-4932-be81-a0fa47402d11" />
+
+<img width="1920" height="919" alt="image" src="https://github.com/user-attachments/assets/9808cc9e-7dd6-48e0-9374-24ed97467f34" />
+
+<img width="1920" height="919" alt="image" src="https://github.com/user-attachments/assets/b34dd382-cb36-454c-8044-8b4605a03326" />
+
+
+<img width="1920" height="919" alt="image" src="https://github.com/user-attachments/assets/3efb75d9-7422-4457-b938-2de85c08f30e" />
+
+
+<img width="1920" height="249" alt="image" src="https://github.com/user-attachments/assets/c3354bec-3cf4-4b43-8e58-d548b2b336d4" />
+
+2. Use `~/tools/zap/zap.sh` (Linux/macOS).
 
 Verify:
 
 ```bash
 zap.sh -version
-# or, if using ZIP: ~/tools/zap/zap.sh -version
+
 ```
+<img width="1920" height="362" alt="image" src="https://github.com/user-attachments/assets/cb485685-af9c-4615-a785-f02b24ef1c96" />
+
 
 Use the full path to `zap.sh` in the next steps if it is not on your `PATH`.
 
