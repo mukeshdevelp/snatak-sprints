@@ -1,6 +1,6 @@
-# VCS Implementation | Setup Workflow | Setup Commit & PR (Pull Request) Workflow
+# Setup Commit & PR (Pull Request) Workflow
 
-This document describes the **Commit and Pull Request (PR) workflow** for VCS implementation: steps to create a PR and get it ready for merge.
+
 
 ---
 
@@ -14,16 +14,20 @@ This document describes the **Commit and Pull Request (PR) workflow** for VCS im
 
 ---
 
+
+
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
-2. [Setting up a PR](#2-setting-up-a-pr)
-   - 2.1 [Step-by-step guide to create a commit](#21-step-by-step-guide-to-create-a-commit)
-   - 2.2 [Steps to create a PR](#22-steps-to-create-a-pr)
-3. [Conclusion](#3-conclusion)
-4. [FAQ](#4-faq)
-5. [Contact Information](#5-contact-information)
-6. [References](#6-references)
+2. [Workflow diagram](#2-workflow-diagram)
+3. [Setting up a PR](#3-setting-up-a-pr)
+   - 3.1 [Step-by-step guide to create a commit](#31-step-by-step-guide-to-create-a-commit)
+   - 3.2 [Steps to create a PR](#32-steps-to-create-a-pr)
+   - 3.3 [Merge a PR](#33-merge-a-pr)
+4. [Conclusion](#4-conclusion)
+5. [FAQ](#5-faq)
+6. [Contact Information](#6-contact-information)
+7. [References](#7-references)
 
 ---
 
@@ -33,13 +37,38 @@ A **Pull Request (PR)** is a request to merge changes from one branch (e.g. a fe
 
 The VCS (Version Control System) setup uses a **feature-branch** model: work is done on branches named `feature-XXX` (where XXX is a ticket or feature identifier) and merged into `main` via **Pull Requests (PRs)**. This document gives:
 
-- **Setting up a PR** — Step-by-step guide to create a commit (with all Git commands) and steps to create a PR.
+- **Workflow diagram** — End-to-end flow from branch to merge.
+- **Setting up a PR** — Step-by-step guide to create a commit (with all Git commands), steps to create a PR, and merge a PR.
 
 ---
 
-## 2. Setting up a PR
+## 2. Workflow diagram
 
-### 2.1 Step-by-step guide to create a commit
+End-to-end flow for the commit and Pull Request workflow:
+
+```
+[main] → [Checkout main & pull] → [Create feature-XXX] → [Make changes] → [Stage & commit] → [Push feature-XXX]
+    → [Open PR (feature-XXX → main)] → [Review & CI] → [Merge PR] → [main updated] → [Delete feature branch (optional)]
+```
+
+| Stage | Description |
+|-------|-------------|
+| **Checkout main & pull** | Get latest `main` from remote. |
+| **Create feature-XXX** | Create and switch to a feature branch from `main`. |
+| **Make changes** | Edit files in the working directory. |
+| **Stage & commit** | `git add` and `git commit` with a clear message. |
+| **Push feature-XXX** | Push the branch to remote; set upstream if first push. |
+| **Open PR** | In VCS UI, create a PR from `feature-XXX` to `main`. |
+| **Review & CI** | Code review and automated checks (e.g. Jenkins) run. |
+| **Merge PR** | Authorised person merges the PR into `main`. |
+| **main updated** | Target branch now includes the changes. |
+| **Delete feature branch** | Optionally remove the feature branch after merge. |
+
+---
+
+## 3. Setting up a PR
+
+### 3.1 Step-by-step guide to create a commit
 
 Follow these steps and commands to work on a feature branch and prepare it for a Pull Request.
 
@@ -102,57 +131,65 @@ git fetch origin
 
 
 
-# Option A: Merge main into your branch (creates a merge commit)
-# git merge origin/main
-
 ```
 
 **Step 8 — Open a Pull Request** in the VCS UI (GitHub, GitLab, etc.): create a PR with **source branch** = `feature-XXX` and **target branch** = `main`.
 
-### 2.2 Steps to create a PR
+### 3.2 Steps to create a PR
 
 1. **Ensure your feature branch is ready** — All commits are pushed; branch is up to date with `main` (rebase or merge from `main` if needed).
 2. **Open the PR** — In the VCS UI (e.g. GitHub, GitLab), create a new Pull Request. Set **source branch** to your `feature-XXX` branch and **target branch** to `main`.
 3. **Fill in the PR description** — Summarise what changed, why, and how to verify (e.g. testing steps, screenshots). Link any related tickets or issues.
-4. **Request reviewers** — Add at least two reviewers. CI (e.g. Jenkins) will run automatically when the PR is opened or updated.
-5. **Address review feedback** — If reviewers request changes, update the branch (commit and push), then re-request review or notify in the PR.
-6. **Wait for checks** — Ensure all required status checks (e.g. Jenkins) pass and reviews are complete. The PR is then ready for merge by an authorised person (e.g. Lead).
+
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8a6a130b-53c3-4185-a4be-d7a09c2c8e38" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/57c51841-851e-4a0a-b428-8bf476f8bac5" />
+
+### 3.3 Merge a PR
+
+1. **Ensure the PR is approved** — Required reviewers have approved the PR as per team policy.
+2. **Ensure CI and checks pass** — All required status checks (e.g. Jenkins build, lint, tests) are green.
+3. **Resolve any conflicts** — If `main` has moved ahead, update the feature branch (merge or rebase from `main`) and resolve conflicts; push the updated branch.
+4. **Perform the merge** — In the VCS UI (GitHub, GitLab, etc.), use the **Merge** button. Choose merge type if prompted (e.g. **Create a merge commit**, **Squash and merge**, or **Rebase and merge**) as per team preference.
+5. **Confirm target branch** — Ensure the target branch is `main` (or the intended branch). Complete the merge.
+6. **Clean up (optional)** — Delete the feature branch after merge to keep the repo tidy; the PR page often offers a shortcut to delete the branch.
+
+
 
 ---
 
-## 3. Conclusion
+## 4. Conclusion
 
-Use a **feature branch** (`feature-XXX`) for all changes; commit and push with the Git commands in [Setting up a PR](#2-setting-up-a-pr). Open a **Pull Request** from the feature branch to `main`, get reviews and required checks (e.g. Jenkins), then have an authorised person (e.g. Lead) merge and clean up the branch. Following this workflow keeps `main` stable and makes every change traceable via PR history.
+Use a **feature branch** (`feature-XXX`) for all changes; commit and push with the Git commands in [Setting up a PR](#3-setting-up-a-pr). Open a **Pull Request** from the feature branch to `main`, get reviews and required checks (e.g. Jenkins), then have an authorised person (e.g. Lead) merge using [Merge a PR](#33-merge-a-pr) and clean up the branch. Following this workflow keeps `main` stable and makes every change traceable via PR history.
 
 ---
 
-## 4. FAQ
+## 5. FAQ
 
-**What if I committed to the wrong branch?**  
+**1. What if I committed to the wrong branch?**  
 If not yet pushed: switch to the correct branch (`git checkout correct-branch`), cherry-pick the commit (`git cherry-pick <commit>`), then reset or remove the commit from the wrong branch. If already pushed: create a branch from the correct base, cherry-pick the commit there, and fix or remove the wrong branch as per team policy.
 
-**What if I have merge conflicts when updating my feature branch with main?**  
+**2. What if I have merge conflicts when updating my feature branch with main?**  
 Resolve conflicts in the files shown by Git after `git merge origin/main` or during `git rebase origin/main`. Edit the conflicting files, then `git add` them and run `git merge --continue` or `git rebase --continue`. If you rebased, use `git push --force-with-lease` (only on your own feature branch).
 
-**Who can merge the PR?**  
-Only the **Lead** or an authorised maintainer should perform the merge into `main`, as per the acceptance criteria. Branch protection can restrict merge to specific roles.
+**3. Who can merge the PR?**  
+Only the **Lead** or an authorised maintainer should perform the merge into `main`, as per the acceptance criteria. Branch protection can restrict merge to specific roles. See [Merge a PR](#33-merge-a-pr) for the merge steps.
 
-**Do I have to use rebase or can I merge main into my branch?**  
+**4. Do I have to use rebase or can I merge main into my branch?**  
 Either is fine. Rebase keeps a linear history; merging main into your branch creates a merge commit. Follow your team's preference. Before opening a PR, ensure your branch is up to date with `main` using one of these methods.
 
 ---
 
-## 5. Contact Information
+## 6. Contact Information
 
-
-| Name|Email Address |
-|----------------|----------------|
-|Mukesh kumar Sharma|msmukeshkumarsharma95@gmail.com|
-
+| Name | Email Address |
+|------|----------------|
+| Mukesh kumar Sharma | msmukeshkumarsharma95@gmail.com |
 
 ---
 
-## 6. References
+## 7. References
 
 | Link | Description |
 |------|-------------|

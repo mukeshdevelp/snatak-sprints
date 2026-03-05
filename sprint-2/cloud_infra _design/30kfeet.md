@@ -90,22 +90,38 @@ At a high level, the design is summarised as follows.
 
 | Component | Description |
 |-----------|-------------|
-| **Users / clients** | Access the system via internet or VPN. |
-| **Edge / DNS** | e.g. Route 53 or CDN for DNS and optional edge caching. |
-| **Load balancer** | Distributes traffic to compute (e.g. ALB/NLB). |
-| **Application layer** | EC2, ECS/EKS, or serverless; the 30k-feet view does not specify instance counts or sizing. |
-| **Data layer** | RDS, S3, caches, or other data stores. |
-| **CI/CD** | Pipeline controller and agents (e.g. Jenkins, GitLab Runner) and how they deploy into the app/data layers. |
-| **Security and monitoring** | IAM, security groups, and observability (logs, metrics). |
+| **VPC** | One Virtual Private Cloud per environment (e.g. dev/prod); contains all subnets and isolates network traffic. |
+| **Public subnet(s)** | Internet-facing; typically host Load Balancer (ALB/NLB) and optionally NAT Gateway for outbound from private subnets. |
+| **Private subnet(s)** | No direct internet; host Application layer (EC2/ECS/EKS), Data layer (RDS, caches), and CI/CD (e.g. Jenkins, runners). |
+| **Internet Gateway** | Attached to VPC; allows traffic between public subnet and the internet. |
+| **Load balancer** | In public subnet; distributes traffic to application instances in private subnet. |
+| **Application layer** | In private subnet; EC2, ECS, or EKS running the app. |
+| **Data layer** | In private subnet; RDS, S3, or other stores; accessed by app and optionally by CI/CD. |
+| **CI/CD** | In private subnet (or dedicated subnet); Jenkins/GitLab Runner; deploys to app/data layers. |
 
-**Diagram (text flow):**
+**Diagram (simplified — VPC and subnets):**
 
 ```
-[Users] → [Edge/DNS] → [Load Balancer] → [Application Layer (EC2/ECS/EKS)]
-                              ↓
-                    [Data Layer (RDS, S3, etc.)]
-                              ↑
-[CI/CD Pipeline] ──────────────┘
+                    Internet
+                        │
+                        ▼
+              ┌─────────────────┐
+              │  Internet GW    │
+              └────────┬────────┘
+                       │
+              ┌────────▼────────────────────────────────────┐
+              │                    VPC                        │
+              │  ┌──────────────────────────────────────────┐  │
+              │  │         Public subnet(s)                  │  │
+              │  │   [Load Balancer — ALB/NLB]              │  │
+              │  └────────────────────┬─────────────────────┘  │
+              │                       │                        │
+              │  ┌────────────────────▼─────────────────────┐  │
+              │  │         Private subnet(s)                 │  │
+              │  │   [Application]  [Data]  [CI/CD]         │  │
+              │  │   (EC2/ECS/EKS)  (RDS,S3) (Jenkins, etc.)│  │
+              │  └──────────────────────────────────────────┘  │
+              └───────────────────────────────────────────────┘
 ```
 
 

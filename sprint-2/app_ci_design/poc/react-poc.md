@@ -95,15 +95,18 @@ Leave this terminal open. In **browser**, check that the app responds:
    ```bash
    mkdir -p ~/tools
    cd ~/tools
-   sudo apt install unzip -y
-   curl -L -o zap.zip https://github.com/zaproxy/zaproxy/releases/latest/download/ZAP_2_15_0_Crossplatform.zip
+   sudo apt install openjdk-17-jdk -y
+   wget https://github.com/zaproxy/zaproxy/releases/download/v2.17.0/ZAP_2_17_0_unix.sh
+   chmod +x ZAP_2_17_0_unix.sh
+   ./ZAP_2_17_0_unix.sh
+   
    ```
    (Adjust the version/URL if needed based on the ZAP download page.)
 2. Extract the ZIP, e.g. to `~/tools/zap`:
    ```bash
    unzip zap.zip -d zap
    ```
-3. Use `~/tools/zap/zap.sh` (Linux/macOS) or `zap.bat` (Windows).
+2. Use `~/tools/zap/zap.sh` (Linux/macOS) or `zap.bat` (Windows).
 
 Verify:
 

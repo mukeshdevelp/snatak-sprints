@@ -1,4 +1,4 @@
-# React CI Checks — DAST
+# React CI Checks — DAST Documentation
 
 This document describes **React CI checks** and **DAST (Dynamic Application Security Testing)** for the frontend application: the React (react-scripts) UI of the OT-Microservices stack that depends on Employee, Attendance, and Salary APIs. The frontend is located at **~/frontend**. It covers what React CI checks and DAST are, why to use them, workflow, tools, comparison, advantages, POC, best practices, and references.
 

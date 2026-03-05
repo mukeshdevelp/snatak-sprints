@@ -1,6 +1,5 @@
-# Python CI Checks | Unit Testing — POC (Proof of Concept)
+# Python CI Checks | Unit Testing — POC
 
-This document is the **POC (Proof of Concept)** for **Python CI checks and unit testing** for Python-based services (e.g. a Flask REST API and a Python background worker): scope, prerequisites, step-by-step setup, and success criteria.
 
 ---
 
@@ -131,13 +130,13 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 
 | Criterion | Status |
 |-----------|--------|
-| Python API: `make build` and `make fmt` succeed in CI. | ☐ |
-| Python API: `python3 -m pytest --cov=.` runs and all tests pass. | ☐ |
-| Python API: Coverage report (and optionally threshold) is enforced in CI. | ☐ |
-| Python worker: Dependencies install in CI. | ☐ |
-| Python worker: At least one unit test exists and runs in CI. | ☐ |
-| Both applications’ test jobs are part of the same pipeline or project. | ☐ |
-| Process is documented (commands, paths, thresholds). | ☐ |
+| Python API: `make build` and `make fmt` succeed in CI. | Pending |
+| Python API: `python3 -m pytest --cov=.` runs and all tests pass. | Pending |
+| Python API: Coverage report (and optionally threshold) is enforced in CI. | Pending |
+| Python worker: Dependencies install in CI. | Pending |
+| Python worker: At least one unit test exists and runs in CI. | Pending |
+| Both applications’ test jobs are part of the same pipeline or project. | Pending |
+| Process is documented (commands, paths, thresholds). | Pending |
 
 ---
 

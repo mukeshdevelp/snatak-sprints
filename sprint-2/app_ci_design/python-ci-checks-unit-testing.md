@@ -1,6 +1,6 @@
-# Python CI Checks (Attendance and Notification) | Unit Testing
+# Python CI Checks | Unit Testing Documentation
 
-This document describes **unit testing** as part of **Python CI checks** for Python-based services (e.g. a Flask REST API and a Python background worker): introduction, what it is, why use it, workflow, tools, comparison, advantages, POC, best practices, and references.
+
 
 ---
 

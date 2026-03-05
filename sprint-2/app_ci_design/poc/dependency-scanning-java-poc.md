@@ -1,4 +1,4 @@
-# Dependency Scanning | Java CI Checks — POC (Proof of Concept)
+# Dependency Scanning | Java CI Checks — POC
 
 
 ---
@@ -29,7 +29,7 @@
 | Item | Description |
 |------|-------------|
 | **Application** | Java/Spring Boot microservice; Maven build; dependencies in `pom.xml`. |
-| **Repo location** | Java project directory (e.g. **~/java-app** or your Maven project path). |
+| **Repo location** | Java project directory (e.g. **~/salary/salary-api** or your Maven project path). |
 | **Build** | `mvn clean package` (or `make build`); produces the application JAR in `target/`. |
 | **POC goal** | Add **OWASP Dependency-Check** to the CI pipeline for the Java (Maven) project; fail on high/critical CVEs. |
 
@@ -50,12 +50,12 @@
 
 1. Navigate to the Java project directory:
    ```bash
-   cd ~/java-app
+   cd ~/salary/salary-api
    ```
 2. Build the project:
    ```bash
-   make build
-   # or: mvn clean package
+   
+   mvn clean package
    ```
 3. Ensure the build succeeds and produces the application JAR in `target/`. The dependency scanner will run against the same project (e.g. after `mvn compile` or `mvn verify`).
 
