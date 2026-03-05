@@ -1,6 +1,6 @@
 # React CI Checks & DAST using OWASP ZAP — POC (Proof of Concept)
 
-This document describes the **steps to perform DAST (Dynamic Application Security Testing)** on the frontend using **OWASP ZAP installed locally**. No Docker and no pipeline—just commands run on your machine.
+
 
 ---
 
@@ -18,11 +18,12 @@ This document describes the **steps to perform DAST (Dynamic Application Securit
 3. [Step 1 — Build the frontend](#3-step-1--build-the-frontend)
 4. [Step 2 — Serve the frontend locally](#4-step-2--serve-the-frontend-locally)
 5. [Step 3 — Install OWASP ZAP locally](#5-step-3--install-owasp-zap-locally)
-6. [Step 4 — Run ZAP quick scan](#6-step-4--run-zap-quick-scan)
-7. [Step 5 — Generate_HTML report](#7-step-5--generate-html-report)
-8. [Success criteria](#8-success-criteria)
-9. [Contact Information](#9-contact-information)
-10. [References](#10-references)
+6. [Step 4 — Run ZAP daemon](#6-step-4--run-zap-daemon)
+7. [Step 5 — Generate HTML report](#7-step-5--generate-html-report)
+8. [Step 6 — Open HTML report in browser](#8-step-6--open-html-report-in-browser)
+9. [Benefits of DAST](#9-benefits-of-dast)
+10. [Contact Information](#10-contact-information)
+11. [References](#11-references)
 
 ---
 
@@ -89,8 +90,6 @@ Leave this terminal open. In **browser**, check that the app responds:
 ## 5. Step 3 — Install OWASP ZAP locally
 
 
-**Ubuntu (ZIP from website):**
-
 1. Download using `wget` (example for latest cross-platform ZIP):
    ```bash
    mkdir -p ~/tools
@@ -116,7 +115,7 @@ Leave this terminal open. In **browser**, check that the app responds:
 
 <img width="1920" height="249" alt="image" src="https://github.com/user-attachments/assets/c3354bec-3cf4-4b43-8e58-d548b2b336d4" />
 
-2. Use `~/tools/zap/zap.sh` (Linux/macOS).
+2. Use `~/tools/zap/zap.sh` (Linux).
 
 Verify:
 
@@ -131,7 +130,7 @@ Use the full path to `zap.sh` in the next steps if it is not on your `PATH`.
 
 ---
 
-## 6. Step 4 — Run ZAP quick scan
+## 6. Step 4 — Run ZAP daemon
 
 With the frontend still running at `http://localhost:3000`, open a **new terminal** and run:
 
@@ -180,7 +179,12 @@ scp -i secretkey.pem ubuntu@54.81.223.183:~/frontend_zap.html ./frontend.html
 
 ---
 
-## 7. Step 5 — Open HTML report in browser
+## 8. Step 6 — Open HTML report in browser
+
+Open the copied **frontend.html** from local system in the browser.
+
+
+**Expected Output**
 
 
 <img width="1920" height="991" alt="image" src="https://github.com/user-attachments/assets/84a75008-dde9-4d41-ab50-5c4cb5ed4fc6" />
@@ -202,19 +206,19 @@ Typical frontend findings: missing security headers (CSP, X-Frame-Options), cook
 
 ---
 
-## 8. Success criteria
+## 9. Benefits of DAST
 
-| Criterion | Status |
-|-----------|--------|
-| Frontend builds (`npm run build` or `make build`). | Pending |
-| Frontend is served at http://localhost:3000 (`npx serve -s build -l 3000`). | Pending |
-| ZAP is installed locally (`zap.sh -version` works). | Pending |
-| ZAP quick scan completes and produces `zap_quick_report.html`. | Pending |
-| Report is reviewed; high/critical findings addressed or accepted. | Pending |
+| Benefit | Description |
+|---------|-------------|
+| **Finds real runtime issues** | Tests the running frontend (HTML, JS, API calls) and catches vulnerabilities that only appear at runtime, not in static code. |
+| **OWASP Top 10 coverage** | Helps identify common web risks such as XSS, insecure redirects, and missing security headers. |
+| **Works against any environment** | Can be run against local builds (e.g. `http://localhost:3000`) or higher environments (staging/pre-prod) without code changes. |
+| **Complements unit and integration tests** | Adds a security layer on top of functional tests, without modifying the application code. |
+| **Repeatable process** | Once commands are defined, teams can re-run the same DAST steps after each major change or before releases. |
 
 ---
 
-## 9. Contact Information
+## 10. Contact Information
 
 | Name | Email Address |
 |------|----------------|
@@ -222,7 +226,7 @@ Typical frontend findings: missing security headers (CSP, X-Frame-Options), cook
 
 ---
 
-## 10. References
+## 11. References
 
 | Link | Description |
 |------|-------------|
