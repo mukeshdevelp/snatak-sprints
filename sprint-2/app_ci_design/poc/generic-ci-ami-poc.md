@@ -1,5 +1,6 @@
 # Generic CI AMI — POC (Proof of Concept)
 
+This document describes the **Proof of Concept (POC)** for the Generic CI AMI: scope, steps, success criteria, and how to run and evaluate the POC.
 
 ---
 

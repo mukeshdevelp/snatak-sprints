@@ -100,13 +100,6 @@ At a high level, the design is summarised as follows.
 
 **Diagram (text flow):**
 
-```
-[Users] → [Edge/DNS] → [Load Balancer] → [Application Layer (EC2/ECS/EKS)]
-                              ↓
-                    [Data Layer (RDS, S3, etc.)]
-                              ↑
-[CI/CD Pipeline] ──────────────┘
-```
 
 
 
@@ -117,7 +110,18 @@ At a high level, the design is summarised as follows.
 The **30k-feet view** summarises the overall picture: cloud scope (provider, region, account), networking (VPC, subnets, traffic), compute (EC2, containers, serverless), data and storage, CI/CD and pipelines, security and identity, and observability—how these building blocks fit together at a high level, without implementation details, IPs, or low-level config.
 
 
+---
 
+## 7. FAQ
+
+| Question | Answer |
+|----------|--------|
+| **What is a 30k-feet view?** | A high-level overview of a system or infrastructure that shows main components, how they connect, and how development/operations are organised, without implementation detail. |
+| **When should I use a 30k-feet view?** | When you need to align stakeholders on scope, onboard new people quickly, plan before diving into design, or communicate the big picture without technical depth. |
+| **What does a 30k-feet view typically include?** | Cloud scope, networking, compute, data/storage, CI/CD, security and identity, and observability—how these building blocks fit together, not IPs or low-level config. |
+| **What is left out of a 30k-feet view?** | Implementation details such as specific IPs, CIDR blocks, instance types, connection strings, job-level pipeline config, and detailed security policies. |
+| **How does a 30k-feet view differ from a detailed design?** | The 30k-feet view answers “what exists and how it fits together”; detailed design documents answer “how it is built and configured.” |
+| **Who benefits from a 30k-feet view?** | Product, management, new engineers, and anyone who needs to understand the system’s structure and scope before or alongside deeper technical docs. |
 
 ---
 

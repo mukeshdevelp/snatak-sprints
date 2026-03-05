@@ -32,6 +32,9 @@ This document is the **POC (Proof of Concept)** for **Python CI checks and unit 
 | **Python API** | Flask-based REST API; Poetry, pytest, pytest-cov, pytest-mock, pylint; tests in router, client, models, utils. |
 | **Python worker** | Python service (e.g. SMTP, Elasticsearch); pip + requirements.txt; POC adds minimal unit tests if none exist. |
 | **Repo locations** | Python API project directory (e.g. **~/python-api**); Python worker project directory (e.g. **~/python-worker**). |
+| **Attendance API** | Flask-based REST API; Poetry, pytest, pytest-cov, pytest-mock, pylint; tests in `router/`, `client/`, `models/`, `utils/`. |
+| **Notification Worker** | Python service (SMTP, Elasticsearch); pip + requirements.txt; currently no test suite in repo—POC adds minimal unit tests. |
+| **Repo locations** | `API/attendance-api`, `API/notification-worker`. |
 | **POC goal** | Run unit tests for both applications in CI; optionally enforce coverage thresholds. |
 
 ---

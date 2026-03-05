@@ -1,4 +1,4 @@
-# VCS Implementation | Setup Workflow | Setup Commit & PR (Pull Request) Workflow
+# Setup Commit & PR (Pull Request) Workflow
 
 This document describes the **Commit and Pull Request (PR) workflow** for VCS implementation: steps to create a PR and get it ready for merge.
 
@@ -114,9 +114,11 @@ git fetch origin
 1. **Ensure your feature branch is ready** — All commits are pushed; branch is up to date with `main` (rebase or merge from `main` if needed).
 2. **Open the PR** — In the VCS UI (e.g. GitHub, GitLab), create a new Pull Request. Set **source branch** to your `feature-XXX` branch and **target branch** to `main`.
 3. **Fill in the PR description** — Summarise what changed, why, and how to verify (e.g. testing steps, screenshots). Link any related tickets or issues.
-4. **Request reviewers** — Add at least two reviewers. CI (e.g. Jenkins) will run automatically when the PR is opened or updated.
-5. **Address review feedback** — If reviewers request changes, update the branch (commit and push), then re-request review or notify in the PR.
-6. **Wait for checks** — Ensure all required status checks (e.g. Jenkins) pass and reviews are complete. The PR is then ready for merge by an authorised person (e.g. Lead).
+
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8a6a130b-53c3-4185-a4be-d7a09c2c8e38" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/57c51841-851e-4a0a-b428-8bf476f8bac5" />
 
 ---
 
