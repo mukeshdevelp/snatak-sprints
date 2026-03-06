@@ -18,7 +18,7 @@
 4. [Step 2 — Add OWASP Dependency-Check](#4-step-2--add-owasp-dependency-check)
 5. [Step 3 — Configure thresholds and run in CI](#5-step-3--configure-thresholds-and-run-in-ci)
 6. [Step 4 — Remediate and document](#6-step-4--remediate-and-document)
-7. [Success criteria](#7-success-criteria)
+7. [Benefits of dependency scanning for Java](#7-benefits-of-dependency-scanning-for-java)
 8. [Contact Information](#8-contact-information)
 9. [References](#9-references)
 
@@ -41,7 +41,6 @@
 |-------------|-------------|
 | **Java and Maven** | Java 17+, Maven (per project `pom.xml`). |
 | **Java project repo** | Clone or use the existing Java (Maven) project directory; ensure `pom.xml` is present. |
-| **CI system** | GitLab CI, Jenkins, or similar (one pipeline for the POC). |
 | **Scanner** | **OWASP Dependency-Check** (Maven plugin or CLI). Works on the project `pom.xml` and dependency tree. |
 
 ---
@@ -86,15 +85,19 @@ Run: `mvn verify` (or `mvn dependency-check:check`). The build fails if CVEs at 
 
 ---
 
-## 5. Step 3 — Configure thresholds and run in CI
+## 5. Step 3 — Configure thresholds and run manually
 
-1. **Thresholds** — Configure the pipeline to fail only on high/critical CVEs (e.g. CVSS ≥ 7 or severity high/critical). Document the threshold in the main design doc ([Dependency Scanning — Java CI](../dependency-scanning-java-ci.md)).
-2. **CI job** — Add a job that:
-   - Checks out the repo and changes to the Java project directory.
-   - Runs `mvn clean compile` or `mvn verify` (with the OWASP Dependency-Check plugin).
-   - Publishes the scan report as an artifact (e.g. `dependency-check-report.html`).
-   - Fails the job when OWASP Dependency-Check reports high/critical vulnerabilities (per threshold).
-3. Trigger the job on every PR or main build.
+1. **Thresholds** — Decide what severity should block a build (e.g. CVSS ≥ 7 or severity high/critical). This is configured via `failBuildOnCVSS` in the plugin:
+   ```xml
+   <failBuildOnCVSS>7</failBuildOnCVSS>
+   ```
+2. **Run the scan locally** — From the project directory:
+   ```bash
+   mvn clean verify
+   # or, if you prefer an explicit goal:
+   mvn dependency-check:check
+   ```
+   The command fails if OWASP Dependency-Check finds vulnerabilities at or above the configured threshold.
 
 ---
 
@@ -105,16 +108,15 @@ Run: `mvn verify` (or `mvn dependency-check:check`). The build fails if CVEs at 
 
 ---
 
-## 7. Success criteria
+## 7. Benefits of dependency scanning for Java
 
-| Criterion | Status |
-|-----------|--------|
-| Java application builds successfully in CI (`make build` or `mvn clean package`). | ☐ |
-| OWASP Dependency-Check runs in CI on the Java project. | ☐ |
-| Scan report is published as an artifact (or visible in security dashboard). | ☐ |
-| Pipeline fails on high/critical CVEs (per configured threshold). | ☐ |
-| At least one vulnerability is remediated and pipeline passes after fix. | ☐ |
-| Process is documented (scanner, threshold, commands). | ☐ |
+| Benefit | Description |
+|---------|-------------|
+| **Identifies vulnerable libraries early** | Highlights known CVEs in Maven dependencies before they are promoted to higher environments. |
+| **Supports compliance and audits** | Provides evidence that third-party Java libraries are scanned regularly for vulnerabilities. |
+| **Guides upgrade priorities** | Shows which dependencies should be upgraded first (e.g. critical/high CVEs) instead of guessing. |
+| **Works with existing Maven builds** | Integrates as a Maven plugin so developers can run the same checks locally or in CI. |
+| **Reduces production risk** | Shrinks the attack surface by catching outdated or vulnerable components before releases. |
 
 ---
 

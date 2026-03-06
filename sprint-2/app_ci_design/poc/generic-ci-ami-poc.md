@@ -20,7 +20,7 @@ This document describes the **Proof of Concept (POC)** for the Generic CI AMI: s
 2. [Scope](#2-scope)
 3. [Prerequisites](#3-prerequisites)
 4. [POC steps](#4-poc-steps)
-5. [Success criteria](#5-success-criteria)
+5. [Benefits of a Generic CI AMI](#5-benefits-of-a-generic-ci-ami)
 6. [Risks and limitations](#6-risks-and-limitations)
 7. [Conclusion](#7-conclusion)
 8. [Contact Information](#8-contact-information)
@@ -95,18 +95,15 @@ The POC is time-boxed (e.g. 1–2 sprints) and focuses on proving the approach, 
 
 ---
 
-## 5. Success criteria
+## 5. Benefits of a Generic CI AMI
 
-The POC is considered successful when:
-
-| Criterion | Description |
-|-----------|-------------|
-| **Jobs run successfully** | The chosen pipelines (e.g. Java, Node) complete build and test when run on instances launched from the Generic CI AMI. |
-| **Startup time acceptable** | Time from job scheduled to job start is within an agreed threshold (e.g. under 3–5 minutes for EC2 launch + agent connect). |
-| **Update process clear** | There is documented steps (or a Packer template) to update the AMI (e.g. new runtime version, security patch) and roll it out. |
-| **No blocking issues** | No critical failures (e.g. agent unable to connect, missing dependency) that cannot be resolved with small changes to the AMI or CI config. |
-
-If all of the above are met, the POC can be signed off and the approach can be extended to more pipelines or to production hardening.
+| Benefit | Description |
+|---------|-------------|
+| **Consistent build environment** | All CI jobs run on instances created from the same AMI, reducing \"works on my machine\" issues. |
+| **Faster onboarding** | New projects and teams can reuse the same preconfigured image instead of rebuilding tooling each time. |
+| **Predictable performance** | Standardised runtimes and tools make job behaviour and performance more predictable across pipelines. |
+| **Simplified maintenance** | Updates to runtimes and tools are applied once to the AMI, then rolled out, rather than per-agent configuration. |
+| **Foundation for autoscaling** | A well-defined AMI is a good base for autoscaled CI agents/runners in cloud environments. |
 
 ---
 

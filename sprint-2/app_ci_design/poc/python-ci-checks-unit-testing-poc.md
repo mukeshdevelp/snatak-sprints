@@ -15,10 +15,10 @@
 1. [Scope and context](#1-scope-and-context)
 2. [Prerequisites](#2-prerequisites)
 3. [Step 1 — Python API: build, lint, and unit tests](#3-step-1--python-api-build-lint-and-unit-tests)
-4. [Step 2 — Python worker: add tests and run in CI](#4-step-2--python-worker-add-tests-and-run-in-ci)
-5. [Step 3 — Integrate both into CI](#5-step-3--integrate-both-into-ci)
-6. [Step 4 — Coverage and thresholds](#6-step-4--coverage-and-thresholds)
-7. [Success criteria](#7-success-criteria)
+4. [Step 2 — Python worker: add tests and run locally](#4-step-2--python-worker-add-tests-and-run-locally)
+5. [Step 3 — Run both projects locally](#5-step-3--run-both-projects-locally)
+6. [Step 4 — Coverage and thresholds (local)](#6-step-4--coverage-and-thresholds-local)
+7. [Benefits of Python CI unit testing](#7-benefits-of-python-ci-unit-testing)
 8. [Contact Information](#8-contact-information)
 9. [References](#9-references)
 
@@ -34,7 +34,7 @@
 | **Attendance API** | Flask-based REST API; Poetry, pytest, pytest-cov, pytest-mock, pylint; tests in `router/`, `client/`, `models/`, `utils/`. |
 | **Notification Worker** | Python service (SMTP, Elasticsearch); pip + requirements.txt; currently no test suite in repo—POC adds minimal unit tests. |
 | **Repo locations** | `API/attendance-api`, `API/notification-worker`. |
-| **POC goal** | Run unit tests for both applications in CI; optionally enforce coverage thresholds. |
+| **POC goal** | Run unit tests for both applications manually; optionally enforce coverage thresholds during local runs. |
 
 ---
 
@@ -45,7 +45,6 @@
 | **Python** | Python 3.11+ for the API (or per pyproject.toml); Python 3.6+ for the worker (or per Dockerfile/requirements). |
 | **Poetry** | For the Python API dependency and test runs. |
 | **pip** | For the Python worker (`pip install -r requirements.txt`). |
-| **CI system** | GitLab CI, Jenkins, or similar (one pipeline or two jobs for the POC). |
 
 ---
 
@@ -73,11 +72,11 @@
    ```bash
    python3 -m pytest --cov=.
    ```
-6. Tests are typically under `router/tests/`, `client/tests/`, `models/tests/`, `utils/tests/` (e.g. test_cache, test_postgres_conn, test_validator). Ensure all pass locally before adding to CI.
+6. Tests are typically under `router/tests/`, `client/tests/`, `models/tests/`, `utils/tests/` (e.g. test_cache, test_postgres_conn, test_validator). Ensure all pass locally before sharing changes.
 
 ---
 
-## 4. Step 2 — Python worker: add tests and run in CI
+## 4. Step 2 — Python worker: add tests and run locally
 
 1. Navigate to the Python worker project directory:
    ```bash
@@ -97,49 +96,32 @@
    python3 -m pytest tests/ -v
    # or: python3 -m unittest discover -s tests
    ```
-5. Document the test command so CI can run the same.
+5. Optionally document the test command in the project README so others can run it.
 
 ---
 
-## 5. Step 3 — Integrate both into CI
+## 5. Step 3 — Coverage and thresholds (manual)
 
-1. **Python API job** (example GitLab CI):
-   - Checkout repo; change to the Python API project directory.
-   - Install: `poetry install --no-root` (or `make build`).
-   - Lint: `make fmt` or `pylint router/ client/ models/ utils/ app.py`.
-   - Test: `python3 -m pytest --cov=. --cov-report=xml` (or `--junitxml=report.xml` for JUnit).
-   - Publish coverage and/or JUnit report as artifacts; fail the job if pytest exits non-zero.
-2. **Python worker job**:
-   - Checkout repo; change to the Python worker project directory.
-   - Install: `pip install -r requirements.txt` (and pytest if not in requirements).
-   - Test: `python3 -m pytest tests/ -v` (or equivalent).
-   - Fail the job if tests fail.
-3. Run both jobs on every push or MR to the relevant paths.
-
----
-
-## 6. Step 4 — Coverage and thresholds
-
-1. For the **Python API**, set a coverage threshold in CI (e.g. fail if coverage &lt; 70%). Example with pytest-cov:
+1. For the **Python API**, you can measure coverage locally and enforce a threshold yourself:
    ```bash
    python3 -m pytest --cov=. --cov-fail-under=70
    ```
-2. Optionally publish coverage to a dashboard (e.g. GitLab coverage parsing, or a coverage server).
-3. For the **Python worker**, coverage is optional in the POC; focus on tests passing. Add `--cov` and thresholds later if the test suite grows.
+2. For the **Python worker**, start by ensuring tests pass; you can add `--cov` and thresholds later as the suite grows:
+   ```bash
+   python3 -m pytest --cov=.
+   ```
 
 ---
 
-## 7. Success criteria
+## 7. Benefits of Python CI unit testing
 
-| Criterion | Status |
-|-----------|--------|
-| Python API: `make build` and `make fmt` succeed in CI. | Pending |
-| Python API: `python3 -m pytest --cov=.` runs and all tests pass. | Pending |
-| Python API: Coverage report (and optionally threshold) is enforced in CI. | Pending |
-| Python worker: Dependencies install in CI. | Pending |
-| Python worker: At least one unit test exists and runs in CI. | Pending |
-| Both applications’ test jobs are part of the same pipeline or project. | Pending |
-| Process is documented (commands, paths, thresholds). | Pending |
+| Benefit | Description |
+|---------|-------------|
+| **Early bug detection** | Fails the pipeline when unit tests break, catching regressions before they reach staging or production. |
+| **Safer refactoring** | Gives confidence to refactor Python API and worker code because behaviour is locked in by tests. |
+| **Better documentation** | Tests act as executable documentation for how functions, modules, and workers are expected to behave. |
+| **Consistent quality across services** | Applies the same test standards to both the Python API and worker, reducing gaps between components. |
+| **Measurable coverage** | Coverage thresholds highlight untested areas and provide an objective target for test quality over time. |
 
 ---
 
