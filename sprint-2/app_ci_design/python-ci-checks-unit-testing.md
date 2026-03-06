@@ -30,7 +30,7 @@
 
 ## 1. Introduction
 
-**Python CI checks** for the microservices stack include build, lint, and **unit testing** for Python-based services. This document focuses on **unit testing** in the context of Python applications such as a **Flask-based REST API** (e.g. Poetry, pytest, PostgreSQL) and a **Python worker** (e.g. SMTP, Elasticsearch). Unit tests verify that individual functions, modules, and components behave correctly in isolation (often with mocks for DB and external services). Running them in CI ensures every commit or PR is validated before merge. This document describes what unit testing means for Python applications, why to run it in CI, workflow, tools, comparison, advantages, a POC (see [poc/python-ci-checks-unit-testing-poc.md](poc/python-ci-checks-unit-testing-poc.md)), and best practices.
+**Python CI checks** for the microservices stack include build, lint, and **unit testing** for Python-based services. This document focuses on **unit testing** in the context of Python applications such as a **Flask-based REST API** (e.g. Poetry, pytest, PostgreSQL) and a **Python worker** (e.g. SMTP, Elasticsearch). Unit tests verify that individual functions, modules, and components behave correctly in isolation (often with mocks for DB and external services). Running them in CI ensures every commit or PR is validated before merge. This document describes what unit testing means for Python applications, why to run it in CI, workflow, tools, comparison, advantages, a POC (see [python-ci-checks-unit-testing-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-176-mukesh/Applications/Understanding/Python_CI_Checks/Unit_Testing/POC/README.md)), and best practices.
 
 ---
 
@@ -106,7 +106,7 @@ For a **Python API** (e.g. Flask, Poetry): `make build` (or `poetry install`), t
 
 ## 8. POC
 
-A dedicated **POC document** for Python CI checks and unit testing is available at **[poc/python-ci-checks-unit-testing-poc.md](poc/python-ci-checks-unit-testing-poc.md)**. It covers:
+A dedicated **POC document** for Python CI checks and unit testing is available at **[python-ci-checks-unit-testing-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-176-mukesh/Applications/Understanding/Python_CI_Checks/Unit_Testing/POC/README.md)**. It covers:
 
 1. **Scope** — Two Python applications (e.g. a Flask API and a Python worker); one CI system (e.g. GitLab CI or Jenkins).  
 2. **Python API** — Run `make build`, `make fmt`, `python3 -m pytest --cov=.` in CI; collect coverage and fail on test failure or low coverage.  
@@ -114,7 +114,7 @@ A dedicated **POC document** for Python CI checks and unit testing is available 
 4. **Integrate** — Add test jobs to the pipeline; publish JUnit/coverage artifacts.  
 5. **Iterate** — Add tests for critical paths; set coverage thresholds.
 
-For the full step-by-step POC (prerequisites, commands, success criteria), see [python-ci-checks-unit-testing-poc.md](poc/python-ci-checks-unit-testing-poc.md).
+For the full step-by-step POC (prerequisites, commands, success criteria), see [python-ci-checks-unit-testing-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-176-mukesh/Applications/Understanding/Python_CI_Checks/Unit_Testing/POC/README.md).
 
 ---
 
@@ -132,7 +132,7 @@ For the full step-by-step POC (prerequisites, commands, success criteria), see [
 
 ## 10. Recommendation / Conclusion
 
-Use **unit testing** as a standard part of **Python CI checks** for all Python services. Use **pytest**, **pytest-cov**, and optionally **pylint** in CI; enforce coverage thresholds. For services without tests, add a small **pytest** (or unittest) suite for core logic and run it in CI (see [python-ci-checks-unit-testing-poc.md](poc/python-ci-checks-unit-testing-poc.md)). Document test commands and coverage thresholds so the team can maintain and extend the checks.
+Use **unit testing** as a standard part of **Python CI checks** for all Python services. Use **pytest**, **pytest-cov**, and optionally **pylint** in CI; enforce coverage thresholds. For services without tests, add a small **pytest** (or unittest) suite for core logic and run it in CI (see [python-ci-checks-unit-testing-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-176-mukesh/Applications/Understanding/Python_CI_Checks/Unit_Testing/POC/README.md)). Document test commands and coverage thresholds so the team can maintain and extend the checks.
 
 ---
 
@@ -151,6 +151,6 @@ Use **unit testing** as a standard part of **Python CI checks** for all Python s
 | [pytest](https://docs.pytest.org/) | pytest — Python testing framework. |
 | [pytest-cov](https://pytest-cov.readthedocs.io/) | pytest-cov — coverage plugin for pytest. |
 | [coverage.py](https://coverage.readthedocs.io/) | coverage.py — code coverage measurement. |
-| [Python CI & Unit Testing POC](poc/python-ci-checks-unit-testing-poc.md) | Step-by-step POC for Python CI checks and unit testing. |
+| [python-ci-checks-unit-testing-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-176-mukesh/Applications/Understanding/Python_CI_Checks/Unit_Testing/POC/README.md) | Step-by-step POC for Python CI checks and unit testing. |
 
 ---

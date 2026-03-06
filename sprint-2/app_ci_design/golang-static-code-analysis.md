@@ -30,7 +30,7 @@
 
 ## 1. Introduction
 
-**Static code analysis** in Go CI checks source code for bugs, style issues, and potential vulnerabilities without running the program. For a **Go** application (e.g. a REST service built with `go build`, `make build`), this typically includes **go fmt**, **go vet**, and linters such as **golangci-lint** or **staticcheck** run as part of the CI pipeline. This document describes what static code analysis is for Go, why to use it, workflow, tools, comparison, advantages, a POC (see [poc/golang-static-code-ananlysis-poc.md](poc/golang-static-code-ananlysis-poc.md)), and best practices.
+**Static code analysis** in Go CI checks source code for bugs, style issues, and potential vulnerabilities without running the program. For a **Go** application (e.g. a REST service built with `go build`, `make build`), this typically includes **go fmt**, **go vet**, and linters such as **golangci-lint** or **staticcheck** run as part of the CI pipeline. This document describes what static code analysis is for Go, why to use it, workflow, tools, comparison, advantages, a POC (see [golang-static-code-ananlysis-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-180-mukesh/Applications/Understanding/Golang_CI_Checks/Static_Code_Analysis/POC/README.md)), and best practices.
 
 ---
 
@@ -107,7 +107,7 @@ Static analysis runs as a CI step (often before or alongside `go build` and `go 
 
 ## 8. POC
 
-A dedicated **POC document** for Go static code analysis is available at **[poc/golang-static-code-ananlysis-poc.md](poc/golang-static-code-ananlysis-poc.md)**. It covers:
+A dedicated **POC document** for Go static code analysis is available at **[golang-static-code-ananlysis-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-180-mukesh/Applications/Understanding/Golang_CI_Checks/Static_Code_Analysis/POC/README.md)**. It covers:
 
 1. **Scope** — A Go project (e.g. REST service); one CI system (e.g. Jenkins or GitLab CI).  
 2. **Add analysis** — Run `go fmt`, `go vet`, and optionally **golangci-lint** (or staticcheck) in CI.  
@@ -115,7 +115,7 @@ A dedicated **POC document** for Go static code analysis is available at **[poc/
 4. **Run in CI** — Add the step to the pipeline; fail the job when formatting or lint fails.  
 5. **Iterate** — Fix reported issues; tune linter config to reduce false positives.
 
-For the full step-by-step POC (prerequisites, commands, success criteria), see [golang-static-code-ananlysis-poc.md](poc/golang-static-code-ananlysis-poc.md).
+For the full step-by-step POC (prerequisites, commands, success criteria), see [golang-static-code-ananlysis-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-180-mukesh/Applications/Understanding/Golang_CI_Checks/Static_Code_Analysis/POC/README.md).
 
 ---
 
@@ -133,7 +133,7 @@ For the full step-by-step POC (prerequisites, commands, success criteria), see [
 
 ## 10. Recommendation / Conclusion
 
-Use **static code analysis** as a standard step in **Go CI checks**. Run **go fmt** and **go vet** on every build; add **golangci-lint** (or staticcheck) for deeper analysis. Configure linters via `.golangci.yml` and fail the pipeline when issues are found. Document which tools and rules are used so the team can run the same checks locally. See the [POC](poc/golang-static-code-ananlysis-poc.md) for a step-by-step setup.
+Use **static code analysis** as a standard step in **Go CI checks**. Run **go fmt** and **go vet** on every build; add **golangci-lint** (or staticcheck) for deeper analysis. Configure linters via `.golangci.yml` and fail the pipeline when issues are found. Document which tools and rules are used so the team can run the same checks locally. See the [golang-static-code-ananlysis-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-180-mukesh/Applications/Understanding/Golang_CI_Checks/Static_Code_Analysis/POC/README.md) for a step-by-step setup.
 
 ---
 
@@ -153,6 +153,6 @@ Use **static code analysis** as a standard step in **Go CI checks**. Run **go fm
 | [go vet](https://pkg.go.dev/cmd/vet) | Standard Go static analyzer. |
 | [golangci-lint](https://golangci-lint.run/) | Aggregated linters for Go. |
 | [staticcheck](https://staticcheck.io/) | Static analysis for Go. |
-| [GoLang CI Checks — Static Code Analysis POC](poc/golang-static-code-ananlysis-poc.md) | Step-by-step POC for Go static analysis. |
+| [golang-static-code-ananlysis-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-180-mukesh/Applications/Understanding/Golang_CI_Checks/Static_Code_Analysis/POC/README.md) | Step-by-step POC for Go static analysis. |
 
 ---

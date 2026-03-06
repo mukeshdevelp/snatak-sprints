@@ -1,4 +1,4 @@
-# Generic CI AMI Document
+# Generic CI AMI Documentation
 
 
 ---
@@ -89,9 +89,7 @@ The Generic CI AMI fits into the CI workflow as follows:
 
 ## 6. POC
 
-For a **proof of concept** with the Generic CI AMI, Check the Link:
-
-<LINK>
+For a **proof of concept** with the Generic CI AMI, Check the Link: [Generic_CI_AMI_POC](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-159-mukesh/Applications/Understanding/Generic_CI_Operation/AMI/POC/README.md)
 
 ---
 
@@ -133,5 +131,6 @@ A **Generic CI AMI** provides a consistent, preconfigured environment for CI job
 | [Packer – Amazon AMI builder](https://www.packer.io/plugins/builders/amazon/ebs) | Automate AMI builds with Packer. |
 | [Jenkins – EC2 Fleet plugin](https://plugins.jenkins.io/ec2-fleet/) | Run Jenkins agents on EC2 (e.g. from an AMI). |
 | [GitLab – Runner autoscaling](https://docs.gitlab.com/runner/configuration/autoscale.html) | Use GitLab Runner with autoscaling (e.g. EC2 from AMI). |
+| [Generic_CI_AMI_POC](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-159-mukesh/Applications/Understanding/Generic_CI_Operation/AMI/POC/README.md) | POC Documentation Link |
 
 ---

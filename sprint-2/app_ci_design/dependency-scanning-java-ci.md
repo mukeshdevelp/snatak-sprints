@@ -1,6 +1,6 @@
-# Dependency Scanning | Java CI Checks
+# Dependency Scanning | Java CI Checks Documetation
 
-This document describes **dependency scanning** as part of **Java CI checks**, in the context of the **Salary API** (Java/Spring Boot, Maven): introduction, what it is, why use it, workflow, tools, comparison, advantages, POC, best practices, and references.
+
 
 ---
 
@@ -16,8 +16,6 @@ This document describes **dependency scanning** as part of **Java CI checks**, i
 1. [Introduction](#1-introduction)
 2. [What is dependency scanning](#2-what-is-dependency-scanning)
 3. [Why use dependency scanning for Java](#3-why-use-dependency-scanning-for-java)
-2. [What](#2-what)
-3. [Why](#3-why)
 4. [Workflow diagram](#4-workflow-diagram)
 5. [Different tools](#5-different-tools)
 6. [Comparison](#6-comparison)
@@ -39,11 +37,6 @@ This document describes **dependency scanning** as part of **Java CI checks**, i
 ## 2. What is dependency scanning
 
 **What** — **Dependency scanning** is an automated check of application dependencies (direct and transitive) against vulnerability databases (e.g. NVD, OSS Index) to find known CVEs. In the context of a **Java** application:
-**Dependency scanning** in Java CI checks that third-party libraries (e.g. Maven dependencies in `pom.xml`) do not contain known vulnerabilities. For the **Salary API** (Spring Boot, Maven), this means scanning dependencies declared in `pom.xml` and the dependency tree (including transitive dependencies) as part of the CI pipeline. This document describes what dependency scanning is, why to use it for the Salary API, workflow, tools, comparison, advantages, a POC approach, and best practices.
-
----
-
-## 2. What
 
 | Concept | Description |
 |--------|-------------|
@@ -56,11 +49,6 @@ This document describes **dependency scanning** as part of **Java CI checks**, i
 ## 3. Why use dependency scanning for Java
 
 **Why** — Teams use dependency scanning for Java applications for the following reasons:
-| **Salary API context** | The Salary API uses Maven and Spring Boot; scanning covers Spring, Cassandra, Redis, Lombok, Springdoc, Logstash, Micrometer, and other dependencies for known vulnerabilities. |
-
----
-
-## 3. Why
 
 | Reason | Description |
 |--------|-------------|
@@ -68,7 +56,6 @@ This document describes **dependency scanning** as part of **Java CI checks**, i
 | **Compliance** | Support security and audit requirements; evidence of scanning in CI. |
 | **Early feedback** | Fail or warn in CI when high/critical CVEs are introduced, so fixes happen before merge. |
 | **Risk reduction** | Reduce risk from supply-chain and known-vulnerability exposure in the Java application. |
-| **Risk reduction** | Reduce risk from supply-chain and known-vulnerability exposure in the Salary API. |
 
 ---
 
@@ -77,6 +64,7 @@ This document describes **dependency scanning** as part of **Java CI checks**, i
 ```
 [Commit/PR] → [CI: checkout] → [Maven build (compile, test)] → [Dependency scan (e.g. OWASP / Snyk / Dependabot)] → [Report / Pass/Fail] → [Merge or block]
 ```
+<img width="1435" height="807" alt="image" src="https://github.com/user-attachments/assets/f5c7b625-d28e-4338-93de-32b3549aa51e" />
 
 Dependency scanning runs as a CI step after the project is built (or in parallel with tests). The scanner reads the dependency tree, checks against vulnerability databases, and reports or fails the pipeline based on configured severity thresholds.
 
@@ -104,7 +92,6 @@ Dependency scanning runs as a CI step after the project is built (or in parallel
 | **Data source** | NVD, etc. | Proprietary + public | GitHub advisory | Multiple |
 | **Fix suggestions** | Manual | Upgrade suggestions | Automated PRs | Report |
 | **Java / Maven fit** | Good for on-prem CI | Good for cloud CI / SaaS | Good if repo on GitHub | Good for multi-artifact pipelines |
-| **Salary API fit** | Good for on-prem CI | Good for cloud CI / SaaS | Good if repo on GitHub | Good for multi-artifact pipelines |
 
 ---
 
@@ -114,7 +101,6 @@ Dependency scanning runs as a CI step after the project is built (or in parallel
 |-----------|-------------|
 | **Automation** | Every build or PR is scanned; no manual dependency audits. |
 | **Transitive coverage** | Scans full dependency tree (e.g. Spring → transitive libs), not only direct deps in the Java project. |
-| **Transitive coverage** | Scans full dependency tree (e.g. Spring → transitive libs), not only direct deps in Salary API. |
 | **Traceability** | CI logs and reports show which dependency has which CVE; easier to justify upgrades. |
 | **Culture** | Encourages keeping dependencies up to date and responding to CVEs as part of normal development. |
 
@@ -122,16 +108,14 @@ Dependency scanning runs as a CI step after the project is built (or in parallel
 
 ## 8. POC
 
-A dedicated **POC document** for dependency scanning (Java CI) is available at **[poc/dependency-scanning-java-poc.md](poc/dependency-scanning-java-poc.md)**. It covers:
+A dedicated **POC document** for dependency scanning (Java CI) is available at **[dependency-scanning-java-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-172-mukesh/Applications/Understanding/Java_CI_Checks/Dependency_Scanning/POC/README.md)**. It covers:
 
 1. **Scope** — Java (Maven) project repo; one CI system (e.g. Jenkins or GitLab CI).  
-1. **Scope** — Use the **Salary API** repo; one CI system (e.g. Jenkins or GitLab CI).  
-2. **Add scanner** — Integrate OWASP Dependency-Check Maven plugin (or Snyk CLI) into the build; run after `mvn compile` or `mvn verify`.  
-3. **Configure thresholds** — Fail the job on high/critical CVEs; optionally warn on medium.  
-4. **Run in CI** — Trigger on every PR or main build; publish report (e.g. artifact or security dashboard).  
-5. **Remediate** — Fix one or two reported issues (e.g. upgrade a dependency); confirm pipeline passes. Document the process for the team.
+2. **Add scanner** — Integrate OWASP Dependency-Check Maven plugin (or Snyk CLI) into the build; run after `mvn compile` or `mvn verify`.   
+3. **Run in CI** — Trigger on every PR or main build; publish report (e.g. artifact or security dashboard).  
 
-For the full step-by-step POC (prerequisites, commands, success criteria), see [dependency-scanning-java-poc.md](poc/dependency-scanning-java-poc.md).
+
+For the full step-by-step POC (prerequisites, commands, success criteria), see [dependency-scanning-java-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-172-mukesh/Applications/Understanding/Java_CI_Checks/Dependency_Scanning/POC/README.md).
 
 ---
 
@@ -140,7 +124,6 @@ For the full step-by-step POC (prerequisites, commands, success criteria), see [
 | Practice | Description |
 |----------|-------------|
 | **Run on every build** | Include dependency scan in the same pipeline that builds the Java application (e.g. after `mvn verify`). |
-| **Run on every build** | Include dependency scan in the same pipeline that builds the Salary API (e.g. after `mvn verify`). |
 | **Fail on high/critical** | Set severity thresholds so high and critical CVEs fail the job; avoid failing on low/informational only. |
 | **Update scan DB** | Use fresh vulnerability data (e.g. OWASP NVD cache updated regularly) to avoid stale results. |
 | **Pin and upgrade** | Pin dependency versions in `pom.xml` and upgrade in response to scan results; re-run scan after upgrades. |
@@ -151,7 +134,6 @@ For the full step-by-step POC (prerequisites, commands, success criteria), see [
 ## 10. Recommendation / Conclusion
 
 Use **dependency scanning** as a standard step in **Java CI checks** for Java (Maven) applications. Integrate **OWASP Dependency-Check** (or **Snyk**) into the Maven build and CI pipeline; fail the build on high/critical vulnerabilities and treat scan reports as part of the definition of done. Combine with Dependabot (if on GitHub) for automated upgrade PRs. Document which tool and thresholds are used so the team can maintain and extend the checks.
-Use **dependency scanning** as a standard step in **Java CI checks** for the **Salary API**. Integrate **OWASP Dependency-Check** (or **Snyk**) into the Maven build and CI pipeline; fail the build on high/critical vulnerabilities and treat scan reports as part of the definition of done. Combine with Dependabot (if on GitHub) for automated upgrade PRs. Document which tool and thresholds are used so the team can maintain and extend the checks.
 
 ---
 
@@ -172,7 +154,6 @@ Use **dependency scanning** as a standard step in **Java CI checks** for the **S
 | [Snyk for Java](https://docs.snyk.io/snyk-cli/cli-reference-for-snyk-cli/) | Snyk CLI and Java/Maven support. |
 | [GitHub Dependabot](https://docs.github.com/en/code-security/dependabot) | Dependabot alerts and automated PRs. |
 | [Trivy](https://github.com/aquasecurity/trivy) | Trivy — vulnerability scanner for artifacts and dependencies. |
-| [Dependency Scanning — Java CI POC](poc/dependency-scanning-java-poc.md) | Step-by-step POC for Java (Maven) applications. |
-| [Salary API (OT-Microservices)](https://github.com/OT-MICROSERVICES) | Salary API and related microservices context. |
+| [dependency-scanning-java-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-172-mukesh/Applications/Understanding/Java_CI_Checks/Dependency_Scanning/POC/README.md) | Step-by-step POC for Java (Maven) applications. |
 
 ---
