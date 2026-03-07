@@ -152,6 +152,8 @@ OWASP downloads vulnerability data from the **NVD database**, which requires an 
 
 3. You will receive an **API key in your email**.
 
+<img width="1919" height="963" alt="image" src="https://github.com/user-attachments/assets/a088a6e2-054f-460c-bc56-6ed93b3fc3b4" />
+
 Example API key:
 
 ```
