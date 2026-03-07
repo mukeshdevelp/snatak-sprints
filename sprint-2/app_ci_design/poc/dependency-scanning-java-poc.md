@@ -46,6 +46,321 @@
 
 ---
 
+# Dependency Scanning for a Maven Project Using OWASP Dependency-Check (Without Adding It to Maven)
+
+This guide shows how to run **OWASP Dependency-Check manually** for a Maven project **without modifying the `pom.xml`**. This approach is useful for quick scans, CI pipelines, or when you don't want to add plugins to the project.
+
+---
+
+# 1. Prerequisites
+
+Make sure the following tools are installed on your system.
+
+### Check Java
+
+```bash
+java -version
+```
+
+### Check Maven
+
+```bash
+mvn -version
+```
+
+### Install unzip (if not installed)
+
+```bash
+sudo apt update
+sudo apt install unzip -y
+```
+
+---
+
+# 2. Download OWASP Dependency-Check
+
+Download the latest CLI version.
+
+```bash
+wget https://github.com/dependency-check/DependencyCheck/releases/download/v12.2.0/dependency-check-12.2.0-release.zip
+
+```
+![alt text](image.png)
+
+Unzip it:
+
+```bash
+unzip dependency-check-12.2.0-release.zip
+
+```
+![alt text](image-1.png)
+
+Move into the directory:
+
+```bash
+cd dependency-check
+```
+
+Verify installation:
+
+```bash
+./bin/dependency-check.sh --version
+```
+![alt text](image-2.png)
+
+---
+
+# 3. Go to Your Maven Project
+
+Navigate to the root of your Maven project.
+
+Example:
+
+```bash
+cd ~/salary/salary-api
+```
+
+Confirm the project contains a `pom.xml`.
+
+```bash
+ls
+```
+
+Expected output should include:
+
+```
+pom.xml
+src/
+```
+![alt text](image-3.png)
+
+
+---
+
+# 4. Run Dependency Scan
+
+Run the scanner and point it to your project directory.
+
+```bash
+/home/ubuntu/salary/salary-api/repo/dependency-check/bin/dependency-check.sh \
+--project "Salary API" \
+--scan . \
+--format HTML \
+--out dependency-check-report
+```
+
+Explanation:
+
+| Option      | Description                       |
+| ----------- | --------------------------------- |
+| `--project` | Name of the project in the report |
+| `--scan`    | Directory to scan                 |
+| `--format`  | Output format                     |
+| `--out`     | Folder where report will be saved |
+
+---
+
+# 5. Wait for Vulnerability Database Download
+
+The first run will:
+
+* Download the **NVD vulnerability database**
+* Build a local cache
+
+This may take **5–15 minutes**.
+
+Later scans will be much faster.
+
+---
+
+# 6. View the Report
+
+Open the generated report.
+
+```bash
+cd dependency-check-report
+ls
+```
+
+You will see:
+
+```
+dependency-check-report.html
+```
+
+Open it:
+
+```bash
+xdg-open dependency-check-report.html
+```
+
+If running on a remote server, copy it to your local machine:
+
+```bash
+scp ubuntu@SERVER_IP:~/salary/salary-api/dependency-check-report/dependency-check-report.html .
+```
+
+Then open it in your browser.
+
+---
+
+# 7. Understanding the Report
+
+The report shows:
+
+* Vulnerable dependencies
+* CVE IDs
+* Severity levels
+
+Severity Levels:
+
+| Level    | Meaning                      |
+| -------- | ---------------------------- |
+| Critical | Very dangerous vulnerability |
+| High     | Serious security risk        |
+| Medium   | Moderate vulnerability       |
+| Low      | Minor issue                  |
+
+Example entry:
+
+```
+Dependency: jackson-databind
+CVE: CVE-2022-42003
+Severity: HIGH
+```
+
+---
+
+# 8. Updating Vulnerable Dependencies
+
+Once vulnerabilities are found, update the dependency version in `pom.xml`.
+
+Example:
+
+```xml
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-databind</artifactId>
+  <version>2.17.0</version>
+</dependency>
+```
+
+Then rebuild the project:
+
+```bash
+mvn clean install
+```
+
+Run the scan again to verify the vulnerability is fixed.
+
+---
+
+# 9. Clean Old Scan Data (Optional)
+
+To delete cached vulnerability data:
+
+```bash
+rm -rf ~/.dependency-check
+```
+
+Next scan will download fresh vulnerability data.
+
+---
+
+# 10. Useful Scan Options
+
+Scan and output multiple formats:
+
+```bash
+--format HTML,JSON
+```
+
+Fail scan if CVSS score is high:
+
+```bash
+--failOnCVSS 7
+```
+
+Example:
+
+```bash
+~/dependency-check/bin/dependency-check.sh \
+--project "Salary API" \
+--scan . \
+--format HTML \
+--failOnCVSS 7 \
+--out dependency-check-report
+```
+
+---
+
+# 11. Typical Workflow
+
+```
+Build Project
+      ↓
+Run Dependency Check
+      ↓
+Generate Security Report
+      ↓
+Fix Vulnerable Dependencies
+      ↓
+Run Scan Again
+```
+
+---
+
+# 12. Advantages of CLI Scanning
+
+* No modification to `pom.xml`
+* Works with any project
+* Easy to integrate into CI/CD
+* Can scan multiple projects
+
+---
+
+# 13. Example Directory After Scan
+
+```
+salary-api
+│
+├── pom.xml
+├── src/
+│
+└── dependency-check-report
+      └── dependency-check-report.html
+```
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # OWASP Dependency Scanning Guide (Maven Project)
 
 This guide explains **how to perform dependency vulnerability scanning in a Maven Java project using OWASP Dependency-Check**. It is designed for **beginners** who are running dependency scanning for the first time.
@@ -189,9 +504,25 @@ Run the following command:
 
 ```bash
 export NVD_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
-mvn dependency-check:check -DnvdApiKey=$NVD_API_KEY
+docker run --rm \
+  -v "$(pwd)":/src \
+  owasp/dependency-check:latest \
+  --scan /src \
+  --project "salary" \
+  --format HTML \
+  --out /src/target
 ```
 <img width="1919" height="159" alt="image" src="https://github.com/user-attachments/assets/ea8f83d4-10b8-40dc-b152-44d6b4d4ebee" />
+
+![alt text](image-4.png)
+
+image.png
+
+image.png
+
+
+image.png
+
 
 Example:
 
@@ -369,6 +700,82 @@ mvn dependency-check:check -DnvdApiKey=YOUR_API_KEY
   * Secret Scanning
 
 
+
+---
+
+## 6.1. Dependency-check using Docker (alternative)
+
+Use the official OWASP Dependency-Check Docker image when the Maven plugin cannot reach the NVD (e.g. 403 from your network). No `pom.xml` changes required.
+
+**Prerequisite:** Docker installed (`docker --version`).
+
+### Commands for this project (salary-api)
+
+From the **project root** (directory that contains `pom.xml`):
+
+```bash
+# 1. Go to the Java project (e.g. salary-api)
+cd /path/to/snatak-sprints/API/salary-api
+
+# 2. (Optional) Build the project so JAR/dependencies exist
+mvn clean package -DskipTests
+
+# 3. Run dependency-check in Docker (with NVD API key for faster first run)
+export NVD_API_KEY='your-nvd-api-key-here'
+docker run --rm \
+  -v "$(pwd)":/src \
+  -e NVD_API_KEY="$NVD_API_KEY" \
+  owasp/dependency-check:latest \
+  --scan /src \
+  --project "salary" \
+  --format HTML \
+  --out /src/target \
+  --nvdApiKey "$NVD_API_KEY" \
+  --nvdApiDelay 6000
+```
+
+**Without NVD API key** (slower; first run can take a long time):
+
+```bash
+cd /path/to/snatak-sprints/API/salary-api
+docker run --rm \
+  -v "$(pwd)":/src \
+  owasp/dependency-check:latest \
+  --scan /src \
+  --project "salary" \
+  --format HTML \
+  --out /src/target
+```
+
+**Skip NVD update** (use only if you already have a local cache from a previous run):
+
+```bash
+docker run --rm \
+  -v "$(pwd)":/src \
+  owasp/dependency-check:latest \
+  --scan /src \
+  --project "salary" \
+  --format HTML \
+  --out /src/target \
+  --noupdate
+```
+
+### Report location
+
+After a successful run:
+
+- **HTML report:** `target/dependency-check-report.html`
+- Open in a browser: `xdg-open target/dependency-check-report.html` (Linux) or open the file manually.
+
+### One-liner (with API key set in env)
+
+```bash
+cd /path/to/snatak-sprints/API/salary-api && \
+docker run --rm -v "$(pwd)":/src -e NVD_API_KEY="$NVD_API_KEY" \
+  owasp/dependency-check:latest \
+  --scan /src --project "salary" --format HTML --out /src/target \
+  --nvdApiKey "$NVD_API_KEY" --nvdApiDelay 6000
+```
 
 ---
 
