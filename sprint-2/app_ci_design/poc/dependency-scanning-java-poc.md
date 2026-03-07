@@ -46,63 +46,293 @@
 
 ---
 
-## 3. Step 1 — Build the Java application
+# OWASP Dependency Scanning Guide (Maven Project)
 
-1. Navigate to the Java project directory:
-   ```bash
-   cd ~/salary/salary-api
-   ```
-2. Build the project:
-   ```bash
-   
-   mvn clean package
-   ```
-3. Ensure the build succeeds and produces the application JAR in `target/`. The dependency scanner will run against the same project (e.g. after `mvn compile` or `mvn verify`).
+This guide explains **how to perform dependency vulnerability scanning in a Maven Java project using OWASP Dependency-Check**. It is designed for **beginners** who are running dependency scanning for the first time.
 
 ---
 
-## 4. Step 2 — Add OWASP Dependency-Check
+# 1. What is Dependency Scanning?
 
-Add **OWASP Dependency-Check** (Maven plugin) to the Java project. Add the plugin to `pom.xml` (or a parent POM). Example:
+Dependency scanning checks the **third-party libraries used in your project** for **known security vulnerabilities (CVEs)**.
+
+Example:
+If your project uses an outdated `log4j` library with a known vulnerability, the scanner will detect it and report the risk.
+
+OWASP Dependency-Check compares your dependencies against the **National Vulnerability Database (NVD)**.
+
+---
+
+# 2. Prerequisites
+
+Before starting, ensure the following tools are installed.
+
+### Check Java
+
+```bash
+java -version
+```
+
+Expected output (example):
+
+```
+openjdk version "17.x.x"
+```
+
+### Check Maven
+
+```bash
+mvn -version
+```
+
+If Maven is not installed (Ubuntu):
+
+```bash
+sudo apt update
+sudo apt install maven -y
+```
+
+---
+
+# 3. Navigate to Your Maven Project
+
+Go to your project directory that contains `pom.xml`.
+
+Example:
+
+```bash
+cd salary-api
+```
+
+Project structure example:
+
+```
+salary-api
+│
+├── pom.xml
+├── src
+│   └── main
+│       └── java
+└── target
+```
+
+---
+
+# 4. Add OWASP Dependency-Check Plugin
+
+Open the **pom.xml** file and add the plugin inside the `<plugins>` section.
+
+```xml
+
+<plugins>
+
+  <plugin>
+    <groupId>org.owasp</groupId>
+    <artifactId>dependency-check-maven</artifactId>
+    <version>9.0.0</version>
+  </plugin>
+
+</plugins>
+
+```
+
+Save the file.
+
+---
+
+# 5. Generate an NVD API Key
+
+OWASP downloads vulnerability data from the **NVD database**, which requires an API key.
+
+1. Visit
+   https://nvd.nist.gov/developers/request-an-api-key
+
+2. Enter your email address.
+
+3. You will receive an **API key in your email**.
+
+Example API key:
+
+```
+abcd1234-xxxx-xxxx-xxxx-xxxxxxxx
+```
+
+---
+
+# 6. Run the Dependency Scan
+
+Run the following command:
+
+```bash
+mvn dependency-check:check -DnvdApiKey=YOUR_API_KEY
+```
+
+Example:
+
+```bash
+mvn dependency-check:check -DnvdApiKey=abcd1234-xxxx
+```
+
+What happens during the scan:
+
+1. Maven downloads project dependencies
+2. OWASP downloads vulnerability data
+3. Dependencies are matched with known CVEs
+4. A vulnerability report is generated
+
+---
+
+# 7. Locate the Scan Report
+
+After the scan finishes, the report will be generated in:
+
+```
+target/dependency-check-report.html
+```
+
+---
+
+# 8. Open the Report
+
+If you are running locally:
+
+```bash
+xdg-open target/dependency-check-report.html
+```
+
+If the scan was run on a server:
+
+```bash
+scp user@server:/project/target/dependency-check-report.html .
+```
+
+Open the file in a browser.
+
+---
+
+# 9. Understand the Report
+
+The report will show vulnerabilities in a table.
+
+Example:
+
+| Dependency       | CVE            | Severity |
+| ---------------- | -------------- | -------- |
+| log4j-core       | CVE-2021-44228 | Critical |
+| jackson-databind | CVE-2020-36518 | High     |
+
+Severity levels:
+
+* Critical
+* High
+* Medium
+* Low
+
+---
+
+# 10. Fix Vulnerable Dependencies
+
+Update vulnerable libraries in `pom.xml`.
+
+Example (old version):
+
+```xml
+<dependency>
+  <groupId>org.apache.logging.log4j</groupId>
+  <artifactId>log4j-core</artifactId>
+  <version>2.14.1</version>
+</dependency>
+```
+
+Updated version:
+
+```xml
+<version>2.17.2</version>
+```
+
+After updating:
+
+```bash
+mvn clean install
+```
+
+Run the scan again.
+
+---
+
+# 11. Optional: Fail Build if Vulnerabilities Exist
+
+You can configure the build to fail if high-severity vulnerabilities are found.
+
+Add this configuration in the plugin:
 
 ```xml
 <plugin>
   <groupId>org.owasp</groupId>
   <artifactId>dependency-check-maven</artifactId>
   <version>9.0.0</version>
-  <executions>
-    <execution>
-      <goals><goal>check</goal></goals>
-      <phase>verify</phase>
-      <configuration>
-        <failBuildOnCVSS>7</failBuildOnCVSS>
-      </configuration>
-    </execution>
-  </executions>
+  <configuration>
+      <failBuildOnCVSS>7</failBuildOnCVSS>
+  </configuration>
 </plugin>
 ```
 
-Run: `mvn verify` (or `mvn dependency-check:check`). The build fails if CVEs at or above the threshold are found.
+This will fail the build if vulnerabilities have a **CVSS score ≥ 7**.
 
 ---
 
-## 5. Step 3 — Configure thresholds and run in CI
+# 12. Typical DevSecOps Workflow
 
-1. **Thresholds** — Configure the pipeline to fail only on high/critical CVEs (e.g. CVSS ≥ 7 or severity high/critical). Document the threshold in the main design doc ([Dependency Scanning — Java CI Checks Documentation](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-172-mukesh/Applications/Understanding/Java_CI_Checks/Dependency_Scanning/README.md)).
-
-2. **CI job** — Add a job that:
-   - Checks out the repo and changes to the Java project directory.
-   - Runs `mvn clean compile` or `mvn verify` (with the OWASP Dependency-Check plugin).
-   - Publishes the scan report as an artifact (e.g. `dependency-check-report.html`).
-   - Fails the job when OWASP Dependency-Check reports high/critical vulnerabilities (per threshold).
-3. Trigger the job on every PR or main build.
+```
+Developer Commit
+       ↓
+Maven Build
+       ↓
+Unit Tests
+       ↓
+OWASP Dependency Scan
+       ↓
+Generate Vulnerability Report
+       ↓
+Fix Vulnerable Dependencies
+```
 
 ---
 
-## 6. Step 4 — Remediate and document
+# 13. Useful Commands
 
-1. **Remediate** — Fix one or two reported issues (e.g. upgrade a vulnerable dependency in `pom.xml`); re-run the scan and confirm the pipeline passes.
-2. **Document** — Record in this file or in the CI config: scanner (OWASP Dependency-Check), threshold (e.g. fail on high/critical), and how to run the scan locally (`mvn verify`).
+Run dependency scan:
+
+```bash
+mvn dependency-check:check
+```
+
+Full build + scan:
+
+```bash
+mvn clean install dependency-check:check
+```
+
+Run with API key:
+
+```bash
+mvn dependency-check:check -DnvdApiKey=YOUR_API_KEY
+```
+
+---
+
+# 14. Best Practices
+
+* Run dependency scanning in **CI/CD pipelines**
+* Regularly update dependencies
+* Monitor **Critical and High vulnerabilities**
+* Combine dependency scanning with:
+
+  * Static Code Analysis
+  * Container Security Scanning
+  * Secret Scanning
+
+
 
 ---
 
