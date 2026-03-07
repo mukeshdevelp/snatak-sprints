@@ -89,9 +89,14 @@ If Maven is not installed (Ubuntu):
 
 ```bash
 sudo apt update
+sudo apt install maven -y
 
 ```
+**Expected Output**
+
 <img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/a72b82b6-fbe1-4900-9291-decf5ce3534b" />
+
+<img width="1919" height="571" alt="image" src="https://github.com/user-attachments/assets/8b5b9b05-16d7-4218-904d-a634d4b25788" />
 
 ---
 
@@ -103,7 +108,20 @@ Example:
 
 ```bash
 cd salary-api
+mvn clean install
+mvn clean package -DskipTests
 ```
+**Expected Output**
+
+
+<img width="1919" height="898" alt="image" src="https://github.com/user-attachments/assets/177ea2f1-c08c-4ea5-a042-a4fd84fd87e1" />
+
+<img width="1919" height="898" alt="image" src="https://github.com/user-attachments/assets/e3277c9a-48a5-4c29-a2f5-70f08d040606" />
+
+<img width="1919" height="918" alt="image" src="https://github.com/user-attachments/assets/75e59046-41ac-4f1d-a25f-94439e459e02" />
+
+<img width="1919" height="918" alt="image" src="https://github.com/user-attachments/assets/f59955a8-8ca3-4db3-a212-67954ce9527d" />
+
 
 Project structure example:
 
@@ -139,6 +157,8 @@ Open the **pom.xml** file and add the plugin inside the `<plugins>` section.
 
 Save the file.
 
+<img width="1919" height="571" alt="image" src="https://github.com/user-attachments/assets/3fae80b0-f873-460c-97dc-d92a559c4122" />
+
 ---
 
 # 5. Generate an NVD API Key
@@ -168,16 +188,26 @@ abcd1234-xxxx-xxxx-xxxx-xxxxxxxx
 Run the following command:
 
 ```bash
-mvn dependency-check:check -DnvdApiKey=YOUR_API_KEY
+export NVD_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
+mvn dependency-check:check -DnvdApiKey=$NVD_API_KEY
 ```
+<img width="1919" height="159" alt="image" src="https://github.com/user-attachments/assets/ea8f83d4-10b8-40dc-b152-44d6b4d4ebee" />
 
 Example:
 
 ```bash
-mvn dependency-check:check -DnvdApiKey=abcd1234-xxxx
 rm -rf ~/.m2/repository/org/owasp
 rm -rf ~/.dependency-check
+curl -s -w "\nHTTP code: %{http_code}\n"   -H "Accept: application/json"   -H "apiKey: $NVD_API_KEY"  "https://services.nvd.nist.gov/rest/json/cves/2.0?resultsPerPage=2000&startIndex=0"
+
+mvn dependency-check:check -DnvdApiKey=abcd1234-xxxx
+
 ```
+<img width="1919" height="918" alt="image" src="https://github.com/user-attachments/assets/1066796a-ac6b-4a2d-91cc-f65cd6bcd071" />
+
+<img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/a7ad92f5-2045-405e-a8cc-92949d52ca54" />
+
+<img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/7e8453c6-099b-4fcf-b896-4e36ecb1927f" />
 
 What happens during the scan:
 
