@@ -165,11 +165,14 @@ docker run --rm \
 
 ![alt text](image-4.png)
 
-<img width="905" height="932" alt="Screenshot from 2026-03-08 00-01-56" src="https://github.com/user-attachments/assets/ea64bcf2-e4de-49a1-91bb-f74bced25030" />
 
-<img width="905" height="792" alt="Screenshot from 2026-03-08 00-02-43" src="https://github.com/user-attachments/assets/83b4a4fe-f8b4-4698-bc3a-ed0793625239" />
+<img width="897" height="914" alt="image" src="https://github.com/user-attachments/assets/dc443d32-a4e4-4ef3-a8fb-acdb3c94a085" />
 
-<img width="905" height="951" alt="Screenshot from 2026-03-08 00-03-17" src="https://github.com/user-attachments/assets/54b2b224-15da-42cd-96a9-6f97b52378a2" />
+
+<img width="911" height="762" alt="image" src="https://github.com/user-attachments/assets/dfc27a21-afad-4218-944b-c452996f0d78" />
+
+
+<img width="905" height="951" alt="Screenshot from 2026-03-08 00-03-17" src="https://github.com/user-attachments/assets/f1097d86-4f56-4bd9-8a89-1ee7ac95b50c" />
 
 **Option B — Using Maven plugin (after adding plugin to `pom.xml`):**
 
@@ -212,7 +215,23 @@ target/dependency-check-report.html
 xdg-open target/dependency-check-report.html
 ```
 
+<<<<<<< HEAD
 **If the scan was run on a server:**
+=======
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-08" src="https://github.com/user-attachments/assets/8923d6a3-ea72-4914-badc-e750bb929c33" />
+
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-13" src="https://github.com/user-attachments/assets/fac1ad4a-9674-4883-bce5-267ebb8724ea" />
+
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-19" src="https://github.com/user-attachments/assets/d9a7aaf2-4ff5-4ffe-9f11-22b20b7cd58d" />
+
+<img width="1920" height="873" alt="Screenshot from 2026-03-08 00-13-27" src="https://github.com/user-attachments/assets/6557a20f-3d92-477a-a395-950f265eec28" />
+
+
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-33" src="https://github.com/user-attachments/assets/f5818a25-8c4f-4886-bf32-4d57743b94e2" />
+
+
+If the scan was run on a server:
+>>>>>>> 4046a826ea2a8dba7578980c60c16e1a577f0391
 
 ```bash
 scp user@server:/project/target/dependency-check-report.html .
