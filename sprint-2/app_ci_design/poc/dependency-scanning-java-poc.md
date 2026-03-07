@@ -89,8 +89,9 @@ If Maven is not installed (Ubuntu):
 
 ```bash
 sudo apt update
-sudo apt install maven -y
+
 ```
+<img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/a72b82b6-fbe1-4900-9291-decf5ce3534b" />
 
 ---
 
@@ -156,6 +157,7 @@ Example API key:
 ```
 abcd1234-xxxx-xxxx-xxxx-xxxxxxxx
 ```
+<img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/446b2028-c133-4c48-a64f-b3c8155676e1" />
 
 ---
 
@@ -171,6 +173,8 @@ Example:
 
 ```bash
 mvn dependency-check:check -DnvdApiKey=abcd1234-xxxx
+rm -rf ~/.m2/repository/org/owasp
+rm -rf ~/.dependency-check
 ```
 
 What happens during the scan:
