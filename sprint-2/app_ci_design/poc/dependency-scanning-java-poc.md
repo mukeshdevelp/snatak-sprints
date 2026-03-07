@@ -576,7 +576,8 @@ xdg-open target/dependency-check-report.html
 
 <img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-19" src="https://github.com/user-attachments/assets/d9a7aaf2-4ff5-4ffe-9f11-22b20b7cd58d" />
 
-<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-27" src="https://github.com/user-attachments/assets/22159624-6233-4727-90e0-2c92e59a1f33" />
+<img width="1920" height="873" alt="Screenshot from 2026-03-08 00-13-27" src="https://github.com/user-attachments/assets/6557a20f-3d92-477a-a395-950f265eec28" />
+
 
 <img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-33" src="https://github.com/user-attachments/assets/f5818a25-8c4f-4886-bf32-4d57743b94e2" />
 
