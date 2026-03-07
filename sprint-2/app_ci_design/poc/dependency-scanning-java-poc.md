@@ -567,6 +567,17 @@ If you are running locally:
 xdg-open target/dependency-check-report.html
 ```
 
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-08" src="https://github.com/user-attachments/assets/8923d6a3-ea72-4914-badc-e750bb929c33" />
+
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-13" src="https://github.com/user-attachments/assets/fac1ad4a-9674-4883-bce5-267ebb8724ea" />
+
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-19" src="https://github.com/user-attachments/assets/d9a7aaf2-4ff5-4ffe-9f11-22b20b7cd58d" />
+
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-27" src="https://github.com/user-attachments/assets/22159624-6233-4727-90e0-2c92e59a1f33" />
+
+<img width="1920" height="956" alt="Screenshot from 2026-03-08 00-13-33" src="https://github.com/user-attachments/assets/f5818a25-8c4f-4886-bf32-4d57743b94e2" />
+
+
 If the scan was run on a server:
 
 ```bash
