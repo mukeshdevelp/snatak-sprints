@@ -30,6 +30,8 @@
 ## 1. Introduction
 
 The **Generic AMI POC** validates that a preconfigured Amazon Machine Image (AMI) can be built and used via the AWS console in a consistent, repeatable way. The POC answers: Can we build the AMI in the console, launch an instance from it, and confirm the instance has the expected runtimes and tools? This document defines the POC scope, prerequisites, steps (console-based), success criteria, and risks. For the broader concept and design, see [Generic CI AMI_Documentation](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-159-mukesh/Applications/Understanding/Generic_CI_Operation/AMI/README.md).
+
+
 ---
 
 ## 2. Scope
