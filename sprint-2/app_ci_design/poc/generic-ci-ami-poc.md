@@ -60,34 +60,101 @@ The **Generic AMI POC** validates that a preconfigured Amazon Machine Image (AMI
 
 ## 4. POC steps
 
-All steps are done via the **AWS EC2 console** (or equivalent CLI commands).
+This POC installs **Nginx** on the AMI and validates by opening the Nginx default page in a browser. All steps use the **AWS EC2 console** and SSH; exact commands are below (Amazon Linux 2).
+
+---
 
 **Step 1 — Define scope**
 
-- Agree on the runtimes and tools that must be on the AMI (e.g. Java 17, Node 20, Git, Docker CLI).
+- **Goal:** Build an AMI with Nginx preinstalled and show the Nginx default page in the browser from an instance launched from that AMI.
 
-**Step 2 — Build the AMI (console)**
 
-- In the EC2 console, launch an instance from the chosen base AMI (e.g. Amazon Linux 2). Use a key pair and security group that allow SSH.
-- Connect to the instance (e.g. SSH). Install required runtimes and tools. Harden minimally (e.g. security updates).
-- In the console: select the instance → **Actions** → **Image and templates** → **Create image**. Name and tag it (e.g. `generic-ami-poc-v1`).
-- Optionally document the install steps or use Packer later for automation.
 
-**Step 3 — Launch an instance from the new AMI (console)**
+---
 
-- In the EC2 console, use **Launch instance**. Choose your new Generic AMI, instance type, subnet, and security group. Launch.
-- Note the instance ID and (if applicable) public/private IP.
+**Step 2 — Launch a base instance (console)**
 
-**Step 4 — Validate the instance**
+1. In **EC2 console** → **Launch instance**.
+2. **Name:** e.g. `nginx-ami-builder`.
+3. **AMI:** Amazon Linux 2.
+4. **Instance type:** e.g. `t2.micro`.
+5. **Key pair:** Create or select a key pair (needed for SSH).
+6. **Security group:** Create or use one that allows:
+   - **SSH (22)** from your IP.
+   - **HTTP (80)** from your IP (or `0.0.0.0/0` for POC only).
+7. Launch the instance. Note the **public IP** after it is running.
 
-- Connect to the new instance (SSH). Verify that the expected runtimes and tools are present (e.g. `java -version`, `node -v`, `git --version`, `docker --version`).
-- Note any missing dependencies or misconfigurations for the next iteration.
+---
 
-**Step 5 — Document and iterate**
+**Step 3 — Connect and install Nginx (commands)**
 
-- Document the AMI build steps (what you installed, how you created the image).
-- Document how to add or update runtimes and how to create a new AMI version from the console.
-- Capture lessons learned and refine (e.g. add a missing tool, adjust instance size). Terminate the test instance when done.
+From your laptop, SSH into the instance (use the key and public IP from Step 2):
+
+```bash
+ssh -i /path/to/your-key.pem ec2-user@<public-ip>
+```
+
+On the instance, run these commands to install and enable Nginx:
+
+```bash
+# Update packages (optional but recommended)
+sudo yum update -y
+
+# Install Nginx (Amazon Linux 2)
+sudo amazon-linux-extras install nginx1 -y
+
+# Or, if the above is not available, use:
+# sudo yum install nginx -y
+
+# Start Nginx and enable it on boot
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+# Verify Nginx is running
+sudo systemctl status nginx
+```
+
+Leave the SSH session open or disconnect; the instance will keep Nginx running.
+
+---
+
+**Step 4 — Create the AMI from the instance (console)**
+
+1. In the **EC2 console** → **Instances**, select the instance (`nginx-ami-builder`).
+2. **Actions** → **Image and templates** → **Create image**.
+3. **Image name:** e.g. `generic-ami-nginx-poc-v1`.
+4. **Image description:** e.g. `POC AMI with Nginx preinstalled`.
+5. Click **Create image**.
+6. Go to **EC2** → **Images** → **AMIs**. Wait until the AMI status is **Available** (a few minutes).
+7. (Optional) Terminate the original builder instance after the AMI is available to avoid extra cost.
+
+---
+
+**Step 5 — Launch an instance from the new AMI (console)**
+
+1. In **EC2 console** → **Launch instance**.
+2. **Name:** e.g. `nginx-poc-test`.
+3. **AMI:** Click **Browse** and select **My AMIs**; choose `generic-ami-nginx-poc-v1` (or the name you gave).
+4. **Instance type:** e.g. `t2.micro`.
+5. **Key pair:** Same as before (for SSH if needed).
+6. **Security group:** Use one that allows **HTTP (80)** from your IP (or `0.0.0.0/0` for POC).
+7. Launch. Note the **public IP** of the new instance.
+
+---
+
+**Step 6 — Show Nginx in the browser (validate)**
+
+1. Wait for the instance to pass **Status check** (running).
+2. Open a browser and go to: **`http://<public-ip-of-new-instance>`**
+3. You should see the **Nginx default welcome page** (e.g. “Welcome to nginx!”).
+4. This confirms the AMI was built correctly and Nginx starts on boot from the new AMI.
+
+---
+
+**Step 7 — Document and clean up**
+
+- Document: base AMI used, Nginx install commands, and that the image was created from the console.
+- **Terminate** the test instance when done: EC2 → Instances → Select instance → **Instance state** → **Terminate instance**.
 
 ---
 
@@ -97,12 +164,12 @@ The POC is considered successful when:
 
 | Criterion | Description |
 |-----------|-------------|
-| **AMI created successfully** | The Generic AMI is created from the console and appears in the AMI list. |
-| **Instance launches and has expected tools** | An instance launched from the AMI (via console) has the required runtimes and tools (e.g. Java, Node, Git) and is usable. |
-| **Update process clear** | There are documented steps to update the AMI (e.g. new runtime version, security patch) and create a new AMI version from the console. |
-| **No blocking issues** | No critical failures (e.g. missing dependency, boot failure) that cannot be resolved with small changes to the AMI build steps. |
+| **AMI created successfully** | The AMI with Nginx is created from the console and appears in **AMIs** with status **Available**. |
+| **Instance launches from the AMI** | An instance launched from the new AMI (via console) starts and passes status checks. |
+| **Nginx visible in browser** | Opening `http://<public-ip>` in a browser shows the Nginx default welcome page (no SSH or extra setup required). |
+| **No blocking issues** | No critical failures (e.g. Nginx not starting, port 80 blocked) that cannot be resolved with security group or install steps. |
 
-If all of the above are met, the POC can be signed off and the approach can be extended (e.g. more tools, automation, or production use).
+If all of the above are met, the POC can be signed off and the approach can be extended (e.g. more packages, automation, or production use).
 
 ---
 
@@ -140,7 +207,7 @@ The Generic AMI POC validates building and using a standard AMI via the AWS cons
 |------|-------------|
 | [Generic CI AMI_Documetation](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-159-mukesh/Applications/Understanding/Generic_CI_Operation/AMI/README.md) | Main document: what, why, workflow, advantages, best practices. |
 | [AWS – Creating an AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami.html) | How to create an AMI from an instance (console). |
-| [Packer – Amazon AMI](https://www.packer.io/plugins/builders/amazon/ebs) | Automate AMI build with Packer (optional). |
+
 
 
 ---
