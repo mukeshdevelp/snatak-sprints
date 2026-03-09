@@ -6,7 +6,7 @@
 
 | Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
 |--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
-| Mukesh Sharma | 03-02-2026 | v1.0 | Mukesh Sharma | 03-02-2026 |  | aniruddh sir | faisal sir | ashwani sir |
+| Mukesh Sharma | 20-02-2026 | v1.0 | Mukesh Sharma | 20-02-2026 |  | aniruddh sir | faisal sir | ashwani sir |
 
 
 
@@ -65,12 +65,10 @@ The Generic AMI is built and used via the AWS console (or CLI/API) as follows:
 ```
 [Launch base instance] → [Connect & install runtimes/tools] → [Create image (Generic AMI)] → [Launch instance from AMI] → [Use instance (SSH)] → [Terminate when done]
 ```
+<img width="1235" height="515" alt="image" src="https://github.com/user-attachments/assets/382ebdf2-756d-4c23-84e8-2f65770eece1" />
 
 
-- **Build the AMI** — In the EC2 console, launch an instance from a base AMI (e.g. Amazon Linux 2). Connect to it, install runtimes and tools, harden and patch, then create a new AMI from that instance (Actions → Image and templates → Create image).
-- **Launch from AMI** — When you need an instance, use the EC2 console (Launch Instance) and select your Generic AMI. Choose instance type, subnet, and security group; launch.
-- **Use the instance** — Connect (e.g. SSH), use the preinstalled runtimes and tools. No need to install dependencies.
-- **Terminate when done** — Stop or terminate the instance from the console when no longer needed.
+
 
 ---
 
