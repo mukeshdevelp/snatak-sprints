@@ -17,11 +17,10 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Step 1 — Build and format the Go project](#3-step-1--build-and-format-the-go-project)
 4. [Step 2 — Add static analysis (go vet, linter)](#4-step-2--add-static-analysis-go-vet-linter)
-5. [Step 3 — Configure and run in CI](#5-step-3--configure-and-run-in-ci)
-6. [Step 4 — Document and tune](#6-step-4--document-and-tune)
-7. [Success criteria](#7-success-criteria)
-8. [Contact Information](#8-contact-information)
-9. [References](#9-references)
+5. [Step 3 — Document and tune](#5-step-3--document-and-tune)
+6. [Success criteria](#6-success-criteria)
+7. [Contact Information](#7-contact-information)
+8. [References](#8-references)
 
 ---
 
@@ -32,7 +31,7 @@
 | **Application** | Go (Golang) microservice; e.g. REST API with Gin; packages such as api, client, config, middleware, routes. |
 | **Repo location** | Go project directory (e.g. **~/go-app** or your Go module path). |
 | **Build** | `go build` (or `make build`); `go fmt ./...`, `go vet ./...`. |
-| **POC goal** | Add static code analysis (go fmt, go vet, and optionally golangci-lint) to the CI pipeline; fail on format or lint errors. |
+| **POC goal** | Run static code analysis locally (go fmt, go vet, and optionally golangci-lint) using normal commands; fix format or lint errors. |
 
 ---
 
@@ -42,93 +41,138 @@
 |-------------|-------------|
 | **Go** | Go 1.20+ (or version required by the project). |
 | **Go project repo** | Clone or use the existing Go module directory; ensure `go.mod` and `.go` sources are present. |
-| **CI system** | GitLab CI, Jenkins, or similar (one pipeline for the POC). |
 | **Linter (optional)** | **golangci-lint** or **staticcheck** for deeper analysis; install from releases or `go install`. |
 
 ---
 
 ## 3. Step 1 — Build and format the Go project
 
-1. Navigate to the Go project directory:
-   ```bash
-   cd ~/go-app
-   ```
-2. Format code:
-   ```bash
-   go fmt ./...
-   # or: make fmt
-   ```
-3. Build the project:
-   ```bash
-   make build
-   # or: go build -o app .
-   ```
-4. Ensure the build succeeds. Static analysis will run on the same codebase (e.g. `go vet ./...` and optionally golangci-lint).
+Run these commands from your machine. Replace the path with your Go project directory (e.g. `API/employee-api` or `~/go-app`).
+
+**Step 1.1 — Navigate to the Go project directory**
+
+```bash
+cd /path/to/your/go-project
+# Example: cd API/employee-api
+```
+
+**Step 1.2 — Format code**
+
+```bash
+go fmt ./...
+```
+
+**Step 1.3 — Build the project**
+
+```bash
+go build -o app .
+# Or, if the project uses Make: make build
+```
+
+**Step 1.4 — Confirm build succeeded**
+
+If the build completes without errors, proceed to Step 2. Fix any build errors before running static analysis.
 
 ---
 
 ## 4. Step 2 — Add static analysis (go vet, linter)
 
-1. **go vet** — Run the standard analyzer:
-   ```bash
-   go vet ./...
-   # or: make vet
-   ```
-   Fix any reported issues.
+Run these commands in the same Go project directory.
 
-2. **golangci-lint (optional)** — Install and run:
-   ```bash
-   golangci-lint run
-   ```
-   Add a `.golangci.yml` in the project root to enable/disable linters and set rules. Example (minimal):
-   ```yaml
-   linters:
-     enable:
-       - vet
-       - errcheck
-       - staticcheck
-   ```
+**Step 2.1 — Run go vet and save a report**
 
-3. Alternatively use **staticcheck** alone:
-   ```bash
-   staticcheck ./...
-   ```
+```bash
+go vet ./... 2>&1 | tee vet-report.txt
+```
+
+- Output is shown in the terminal and saved to **`vet-report.txt`** in the project root. Open the file to view the report.
+- Fix any issues reported. Re-run until the command exits with no output (success). Then `vet-report.txt` will be empty or you can delete it.
+
+**Step 2.2 — (Optional) Install golangci-lint**
+
+```bash
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+```
+
+Ensure `$GOPATH/bin` or `$HOME/go/bin` is in your `PATH` so the `golangci-lint` command is found.
+
+**Step 2.3 — (Optional) Run golangci-lint and save a report**
+
+```bash
+golangci-lint run ./... 2>&1 | tee lint-report.txt
+```
+
+- Output is shown in the terminal and saved to **`lint-report.txt`** in the project root. Open the file to view the report.
+- Optional: save a JSON report for tooling or CI:
+  ```bash
+  golangci-lint run ./... --out-format json > lint-report.json
+  ```
+
+**Step 2.4 — (Optional) Add a config file for golangci-lint**
+
+Create a file named `.golangci.yml` in the project root to enable/disable linters. Example (minimal):
+
+```yaml
+linters:
+  enable:
+    - vet
+    - errcheck
+    - staticcheck
+```
+
+Then run again and save the report:
+
+```bash
+golangci-lint run ./... 2>&1 | tee lint-report.txt
+```
+
+Open **`lint-report.txt`** to view the full report.
+
+**Step 2.5 — (Alternative) Use staticcheck alone and save a report**
+
+If you prefer not to use golangci-lint, install and run staticcheck:
+
+```bash
+go install honnef.co/go/tools/cmd/staticcheck@latest
+staticcheck ./... 2>&1 | tee staticcheck-report.txt
+```
+
+- Output is shown in the terminal and saved to **`staticcheck-report.txt`** in the project root. Open the file to view the report.
+- Fix any reported issues.
+
+**Report files (summary)**
+
+| File | Contents |
+|------|----------|
+| `vet-report.txt` | go vet output (file:line: message). |
+| `lint-report.txt` | golangci-lint output (human-readable). |
+| `lint-report.json` | golangci-lint output in JSON (optional). |
+| `staticcheck-report.txt` | staticcheck output. |
+
+All report files are created in the **project root**. Open them in a text editor or viewer to review the findings.
 
 ---
 
-## 5. Step 3 — Configure and run in CI
+## 5. Step 3 — Document and tune
 
-1. **CI job** — Add a job that:
-   - Checks out the repo and changes to the Go project directory.
-   - Runs `go fmt ./...` (or `make fmt`) and ensures the tree is formatted (e.g. check for diffs or use `-l` to list unformatted files).
-   - Runs `go vet ./...` (or `make vet`).
-   - Runs the linter (e.g. `golangci-lint run`) if adopted.
-   - Fails the job when format is wrong, vet fails, or the linter reports errors.
-2. Trigger the job on every PR or main build.
-3. Optionally publish lint report as an artifact.
+1. **Document** — Note which tools you used (go fmt, go vet, golangci-lint or staticcheck) and the commands you ran, so you or others can repeat the steps.
+2. **Tune** — If the linter reports too many findings, edit `.golangci.yml` to disable specific linters or rules; then gradually re-enable rules as you fix issues.
 
 ---
 
-## 6. Step 4 — Document and tune
-
-1. **Document** — Record in this file or in the CI config: tools used (go fmt, go vet, golangci-lint/staticcheck), how to run locally (`make fmt`, `make vet`, `golangci-lint run`), and any severity thresholds.
-2. **Tune** — If the linter reports too many findings, adjust `.golangci.yml` (disable specific linters or rules) so the POC pipeline is achievable; then gradually re-enable rules.
-
----
-
-## 7. Success criteria
+## 6. Success criteria
 
 | Criterion | Status |
 |-----------|--------|
-| Go project builds successfully in CI (`make build` or `go build`). | ☐ |
-| `go fmt` (or `make fmt`) runs and pipeline fails if code is not formatted. | ☐ |
-| `go vet` (or `make vet`) runs and pipeline fails on vet issues. | ☐ |
-| Optional: golangci-lint (or staticcheck) runs in CI and fails on configured issues. | ☐ |
-| Process is documented (tools, commands, config). | ☐ |
+| Go project builds successfully (`go build` or `make build`). | ☐ |
+| `go fmt ./...` runs and code is formatted (no unformatted files). | ☐ |
+| `go vet ./...` runs and reports no issues. | ☐ |
+| Optional: golangci-lint (or staticcheck) runs and reports no errors for configured rules. | ☐ |
+| Process is documented (tools used, commands, config). | ☐ |
 
 ---
 
-## 8. Contact Information
+## 7. Contact Information
 
 | Name | Email Address |
 |------|----------------|
@@ -136,7 +180,7 @@
 
 ---
 
-## 9. References
+## 8. References
 
 | Link | Description |
 |------|-------------|

@@ -1,4 +1,4 @@
-# GoLang CI Checks | Static Code Analysis
+# GoLang CI Checks | Static Code Analysis Documentation
 
 
 
