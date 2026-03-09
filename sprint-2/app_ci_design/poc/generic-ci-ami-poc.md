@@ -84,6 +84,12 @@ This POC installs **Nginx** on the AMI and validates by opening the Nginx defaul
    - **HTTP (80)** from your IP (or `0.0.0.0/0` for POC only).
 7. Launch the instance. Note the **public IP** after it is running.
 
+**Expected Output**
+
+<img width="1920" height="1080" alt="Screenshot from 2026-03-09 10-52-12" src="https://github.com/user-attachments/assets/a3526ed7-b09a-443b-ad80-9a310e1d005f" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fdde848c-e9ca-415d-ba6d-fe6371e107d3" />
+
 ---
 
 **Step 3 — Connect and install Nginx (commands)**
@@ -93,18 +99,17 @@ From your laptop, SSH into the instance (use the key and public IP from Step 2):
 ```bash
 ssh -i /path/to/your-key.pem ec2-user@<public-ip>
 ```
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2cf376c5-8a86-4629-9d92-e6f35f589baf" />
 
-On the instance, run these commands to install and enable Nginx:
+
+On the instance, run these commands to install and enable Nginx (Ubuntu):
 
 ```bash
-# Update packages (optional but recommended)
-sudo yum update -y
+# Update package lists and upgrade 
+sudo apt update && sudo apt upgrade -y
 
-# Install Nginx (Amazon Linux 2)
-sudo amazon-linux-extras install nginx1 -y
-
-# Or, if the above is not available, use:
-# sudo yum install nginx -y
+# Install Nginx
+sudo apt install nginx -y
 
 # Start Nginx and enable it on boot
 sudo systemctl start nginx
@@ -113,6 +118,15 @@ sudo systemctl enable nginx
 # Verify Nginx is running
 sudo systemctl status nginx
 ```
+**Expected Output**
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/13574ff7-2f49-42ea-80b7-944755acf8fe" />
+
+<img width="1910" height="910" alt="image" src="https://github.com/user-attachments/assets/3869ed81-6440-406b-96d6-4ab1591dec77" />
+
+
+<img width="1910" height="651" alt="image" src="https://github.com/user-attachments/assets/6110ea87-099e-40f0-a39f-ab8cad1074dd" />
+
 
 Leave the SSH session open or disconnect; the instance will keep Nginx running.
 
