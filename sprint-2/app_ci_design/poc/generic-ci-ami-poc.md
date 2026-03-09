@@ -1,4 +1,4 @@
-# Generic CI AMI — POC (Proof of Concept)
+# Generic AMI — POC (Proof of Concept)
 
 
 ---
@@ -29,19 +29,18 @@
 
 ## 1. Introduction
 
-The **Generic CI AMI POC** validates that a preconfigured Amazon Machine Image (AMI) can be used to run CI jobs in a consistent, repeatable way. The POC answers: Can we build the AMI, connect it to our CI system, and run real build/test jobs with acceptable startup time and reliability? This document defines the POC scope, prerequisites, steps, success criteria, and risks. For the broader concept and design, see [Generic CI AMI_Documentation](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-159-mukesh/Applications/Understanding/Generic_CI_Operation/AMI/README.md).
-
+The **Generic AMI POC** validates that a preconfigured Amazon Machine Image (AMI) can be built and used via the AWS console in a consistent, repeatable way. The POC answers: Can we build the AMI in the console, launch an instance from it, and confirm the instance has the expected runtimes and tools? This document defines the POC scope, prerequisites, steps (console-based), success criteria, and risks. For the broader concept and design, see [Generic CI AMI_Documentation](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-159-mukesh/Applications/Understanding/Generic_CI_Operation/AMI/README.md).
 ---
 
 ## 2. Scope
 
 | In scope | Out of scope |
 |----------|--------------|
-| One CI system (e.g. Jenkins or GitLab) | Multiple CI systems in one POC |
-| One or two sample pipelines (e.g. Java, Node) | All existing pipelines |
-| Building one Generic CI AMI and using it for agents/runners | High availability or multi-region |
-| Measuring job success and startup time | Full production hardening (e.g. compliance, SSO) |
-| Documenting how to update the AMI | Automated AMI refresh pipelines (can be phase 2) |
+| Building one Generic AMI via AWS console | Multiple AMIs or regions in one POC |
+| Launching an instance from the AMI via console | Automation (e.g. Packer, pipelines) in POC |
+| Validating runtimes and tools on the launched instance | High availability or multi-region |
+| Documenting how to update the AMI | Full production hardening (e.g. compliance, SSO) |
+| Console-based steps only | Automated AMI refresh (can be phase 2) |
 
 
 
@@ -51,46 +50,42 @@ The **Generic CI AMI POC** validates that a preconfigured Amazon Machine Image (
 
 | Requirement | Description |
 |--------------|-------------|
-| **AWS account** | Access to create AMIs, launch EC2 instances, and use IAM roles for the CI agent. |
-| **CI system** | Jenkins, GitLab, or similar with the ability to launch agents/runners on EC2 (e.g. EC2 Fleet plugin, GitLab Runner autoscale). |
+| **AWS account** | Access to EC2 console: create AMIs, launch instances, use key pairs and security groups. |
 | **Base AMI** | A supported base (e.g. Amazon Linux 2, Ubuntu) in the target region. |
-| **Build automation (optional)** | Packer or scripts to build the AMI reproducibly. |
-| **Sample repos** | At least one repo (e.g. Java or Node) with a simple build and test that can run on the POC AMI. |
+| **Build automation (optional)** | Packer or scripts to build the AMI reproducibly; POC can be console-only. |
 
 ---
 
 ## 4. POC steps
 
+All steps are done via the **AWS EC2 console** (or equivalent CLI commands).
+
 **Step 1 — Define scope**
 
-- Choose one CI system (e.g. Jenkins).
-- Choose one or two representative pipelines (e.g. one Java build, one Node build).
 - Agree on the runtimes and tools that must be on the AMI (e.g. Java 17, Node 20, Git, Docker CLI).
 
-**Step 2 — Build the AMI**
+**Step 2 — Build the AMI (console)**
 
-- Start an EC2 instance from the chosen base AMI (e.g. Amazon Linux 2).
-- Install required runtimes, tools, and the CI agent (e.g. Jenkins agent JAR or GitLab Runner).
-- Harden minimally (e.g. security updates, no unnecessary services).
-- Create a new AMI from the instance; tag it (e.g. `generic-ci-ami-poc-v1`).
-- Optionally automate this with Packer and document the steps.
+- In the EC2 console, launch an instance from the chosen base AMI (e.g. Amazon Linux 2). Use a key pair and security group that allow SSH.
+- Connect to the instance (e.g. SSH). Install required runtimes and tools. Harden minimally (e.g. security updates).
+- In the console: select the instance → **Actions** → **Image and templates** → **Create image**. Name and tag it (e.g. `generic-ami-poc-v1`).
+- Optionally document the install steps or use Packer later for automation.
 
-**Step 3 — Configure CI to use the AMI**
+**Step 3 — Launch an instance from the new AMI (console)**
 
-- In the CI system, configure the cloud/EC2 plugin to launch agents or runners from the new AMI (instance type, subnet, IAM role, security group).
-- Ensure the agent can reach the CI controller (network, security groups, credentials or keys).
+- In the EC2 console, use **Launch instance**. Choose your new Generic AMI, instance type, subnet, and security group. Launch.
+- Note the instance ID and (if applicable) public/private IP.
 
-**Step 4 — Run sample jobs**
+**Step 4 — Validate the instance**
 
-- Trigger the chosen pipelines (e.g. on a branch or PR).
-- Confirm that instances launch from the AMI, register as agents/runners, and that the jobs complete successfully.
-- Note job startup time (time from “job scheduled” to “job started”) and any failures or misconfigurations.
+- Connect to the new instance (SSH). Verify that the expected runtimes and tools are present (e.g. `java -version`, `node -v`, `git --version`, `docker --version`).
+- Note any missing dependencies or misconfigurations for the next iteration.
 
 **Step 5 — Document and iterate**
 
-- Document the AMI build steps (manual or Packer).
-- Document how to add or update runtimes and how to publish a new AMI version.
-- Capture lessons learned and refine (e.g. add a missing tool, adjust instance size).
+- Document the AMI build steps (what you installed, how you created the image).
+- Document how to add or update runtimes and how to create a new AMI version from the console.
+- Capture lessons learned and refine (e.g. add a missing tool, adjust instance size). Terminate the test instance when done.
 
 ---
 
@@ -100,12 +95,12 @@ The POC is considered successful when:
 
 | Criterion | Description |
 |-----------|-------------|
-| **Jobs run successfully** | The chosen pipelines (e.g. Java, Node) complete build and test when run on instances launched from the Generic CI AMI. |
-| **Startup time acceptable** | Time from job scheduled to job start is within an agreed threshold (e.g. under 3–5 minutes for EC2 launch + agent connect). |
-| **Update process clear** | There is documented steps (or a Packer template) to update the AMI (e.g. new runtime version, security patch) and roll it out. |
-| **No blocking issues** | No critical failures (e.g. agent unable to connect, missing dependency) that cannot be resolved with small changes to the AMI or CI config. |
+| **AMI created successfully** | The Generic AMI is created from the console and appears in the AMI list. |
+| **Instance launches and has expected tools** | An instance launched from the AMI (via console) has the required runtimes and tools (e.g. Java, Node, Git) and is usable. |
+| **Update process clear** | There are documented steps to update the AMI (e.g. new runtime version, security patch) and create a new AMI version from the console. |
+| **No blocking issues** | No critical failures (e.g. missing dependency, boot failure) that cannot be resolved with small changes to the AMI build steps. |
 
-If all of the above are met, the POC can be signed off and the approach can be extended to more pipelines or to production hardening.
+If all of the above are met, the POC can be signed off and the approach can be extended (e.g. more tools, automation, or production use).
 
 ---
 
@@ -114,7 +109,7 @@ If all of the above are met, the POC can be signed off and the approach can be e
 | Risk / limitation | Mitigation |
 |-------------------|------------|
 | **AMI drift** | Document and automate AMI build; rebuild on a schedule. |
-| **Cold start latency** | Accept for POC or use a small pool of warm instances if needed. |
+| **Instance launch time** | Accept for POC; instances take a few minutes to boot from the AMI. |
 | **Missing tools** | Start with a minimal set; add tools based on first runs and document them. |
 | **Cost** | Use small instance types and ensure instances terminate when idle; monitor cost during POC. |
 | **Single region/account** | POC can be single region/account; multi-region or multi-account can be phase 2. |
@@ -123,7 +118,7 @@ If all of the above are met, the POC can be signed off and the approach can be e
 
 ## 7. Conclusion
 
-The Generic CI AMI POC validates building and using a standard AMI for CI jobs. Follow the steps: define scope, build the AMI, configure the CI system, run sample jobs, and document the update process. Success is measured by jobs completing successfully, acceptable startup time, and a clear path to update the AMI. Address risks (e.g. drift, cost) and then plan next steps (e.g. more pipelines, automation, production standards).
+The Generic AMI POC validates building and using a standard AMI via the AWS console. Follow the steps: define scope, build the AMI in the console, launch an instance from it, validate runtimes and tools, and document the update process. Success is measured by a working AMI, a launchable instance with the expected tools, and a clear path to update the AMI. Address risks (e.g. drift, cost) and then plan next steps (e.g. automation, production use).
 
 ---
 
@@ -142,8 +137,8 @@ The Generic CI AMI POC validates building and using a standard AMI for CI jobs. 
 | Link | Description |
 |------|-------------|
 | [Generic CI AMI_Documetation](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-159-mukesh/Applications/Understanding/Generic_CI_Operation/AMI/README.md) | Main document: what, why, workflow, advantages, best practices. |
-| [AWS – Creating an AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami.html) | How to create an AMI from an instance. |
-| [Packer – Amazon AMI](https://www.packer.io/plugins/builders/amazon/ebs) | Automate AMI build with Packer. |
+| [AWS – Creating an AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami.html) | How to create an AMI from an instance (console). |
+| [Packer – Amazon AMI](https://www.packer.io/plugins/builders/amazon/ebs) | Automate AMI build with Packer (optional). |
 
 
 ---
