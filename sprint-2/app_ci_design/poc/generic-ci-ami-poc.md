@@ -128,7 +128,10 @@ sudo systemctl status nginx
 <img width="1910" height="651" alt="image" src="https://github.com/user-attachments/assets/6110ea87-099e-40f0-a39f-ab8cad1074dd" />
 
 
-Leave the SSH session open or disconnect; the instance will keep Nginx running.
+Leave the SSH session open or disconnect, the instance will keep Nginx running. Check if the nginx welcome page is available on browser.
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2bf9a3c1-f46f-4216-9cbf-156abbc34845" />
+
 
 ---
 
@@ -147,12 +150,23 @@ Leave the SSH session open or disconnect; the instance will keep Nginx running.
 **Step 5 — Launch an instance from the new AMI (console)**
 
 1. In **EC2 console** → **Launch instance**.
-2. **Name:** e.g. `nginx-poc-test`.
-3. **AMI:** Click **Browse** and select **My AMIs**; choose `generic-ami-nginx-poc-v1` (or the name you gave).
-4. **Instance type:** e.g. `t2.micro`.
+2. **Name:** e.g. `nginx-poc-test`. After filling the description click on `create image`.
+3. **AMI:** Click **Browse** and select **My AMIs**; choose `generic-ami-nginx-poc-v1` (or the name you gave). Click on `Launch instance from AMI`.
+4. **Instance type:** e.g. `t2.micro`. Also fill the necessary details to launch and ec2 instance.
 5. **Key pair:** Same as before (for SSH if needed).
 6. **Security group:** Use one that allows **HTTP (80)** from your IP (or `0.0.0.0/0` for POC).
 7. Launch. Note the **public IP** of the new instance.
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/82090990-9168-4760-b6c6-a50f3fa5dd63" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/93255ea8-2409-4282-9ef1-62f12e880479" />
+
+<img width="1910" height="651" alt="image" src="https://github.com/user-attachments/assets/bab5ffdb-6202-46a3-bb75-18d948167d1b" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/661d9a0f-ea69-44c2-80c4-231ea280773a" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c2410780-722b-42cc-8f85-77d5b3746cc4" />
+
 
 ---
 
@@ -162,6 +176,10 @@ Leave the SSH session open or disconnect; the instance will keep Nginx running.
 2. Open a browser and go to: **`http://<public-ip-of-new-instance>`**
 3. You should see the **Nginx default welcome page** (e.g. “Welcome to nginx!”).
 4. This confirms the AMI was built correctly and Nginx starts on boot from the new AMI.
+
+**Expected Output:**
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/006db4cc-db83-4f31-908d-a4fec4452c41" />
 
 ---
 
