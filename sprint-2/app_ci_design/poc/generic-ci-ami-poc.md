@@ -53,14 +53,14 @@ The **Generic AMI POC** validates that a preconfigured Amazon Machine Image (AMI
 | Requirement | Description |
 |--------------|-------------|
 | **AWS account** | Access to EC2 console: create AMIs, launch instances, use key pairs and security groups. |
-| **Base AMI** | A supported base (e.g. Amazon Linux 2, Ubuntu) in the target region. |
+| **Base AMI** | Ubuntu Server (e.g. 22.04 LTS) in the target region. |
 | **Build automation (optional)** | Packer or scripts to build the AMI reproducibly; POC can be console-only. |
 
 ---
 
 ## 4. POC steps
 
-This POC installs **Nginx** on the AMI and validates by opening the Nginx default page in a browser. All steps use the **AWS EC2 console** and SSH; exact commands are below (Amazon Linux 2).
+This POC installs **Nginx** on the AMI and validates by opening the Nginx default page in a browser. All steps use the **AWS EC2 console** and SSH; exact commands are below (Ubuntu).
 
 ---
 
@@ -76,7 +76,7 @@ This POC installs **Nginx** on the AMI and validates by opening the Nginx defaul
 
 1. In **EC2 console** → **Launch instance**.
 2. **Name:** e.g. `nginx-ami-builder`.
-3. **AMI:** Amazon Linux 2.
+3. **AMI:** Ubuntu Server (e.g. 22.04 LTS).
 4. **Instance type:** e.g. `t2.micro`.
 5. **Key pair:** Create or select a key pair (needed for SSH).
 6. **Security group:** Create or use one that allows:
@@ -97,7 +97,7 @@ This POC installs **Nginx** on the AMI and validates by opening the Nginx defaul
 From your laptop, SSH into the instance (use the key and public IP from Step 2):
 
 ```bash
-ssh -i /path/to/your-key.pem ec2-user@<public-ip>
+ssh -i /path/to/your-key.pem ubuntu@<public-ip>
 ```
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2cf376c5-8a86-4629-9d92-e6f35f589baf" />
 
