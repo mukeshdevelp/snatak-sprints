@@ -16,9 +16,9 @@
 1. [Scope and context](#1-scope-and-context)
 2. [Prerequisites](#2-prerequisites)
 3. [Step 1 — Build and format the Go project](#3-step-1--build-and-format-the-go-project)
-4. [Step 2 — Add static analysis (go vet, linter)](#4-step-2--add-static-analysis-go-vet-linter)
+4. [Step 2 — Configure and run SonarQube](#4-step-2--configure-and-run-sonarqube)
 5. [Step 3 — Document and tune](#5-step-3--document-and-tune)
-6. [Success criteria](#6-success-criteria)
+6. [Advantages of SonarQube over traditional tools](#6-advantages-of-sonarqube-over-traditional-tools)
 7. [Contact Information](#7-contact-information)
 8. [References](#8-references)
 
@@ -29,9 +29,9 @@
 | Item | Description |
 |------|-------------|
 | **Application** | Go (Golang) microservice; e.g. REST API with Gin; packages such as api, client, config, middleware, routes. |
-| **Repo location** | Go project directory (e.g. **~/go-app** or your Go module path). |
-| **Build** | `go build` (or `make build`); `go fmt ./...`, `go vet ./...`. |
-| **POC goal** | Run static code analysis locally (go fmt, go vet, and optionally golangci-lint) using normal commands; fix format or lint errors. |
+| **Repo location** | Go project directory (e.g. **~/go-app** or **API/employee-api**). |
+| **Build** | `go build` (or `make build`); `go fmt ./...`. |
+| **POC goal** | Run **SonarQube** static code analysis on the Go project; view the report in the SonarQube web UI (issues, code smells, security, quality gate). |
 
 ---
 
@@ -41,7 +41,9 @@
 |-------------|-------------|
 | **Go** | Go 1.20+ (or version required by the project). |
 | **Go project repo** | Clone or use the existing Go module directory; ensure `go.mod` and `.go` sources are present. |
-| **Linter (optional)** | **golangci-lint** or **staticcheck** for deeper analysis; install from releases or `go install`. |
+| **SonarQube server** | A running SonarQube instance (e.g. local or company server). You need the server URL (e.g. `http://localhost:9000` or `https://sonarqube.example.com`). |
+| **SonarQube token** | A user token generated in SonarQube (My Account → Security → Generate Token) for the scanner. |
+| **SonarScanner** | SonarScanner CLI installed on your machine. Download from [SonarQube Scanner](https://docs.sonarqube.org/latest/analyzing-source-code/scanners/sonarscanner/). |
 
 ---
 
@@ -71,104 +73,108 @@ go build -o app .
 
 **Step 1.4 — Confirm build succeeded**
 
-If the build completes without errors, proceed to Step 2. Fix any build errors before running static analysis.
+If the build completes without errors, proceed to Step 2. SonarQube will analyze the same codebase.
 
 ---
 
-## 4. Step 2 — Add static analysis (go vet, linter)
+## 4. Step 2 — Configure and run SonarQube
 
-Run these commands in the same Go project directory.
+Run these steps in the same Go project directory. The **report is visible in the SonarQube web UI** after the scan.
 
-**Step 2.1 — Run go vet and save a report**
+**Step 2.1 — Create the project in SonarQube (if not already created)**
+
+1. Log in to your SonarQube server (e.g. `http://localhost:9000`).
+2. Click **Create project manually** (or use existing project).
+3. **Project key:** e.g. `go-employee-api` (must be unique).
+4. **Display name:** e.g. `Go Employee API`.
+5. Generate a token for the project (or use an existing token). Save the token; you will use it in Step 2.2.
+
+**Step 2.2 — Add `sonar-project.properties` in the project root**
+
+Create a file named **`sonar-project.properties`** in the Go project root (same folder as `go.mod`):
+
+```properties
+# SonarQube server
+sonar.host.url=http://localhost:9000
+# Or: sonar.host.url=https://sonarqube.example.com
+
+# Project identification (use the key from Step 2.1)
+sonar.projectKey=go-employee-api
+sonar.projectName=Go Employee API
+
+# Source code (paths relative to this file)
+sonar.sources=.
+
+# Go-specific: exclude vendor and generated files if needed
+sonar.exclusions=**/vendor/**,**/*_test.go
+# To include tests in analysis, remove **/*_test.go from exclusions
+
+# Token (use environment variable in production; do not commit secrets)
+sonar.token=your-sonarqube-token-here
+```
+
+Replace `your-sonarqube-token-here` with the token from Step 2.1. Prefer setting the token via environment variable and omit `sonar.token` from the file:
 
 ```bash
-go vet ./... 2>&1 | tee vet-report.txt
+export SONAR_TOKEN=your-sonarqube-token-here
 ```
 
-- Output is shown in the terminal and saved to **`vet-report.txt`** in the project root. Open the file to view the report.
-- Fix any issues reported. Re-run until the command exits with no output (success). Then `vet-report.txt` will be empty or you can delete it.
+Then in `sonar-project.properties` you can use (if your SonarScanner version supports it): leave `sonar.token` out and pass it via `-Dsonar.token=$SONAR_TOKEN` when running the scanner, or set it in the file only for local POC and add the file to `.gitignore`.
 
-**Step 2.2 — (Optional) Install golangci-lint**
+**Step 2.3 — Run the SonarScanner**
+
+From the Go project root:
 
 ```bash
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+sonar-scanner
+# Or, if sonar-scanner is not in PATH: /path/to/sonar-scanner/bin/sonar-scanner
 ```
 
-Ensure `$GOPATH/bin` or `$HOME/go/bin` is in your `PATH` so the `golangci-lint` command is found.
-
-**Step 2.3 — (Optional) Run golangci-lint and save a report**
+If the token is in an environment variable:
 
 ```bash
-golangci-lint run ./... 2>&1 | tee lint-report.txt
+sonar-scanner -Dsonar.token=$SONAR_TOKEN
 ```
 
-- Output is shown in the terminal and saved to **`lint-report.txt`** in the project root. Open the file to view the report.
-- Optional: save a JSON report for tooling or CI:
-  ```bash
-  golangci-lint run ./... --out-format json > lint-report.json
-  ```
+Wait for the scan to finish. The scanner prints a link to the analysis result (e.g. **Dashboard** URL).
 
-**Step 2.4 — (Optional) Add a config file for golangci-lint**
+**Step 2.4 — Open the report in SonarQube**
 
-Create a file named `.golangci.yml` in the project root to enable/disable linters. Example (minimal):
+1. In the terminal output, find the **dashboard URL** (e.g. `http://localhost:9000/dashboard?id=go-employee-api`).
+2. Open that URL in your browser.
+3. You will see the **SonarQube report**: Issues, Code Smells, Security Hotspots, Coverage (if tests are run and reported), and the **Quality Gate** status (Passed / Failed).
 
-```yaml
-linters:
-  enable:
-    - vet
-    - errcheck
-    - staticcheck
-```
+**Report in SonarQube UI (summary)**
 
-Then run again and save the report:
+| Section | Contents |
+|---------|----------|
+| **Dashboard** | Overview: bugs, vulnerabilities, code smells, duplication, quality gate. |
+| **Issues** | List of findings with file, line, severity, and rule. |
+| **Security Hotspots** | Security-related findings to review. |
+| **Quality Gate** | Pass / Fail status based on configured conditions. |
 
-```bash
-golangci-lint run ./... 2>&1 | tee lint-report.txt
-```
-
-Open **`lint-report.txt`** to view the full report.
-
-**Step 2.5 — (Alternative) Use staticcheck alone and save a report**
-
-If you prefer not to use golangci-lint, install and run staticcheck:
-
-```bash
-go install honnef.co/go/tools/cmd/staticcheck@latest
-staticcheck ./... 2>&1 | tee staticcheck-report.txt
-```
-
-- Output is shown in the terminal and saved to **`staticcheck-report.txt`** in the project root. Open the file to view the report.
-- Fix any reported issues.
-
-**Report files (summary)**
-
-| File | Contents |
-|------|----------|
-| `vet-report.txt` | go vet output (file:line: message). |
-| `lint-report.txt` | golangci-lint output (human-readable). |
-| `lint-report.json` | golangci-lint output in JSON (optional). |
-| `staticcheck-report.txt` | staticcheck output. |
-
-All report files are created in the **project root**. Open them in a text editor or viewer to review the findings.
+The report is **visible and shareable** via the SonarQube web interface; no local report file is required for viewing.
 
 ---
 
 ## 5. Step 3 — Document and tune
 
-1. **Document** — Note which tools you used (go fmt, go vet, golangci-lint or staticcheck) and the commands you ran, so you or others can repeat the steps.
-2. **Tune** — If the linter reports too many findings, edit `.golangci.yml` to disable specific linters or rules; then gradually re-enable rules as you fix issues.
+1. **Document** — Note the SonarQube server URL, project key, and that you run `sonar-scanner` from the project root. Add `sonar-project.properties` to the repo (without secrets) or document the required properties.
+2. **Tune** — In SonarQube, adjust Quality Gate conditions or exclude files (e.g. `sonar.exclusions`) if needed. Fix critical and blocker issues first, then re-run `sonar-scanner` to refresh the report.
 
 ---
 
-## 6. Success criteria
+## 6. Advantages of SonarQube over traditional tools
 
-| Criterion | Status |
-|-----------|--------|
-| Go project builds successfully (`go build` or `make build`). | ☐ |
-| `go fmt ./...` runs and code is formatted (no unformatted files). | ☐ |
-| `go vet ./...` runs and reports no issues. | ☐ |
-| Optional: golangci-lint (or staticcheck) runs and reports no errors for configured rules. | ☐ |
-| Process is documented (tools used, commands, config). | ☐ |
+| Advantage | Description |
+|-----------|-------------|
+| **Single dashboard** | One web UI for issues, code smells, security hotspots, duplication, and quality gate—unlike go vet or golangci-lint, which only print to the terminal or text files. |
+| **Quality gate** | Built-in pass/fail criteria (e.g. no new bugs, coverage threshold) so you can enforce quality at a glance; traditional tools have no standard “gate” concept. |
+| **Historical trend** | SonarQube stores history and shows trends over time (e.g. issue count, technical debt); go vet and linters are single-run only. |
+| **Multi-language** | Same server and workflow for Go, Java, JS, and others; traditional Go tools (go vet, golangci-lint, staticcheck) are Go-only. |
+| **Centralized reporting** | Reports are visible to the whole team via URL; no need to share local lint or vet output files. |
+| **Security and hotspots** | Dedicated security and hotspot views with remediation guidance; traditional Go linters focus more on correctness and style. |
+| **Configurable rules** | Enable, disable, or tune rules and quality profiles in the UI; with go vet and many linters you edit config files only. |
 
 ---
 
@@ -184,10 +190,9 @@ All report files are created in the **project root**. Open them in a text editor
 
 | Link | Description |
 |------|-------------|
-| [GoLang CI Checks — Static Code Analysis (main doc)](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-180-mukesh/Applications/Understanding/Golang_CI_Checks/Static_Code_Analysis/README.md) | Main design document for Go static code analysis. |
-| [go fmt](https://pkg.go.dev/cmd/gofmt) | Standard Go formatter. |
-| [go vet](https://pkg.go.dev/cmd/vet) | Standard Go static analyzer. |
-| [golangci-lint](https://golangci-lint.run/) | Aggregated linters for Go. |
-| [staticcheck](https://staticcheck.io/) | Static analysis for Go. |
+| [SonarQube documentation](https://docs.sonarqube.org/latest/) | SonarQube user and analysis documentation. |
+| [SonarScanner](https://docs.sonarqube.org/latest/analyzing-source-code/scanners/sonarscanner/) | Download and use SonarScanner CLI. |
+| [Analyzing Go with SonarQube](https://docs.sonarqube.org/latest/analysis/languages/go/) | Go language support in SonarQube. |
+| [GoLang CI Checks — Static Code Analysis (main doc)](../golang-static-code-analysis.md) | Main design document for Go static code analysis. |
 
 ---
