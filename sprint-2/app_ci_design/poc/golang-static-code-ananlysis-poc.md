@@ -249,6 +249,12 @@ Wait for the scan to finish. The scanner prints a link to the analysis result (e
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fe373204-8748-48de-8dd4-458e60a57326" />
 <img width="1915" height="718" alt="image" src="https://github.com/user-attachments/assets/a0289530-4759-44d2-a93a-830be3ac5bf0" />
 <img width="1915" height="718" alt="image" src="https://github.com/user-attachments/assets/8b0138c5-10be-4bed-a3a0-00b6349dc396" />
+<img width="1915" height="718" alt="image" src="https://github.com/user-attachments/assets/462a8007-dd26-4bc3-99d7-c6b5e8c513ac" />
+<img width="1915" height="718" alt="image" src="https://github.com/user-attachments/assets/c2718a93-134e-41fe-a154-26a84713b871" />
+
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/56be412e-f5df-4935-a7b9-333a83ddc0da" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a7414e69-b2d3-4926-8bd9-40868b0e17d7" />
 
 
 **Report in SonarQube UI (summary)**
