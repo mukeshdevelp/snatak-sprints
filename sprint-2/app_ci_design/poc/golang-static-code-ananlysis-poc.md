@@ -103,8 +103,8 @@ Run these steps in the same Go project directory. The **report is visible in the
 Create a file named **`sonar-project.properties`** in the Go project root (same folder as `go.mod`):
 
 ```properties
-# SonarQube server
-sonar.host.url=http://localhost:9000
+# URL of the SonarQube server (ngrok public URL)
+sonar.host.url=https://unmammalian-supplicatingly-yer.ngrok-free.dev
 # Or: sonar.host.url=https://sonarqube.example.com
 
 # Project identification (use the key from Step 2.1)
@@ -119,9 +119,12 @@ sonar.exclusions=**/vendor/**,**/*_test.go
 # To include tests in analysis, remove **/*_test.go from exclusions
 
 # Token (use environment variable in production; do not commit secrets)
-sonar.token=your-sonarqube-token-here
+sonar.token=sqp_c0aca1f80910b15a14e083c2b4d46fdcdc43d104
+sonar.working.directory=/data/employee-api-scannerwork
+
 ```
 <img width="1915" height="464" alt="image" src="https://github.com/user-attachments/assets/e31a1219-c4fe-48f4-aba7-339fa6355fd9" />
+<img width="1915" height="550" alt="image" src="https://github.com/user-attachments/assets/567fe506-72ba-40f2-b810-15df4702d594" />
 
 Replace `your-sonarqube-token-here` with the token from Step 2.1. Prefer setting the token via environment variable and omit `sonar.token` from the file:
 
