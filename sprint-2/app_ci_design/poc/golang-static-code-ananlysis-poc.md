@@ -233,6 +233,7 @@ sonar-scanner
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9eb07cfe-3e77-4228-9822-4aaad39900b5" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e8efc02e-2148-4095-a1a7-da5cd97b38a5" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8e41ced3-d273-45d7-a533-8f45fa9be04d" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/823df562-ee11-4eac-8c8f-95f92b719fa0" />
 
 
 If the token is in an environment variable:
