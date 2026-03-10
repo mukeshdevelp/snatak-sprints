@@ -49,26 +49,30 @@
 
 ## 3. Step 1 — Build and format the Go project
 
-Run these commands from your machine. Replace the path with your Go project directory (e.g. `API/employee-api` or `~/go-app`).
+Run these commands from your machine. Replace the path with your Go project directory (e.g. `employee/employee-api`).
 
 **Step 1.1 — Navigate to the Go project directory**
 
 ```bash
-cd /path/to/your/go-project
-# Example: cd API/employee-api
+cd ~/emploeyee/employee-api
+
 ```
+<img width="1915" height="202" alt="image" src="https://github.com/user-attachments/assets/62c83541-8a1d-4cb6-897e-f505d53fd9cc" />
+
 
 **Step 1.2 — Format code**
 
 ```bash
 go fmt ./...
 ```
+<img width="1915" height="98" alt="image" src="https://github.com/user-attachments/assets/0cfe2dd6-a2c6-46dc-91ed-e56aafa384bf" />
+
 
 **Step 1.3 — Build the project**
 
 ```bash
-go build -o app .
-# Or, if the project uses Make: make build
+go build
+# Or use Make: make build
 ```
 
 **Step 1.4 — Confirm build succeeded**
@@ -84,10 +88,15 @@ Run these steps in the same Go project directory. The **report is visible in the
 **Step 2.1 — Create the project in SonarQube (if not already created)**
 
 1. Log in to your SonarQube server (e.g. `http://localhost:9000`).
-2. Click **Create project manually** (or use existing project).
+2. Click **Create a local project** (or use existing project).
 3. **Project key:** e.g. `go-employee-api` (must be unique).
 4. **Display name:** e.g. `Go Employee API`.
 5. Generate a token for the project (or use an existing token). Save the token; you will use it in Step 2.2.
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/b03657fb-28c6-42cd-acd8-573928f669f8" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/b89af40d-bbfc-423d-b4e8-d37b1dc5bfd5" />
+
 
 **Step 2.2 — Add `sonar-project.properties` in the project root**
 
@@ -112,6 +121,7 @@ sonar.exclusions=**/vendor/**,**/*_test.go
 # Token (use environment variable in production; do not commit secrets)
 sonar.token=your-sonarqube-token-here
 ```
+<img width="1915" height="464" alt="image" src="https://github.com/user-attachments/assets/e31a1219-c4fe-48f4-aba7-339fa6355fd9" />
 
 Replace `your-sonarqube-token-here` with the token from Step 2.1. Prefer setting the token via environment variable and omit `sonar.token` from the file:
 
@@ -126,9 +136,65 @@ Then in `sonar-project.properties` you can use (if your SonarScanner version sup
 From the Go project root:
 
 ```bash
+# Downlaod sonar-scanner
+cd /data
+mkdir sonar-scanner
+cd sonar-scanner
+curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-8.0.1.6346-linux-x64.zip
+
+unzip sonar-scanner-cli-8.0.1.6346-linux-x64.zip 
+# scp -i ~/secretkey.pem sonar-scanner-cli-8.0.1.6346-linux-x64.zip  ubuntu@3.90.17.235:~/
+# scp -i ~/secretkey.pem sonar-scanner-cli-8.0.1.6346-linux-x64.zip  ubuntu@10.0.2.75:~/employee/employee-api
+
+export PATH="/data/sonar-scanner/sonar-scanner-8.0.1.6346-linux-x64/bin:$PATH"
+which sonar-scanner
+cd ~/employee/employee-api/
+
+# edit in conf/sonar.properties
+sonar.web.host=0.0.0.0
+sonar.web.port=9000
+# run sonarqube again on the local machine
 sonar-scanner
-# Or, if sonar-scanner is not in PATH: /path/to/sonar-scanner/bin/sonar-scanner
+
+# install ngrok
+# Download ngrok
+curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+sudo apt update && sudo apt install ngrok
+
+# Verify installation
+ngrok version
+
+
 ```
+
+<img width="1915" height="909" alt="image" src="https://github.com/user-attachments/assets/8002727e-570d-4f9e-8864-b9f781e2c9e1" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c80e71b0-0485-4847-a0c2-f0d43420d90b" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/eb91d225-5bf9-498b-bc23-d21ad16e4e63" />
+
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f2bc47a3-9dc0-44bc-a1b2-d34933f256e9" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ca3fc35a-bec4-416c-9b52-f1251b1d2d99" />
+
+<img width="1915" height="347" alt="image" src="https://github.com/user-attachments/assets/69757117-c2a8-4185-abae-cf73059fda1f" />
+
+<img width="1915" height="347" alt="image" src="https://github.com/user-attachments/assets/d95baf03-e3c9-49be-8c73-c45bd58326f3" />
+
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/6a60d581-8773-44f3-8dd4-d5a47006de8d" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/33c802e6-f22e-44fd-a905-083804b8a0d8" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/272b9fc3-9ec3-4db7-8afe-c5b53eb24a4d" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ccba0c7b-4755-432f-be9c-1a2fb6913d82" />
+
+<img width="1915" height="1044" alt="image" src="https://github.com/user-attachments/assets/c88a658e-8e3c-4f0e-9316-6e901bfedbc2" />
+<img width="1915" height="1044" alt="image" src="https://github.com/user-attachments/assets/2990922a-425a-4015-8cf7-768cbe522484" />
+<img width="1915" height="1044" alt="image" src="https://github.com/user-attachments/assets/d2256d04-9cd1-443b-a5c7-e20eee020359" />
 
 If the token is in an environment variable:
 
