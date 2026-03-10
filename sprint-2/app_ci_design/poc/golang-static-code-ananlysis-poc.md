@@ -165,6 +165,25 @@ sudo apt update && sudo apt install ngrok
 # Verify installation
 ngrok version
 
+export SONAR_SCANNER_OPTS="-Djava.io.tmpdir=/data/tmp_sonar_scanner -Xmx512m"
+
+
+---
+
+sudo mkdir -p /data/sonar_cache
+sudo mkdir -p /data/tmp_sonar
+sudo chown -R ubuntu:ubuntu /data/sonar_cache /data/tmp_sonar
+
+export SONAR_SCANNER_OPTS="-Djava.io.tmpdir=/data/tmp_sonar -Xmx512m"
+export SONAR_USER_HOME="/data/sonar_cache"
+
+export PATH="/data/sonar-scanner/sonar-scanner-8.0.1.6346-linux-x64/bin:$PATH"
+
+which sonar-scanner
+echo $SONAR_SCANNER_OPTS
+echo $SONAR_USER_HOME
+df -h /data
+sonar-scanner
 
 ```
 
@@ -196,6 +215,23 @@ ngrok version
 <img width="1915" height="1044" alt="image" src="https://github.com/user-attachments/assets/2990922a-425a-4015-8cf7-768cbe522484" />
 <img width="1915" height="1044" alt="image" src="https://github.com/user-attachments/assets/d2256d04-9cd1-443b-a5c7-e20eee020359" />
 
+<img width="1915" height="194" alt="image" src="https://github.com/user-attachments/assets/1ffa7fd5-07a6-4280-986e-809ed166683e" />
+<img width="1915" height="194" alt="image" src="https://github.com/user-attachments/assets/4f7a3fb1-b924-4552-b1c0-b249bcbd9b38" />
+
+<img width="1915" height="718" alt="image" src="https://github.com/user-attachments/assets/28eb7ca3-3f8f-43b5-b5c0-4cb4b5a60042" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7ddc130e-ab5d-4a05-b886-6d14744abbed" />
+
+**Final Output**
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/de2f9eb4-d429-4260-befe-c373f1696976" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/352ebdbc-41e6-439e-914e-ee8e3a3af230" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/b56373e1-98ac-425c-8785-9e00bca41eb2" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9eb07cfe-3e77-4228-9822-4aaad39900b5" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e8efc02e-2148-4095-a1a7-da5cd97b38a5" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8e41ced3-d273-45d7-a533-8f45fa9be04d" />
+
+
 If the token is in an environment variable:
 
 ```bash
@@ -209,6 +245,11 @@ Wait for the scan to finish. The scanner prints a link to the analysis result (e
 1. In the terminal output, find the **dashboard URL** (e.g. `http://localhost:9000/dashboard?id=go-employee-api`).
 2. Open that URL in your browser.
 3. You will see the **SonarQube report**: Issues, Code Smells, Security Hotspots, Coverage (if tests are run and reported), and the **Quality Gate** status (Passed / Failed).
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fe373204-8748-48de-8dd4-458e60a57326" />
+<img width="1915" height="718" alt="image" src="https://github.com/user-attachments/assets/a0289530-4759-44d2-a93a-830be3ac5bf0" />
+<img width="1915" height="718" alt="image" src="https://github.com/user-attachments/assets/8b0138c5-10be-4bed-a3a0-00b6349dc396" />
+
 
 **Report in SonarQube UI (summary)**
 
