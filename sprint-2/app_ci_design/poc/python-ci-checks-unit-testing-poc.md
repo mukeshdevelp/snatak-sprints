@@ -103,9 +103,10 @@ mkdir -p /data/systemd
 nano /data/systemd/attendance.service
 sudo cp /data/systemd/attendance.service /etc/systemd/system/attendance.service
 export COVERAGE_FILE=/data/attendance/.coverage
-
+python3 -m pytest tests/ -v --cov=. --cov-report=html
 scp -i secretkey.pem -r ubuntu@10.0.2.75:/data/attendance/htmlcov/ ~/bastion
 scp -i secretkey.pem -r ubuntu@54.226.94.183:~/bastion/ /home/mukesh/htmlcov/
+sudo rm -rf /data/.pytest_cache /data/attendance/__pycache__/ /data/attendance/.pytest_cache/
 
 
 ```
@@ -122,6 +123,7 @@ scp -i secretkey.pem -r ubuntu@54.226.94.183:~/bastion/ /home/mukesh/htmlcov/
 
 
 <img width="1917" height="821" alt="image" src="https://github.com/user-attachments/assets/ef292fa1-2ffa-4706-a5b3-c1c45d42e2ac" />
+<img width="1917" height="221" alt="image" src="https://github.com/user-attachments/assets/70d4a8b3-b923-43ab-8ea9-de045827363e" />
 
 
 - The **coverage report** is saved in the **`htmlcov/`** directory in the project root (`API/attendance-api/htmlcov/`).
@@ -148,7 +150,7 @@ This section covers unit testing for the **Notification worker** in **API/notifi
 **Step 4.1.1 — Navigate to the Notification worker project**
 
 ```bash
-cd API/notification-worker
+cd ~/notification/notification-worker
 ```
 
 **Step 4.1.2 — Install dependencies**
@@ -157,12 +159,18 @@ cd API/notification-worker
 make build
 # or: pip3 install -r requirements.txt
 ```
+<img width="1917" height="812" alt="image" src="https://github.com/user-attachments/assets/925144e4-2d37-4323-9c41-e60613644f8f" />
+<img width="1917" height="465" alt="image" src="https://github.com/user-attachments/assets/86f56a41-2177-445e-8ca8-91b1d5838c75" />
+
 
 **Step 4.1.3 — Add or locate the test suite (POC)**
 
 - If no tests exist: create a `tests/` directory and add `tests/test_*.py` (e.g. test config loading or a helper that builds the notification payload).
 - Mock external services (e.g. SMTP, email gateway, message queue) in tests.
 - Use **pytest** (add `pytest` to `requirements.txt` or a dev-requirements file) or **unittest**.
+
+<img width="1917" height="133" alt="image" src="https://github.com/user-attachments/assets/62ba5274-9ecd-46fc-b193-3c17c24697a7" />
+<img width="1917" height="965" alt="image" src="https://github.com/user-attachments/assets/c157e7e9-75aa-42ab-83c7-979597eeb838" />
 
 **Step 4.1.4 — Run tests locally and save report in HTML**
 
