@@ -1,2 +1,4 @@
 # API folder - do not commit to GitHub
 API/
+pom.xml
+API/salary-api/*
