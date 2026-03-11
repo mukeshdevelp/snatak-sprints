@@ -56,7 +56,7 @@ This section covers unit testing for the **Attendance API** in **API/attendance-
 **Step 3.1.1 — Navigate to the Attendance API project**
 
 ```bash
-cd API/attendance-api
+cd attendance/attendance-api
 ```
 
 **Step 3.1.2 — Install dependencies**
@@ -69,9 +69,21 @@ make build
 **Step 3.1.3 — Run lint (e.g. pylint)**
 
 ```bash
-make fmt
-# or: pylint router/ client/ models/ utils/ app.py
+export TMPDIR=/data/tmp
+mkdir -p /data/tmp
+poetry run pylint router/ client/ models/ utils/ app.py
+
 ```
+<img width="1917" height="873" alt="image" src="https://github.com/user-attachments/assets/5fa33418-bfc2-42d8-b242-368532b97b52" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1c1702cb-3aab-4351-8356-634952ad01cf" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0cd4fc07-914e-408d-86d2-d01c8a52cec6" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/51884d9f-99b5-4795-b97d-73f328904afd" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/afec3f4c-26d9-472e-93f0-6ca35f012a0f" />
+
 
 **Step 3.1.4 — Run unit tests**
 
@@ -82,8 +94,12 @@ python3 -m pytest
 **Step 3.1.5 — Run tests with coverage and save report in HTML**
 
 ```bash
-python3 -m pytest --cov=. --cov-report=html
+# to use data fodler
+export PYTEST_ADDOPTS="--cache-dir=/data/.pytest_cache"
+poetry run pytest --cov=. --cov-report=html
+
 ```
+<img width="1917" height="411" alt="image" src="https://github.com/user-attachments/assets/f386035c-5a6a-44b1-8d01-8dce69a17f00" />
 
 - The **coverage report** is saved in the **`htmlcov/`** directory in the project root (`API/attendance-api/htmlcov/`).
 - Open **`htmlcov/index.html`** in a browser to view the report (line-by-line coverage, summary by file).
