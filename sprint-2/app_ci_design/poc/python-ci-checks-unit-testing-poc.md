@@ -156,8 +156,8 @@ cd ~/notification/notification-worker
 **Step 4.1.2 — Install dependencies**
 
 ```bash
-make build
-# or: pip3 install -r requirements.txt
+pip3 install -r requirements.txt
+
 ```
 <img width="1917" height="812" alt="image" src="https://github.com/user-attachments/assets/925144e4-2d37-4323-9c41-e60613644f8f" />
 <img width="1917" height="465" alt="image" src="https://github.com/user-attachments/assets/86f56a41-2177-445e-8ca8-91b1d5838c75" />
@@ -175,13 +175,28 @@ make build
 **Step 4.1.4 — Run tests locally and save report in HTML**
 
 ```bash
-python3 -m pytest tests/ -v --cov=. --cov-report=html
+pip3 install pytest-cov pytest
+python3 -m pytest
+scp -i secretkey.pem -r ubuntu@10.0.2.75:/data/htmlcov/ ~/
+scp -i secretkey.pem -r ubuntu@54.86.242.189:~/htmlcov/ /home/mukesh/Documents/
+
 # or, without coverage: python3 -m pytest tests/ -v
 # or: python3 -m unittest discover -s tests
 ```
 
-- The **coverage report** is saved in the **`htmlcov/`** directory in the project root (`API/notification-worker/htmlcov/`).
-- Open **`htmlcov/index.html`** in a browser to view the report.
+<img width="1917" height="887" alt="image" src="https://github.com/user-attachments/assets/860ffa27-ea20-4712-93fd-cad1432c3651" />
+<img width="1917" height="887" alt="image" src="https://github.com/user-attachments/assets/6a679317-1358-4ec8-93c4-db135dccb640" />
+<img width="1917" height="887" alt="image" src="https://github.com/user-attachments/assets/0437785b-aea9-42ea-b6d4-e6ecf9b0f233" />
+<img width="1917" height="300" alt="image" src="https://github.com/user-attachments/assets/b55cafcd-82b3-4c53-b715-433092a510a9" />
+<img width="1917" height="300" alt="image" src="https://github.com/user-attachments/assets/2327f61f-ad84-4609-bac5-91d12cbf0d90" />
+
+
+**Final Report**
+
+
+<img width="1917" height="984" alt="image" src="https://github.com/user-attachments/assets/3277e646-0ecd-4289-91f7-b6a7fc54fa08" />
+<img width="1917" height="984" alt="image" src="https://github.com/user-attachments/assets/38afa49f-3b86-4e5c-97c3-46d4e506548b" />
+
 
 **Step 4.1.5 — Document the test command**
 
