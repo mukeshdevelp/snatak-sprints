@@ -1,4 +1,4 @@
-# Maven Project Dependency Scanning with Trivy — POC
+# Java CI Checks Dependency Scanning with Trivy — POC
 
 
 ---
