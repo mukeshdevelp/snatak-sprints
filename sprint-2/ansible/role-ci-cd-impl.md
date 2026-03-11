@@ -56,6 +56,8 @@ File: `ansible/inventory/static.ini`
 pg-host-1 ansible_ssh_private_key_file=~/secretKey.pem ansible_host=18.206.96.132 ansible_user=ubuntu
 
 ```
+<img width="1920" height="234" alt="image" src="https://github.com/user-attachments/assets/3293a933-f7c4-4809-a6ff-f889a7530430" />
+
 
 - **Group**: `postgresql_servers` — all hosts where PostgreSQL should be installed.
 - **OS**: Ubuntu (remote user `ubuntu`).
@@ -81,6 +83,7 @@ postgresql_version: "14"
 # Whether this role should manage pg_hba.conf for local connections
 postgresql_manage_pg_hba: true
 ```
+<img width="1920" height="290" alt="image" src="https://github.com/user-attachments/assets/843db826-e301-4fa6-bc42-b271ba1d5024" />
 
 **Tasks**
 
@@ -114,6 +117,9 @@ File: `ansible/roles/postgresql/tasks/main.yml`
   notify: Restart PostgreSQL
   when: postgresql_manage_pg_hba
 ```
+<img width="1920" height="894" alt="image" src="https://github.com/user-attachments/assets/c3ba8cac-da3d-4e26-9a59-8b407050677d" />
+
+<img width="1920" height="894" alt="image" src="https://github.com/user-attachments/assets/f9b4d37c-3f60-489f-a74e-976d9d0f5a15" />
 
 **Handlers**
 
@@ -127,6 +133,7 @@ File: `ansible/roles/postgresql/handlers/main.yml`
     name: postgresql
     state: restarted
 ```
+<img width="1920" height="283" alt="image" src="https://github.com/user-attachments/assets/7fc9468d-c8e6-4403-980c-19149b51b53a" />
 
 ---
 
@@ -146,6 +153,8 @@ File: `ansible/postgresql-role-cd.yml`
   roles:
     - postgresql
 ```
+
+<img width="1920" height="331" alt="image" src="https://github.com/user-attachments/assets/3d223604-64c4-477c-be8d-99a84787d823" />
 
 ---
 
@@ -177,6 +186,9 @@ Follow these steps to deploy the **postgresql** role to Ubuntu servers:
   ```
 - Verify that the planned changes look correct.
 
+<img width="1920" height="943" alt="image" src="https://github.com/user-attachments/assets/c1377f43-612d-4b83-94a8-74419b233b5e" />
+
+
 ### 5.5 Apply the role (actual CD run)
 
 - From `ansible/` directory:
@@ -188,6 +200,7 @@ Follow these steps to deploy the **postgresql** role to Ubuntu servers:
   - Install `postgresql` and `postgresql-contrib` via `apt`.
   - Enable and start the `postgresql` service.
   - Optionally update `pg_hba.conf` for local connections and restart PostgreSQL.
+<img width="1920" height="943" alt="image" src="https://github.com/user-attachments/assets/602a5311-a5ea-46fd-93f1-63eb755ba544" />
 
 ### 5.6 Post-deploy validation
 
@@ -196,10 +209,14 @@ Follow these steps to deploy the **postgresql** role to Ubuntu servers:
   sudo systemctl status postgresql
   psql --version
   ```
+  <img width="1920" height="943" alt="image" src="https://github.com/user-attachments/assets/fac5abb1-df48-482e-affc-370636590c09" />
+
 - Optionally, connect as the `postgres` user to confirm DB is running:
   ```bash
   sudo -u postgres psql -c '\l'
   ```
+  <img width="1920" height="557" alt="image" src="https://github.com/user-attachments/assets/c0945dde-3f24-451c-9742-0dad81b01071" />
+
 
 These steps define the **CD flow** for the PostgreSQL role using a **static inventory** and **Ubuntu** as the OS.
 
