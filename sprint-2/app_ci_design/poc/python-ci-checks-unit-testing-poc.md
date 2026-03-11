@@ -95,11 +95,34 @@ python3 -m pytest
 
 ```bash
 # to use data fodler
-export PYTEST_ADDOPTS="--cache-dir=/data/.pytest_cache"
-poetry run pytest --cov=. --cov-report=html
+sudo systemctl stop attendance-api.service
+sudo cp -r ~/attendance/ /data/attendance
+cd /data/attendance
+cat pytest.ini
+mkdir -p /data/systemd
+nano /data/systemd/attendance.service
+sudo cp /data/systemd/attendance.service /etc/systemd/system/attendance.service
+export COVERAGE_FILE=/data/attendance/.coverage
+
+scp -i secretkey.pem -r ubuntu@10.0.2.75:/data/attendance/htmlcov/ ~/bastion
+scp -i secretkey.pem -r ubuntu@54.226.94.183:~/bastion/ /home/mukesh/htmlcov/
+
 
 ```
 <img width="1917" height="411" alt="image" src="https://github.com/user-attachments/assets/f386035c-5a6a-44b1-8d01-8dce69a17f00" />
+**Expected Output**
+
+<img width="1917" height="697" alt="image" src="https://github.com/user-attachments/assets/5eaee422-fc88-4d73-93e3-7e45d79bf208" />
+<img width="1917" height="697" alt="image" src="https://github.com/user-attachments/assets/a4683bc9-2bf7-4d4c-9a34-17178397582d" />
+<img width="1917" height="747" alt="image" src="https://github.com/user-attachments/assets/8f9d4537-4f70-4469-8452-75cf0c9aadf1" />
+
+<img width="1917" height="524" alt="image" src="https://github.com/user-attachments/assets/b3f64759-d928-45e1-83ba-6e662ef05249" />
+
+<img width="1917" height="815" alt="image" src="https://github.com/user-attachments/assets/8d0e1559-ea12-4f8a-b63c-332cde993946" />
+
+
+<img width="1917" height="821" alt="image" src="https://github.com/user-attachments/assets/ef292fa1-2ffa-4706-a5b3-c1c45d42e2ac" />
+
 
 - The **coverage report** is saved in the **`htmlcov/`** directory in the project root (`API/attendance-api/htmlcov/`).
 - Open **`htmlcov/index.html`** in a browser to view the report (line-by-line coverage, summary by file).
@@ -107,6 +130,10 @@ poetry run pytest --cov=. --cov-report=html
 **Step 3.1.6 — Confirm test layout and pass**
 
 Tests are typically under `router/tests/`, `client/tests/`, `models/tests/`, `utils/tests/` (e.g. test_cache, test_postgres_conn, test_validator). Mock PostgreSQL and Redis in tests where needed. Ensure all tests pass locally before adding to CI.
+
+**Final Report**
+
+<img width="1917" height="982" alt="image" src="https://github.com/user-attachments/assets/7e722c2f-5548-478e-aa82-82910eebeee4" />
 
 ---
 
