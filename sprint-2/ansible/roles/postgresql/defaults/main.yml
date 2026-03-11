@@ -2,6 +2,9 @@
 # Default PostgreSQL major version for Ubuntu
 postgresql_version: "14"
 
+# Systemd service name (Ubuntu/Debian use postgresql@VERSION-main)
+postgresql_service_name: "postgresql@{{ postgresql_version }}-main"
+
 # Whether this role should manage pg_hba.conf for local connections
 postgresql_manage_pg_hba: true
 

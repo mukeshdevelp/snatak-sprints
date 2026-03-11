@@ -53,12 +53,13 @@ File: `ansible/inventory/static.ini`
 
 ```ini
 [postgresql_servers]
-pg-host-1 ansible_host=10.0.0.10 ansible_user=ubuntu
+pg-host-1 ansible_ssh_private_key_file=~/secretKey.pem ansible_host=18.206.96.132 ansible_user=ubuntu
+
 ```
 
 - **Group**: `postgresql_servers` — all hosts where PostgreSQL should be installed.
 - **OS**: Ubuntu (remote user `ubuntu`).
-- Replace `10.0.0.10` with your actual server IP/hostname.
+- Replace `18.206.96.132` with your actual server IP/hostname.
 
 ---
 
@@ -206,19 +207,27 @@ These steps define the **CD flow** for the PostgreSQL role using a **static inve
 
 ## 6. FAQ
 
-1. **Why use static inventory for this role?**  
+1. **"Unable to parse ... static.ini" or "Could not match host pattern: postgresql_servers"?**  
+   Run the playbook from the **ansible** directory (the one that contains `roles/` and `inventory/`), not from inside `ansible/roles/`. Use:
+   ```bash
+   cd /path/to/snatak-sprints/sprint-2/ansible
+   ansible-playbook postgresql-role-cd.yml
+   ```
+   An `ansible.cfg` in this directory sets `inventory = inventory/static.ini` and `deprecation_warnings = False`.
+
+2. **Why use static inventory for this role?**  
   Static inventory is simple to manage for a fixed set of hosts (e.g. a few PostgreSQL servers). You list hosts in `inventory/static.ini`; no dynamic source or extra plugins are required. For many hosts or cloud-based discovery, consider dynamic inventory later.
 
-2. **How do I add more PostgreSQL servers?**  
+3. **How do I add more PostgreSQL servers?**  
   Add more lines under `[postgresql_servers]` in `ansible/inventory/static.ini` with unique names and `ansible_host` (and `ansible_user=ubuntu` if needed). Re-run the playbook; the role applies to all hosts in the group.
 
-3. **Can I use a different PostgreSQL version?**  
+4. **Can I use a different PostgreSQL version?**  
   Set the `postgresql_version` variable (e.g. in the playbook or in `roles/postgresql/defaults/main.yml`) to the major version number (e.g. `"16"`). Ensure that version is available in Ubuntu’s repositories for your release.
 
 - **What if I don’t want the role to change pg_hba.conf?**  
   Set `postgresql_manage_pg_hba: false` in the playbook or in role defaults. The role will only install packages and manage the PostgreSQL service.
 
-5. **Do I need to use Ubuntu?**  
+6. **Do I need to use Ubuntu?**  
   This role is written for Ubuntu (apt, `postgresql` package, paths like `/etc/postgresql/{{ postgresql_version }}/main/`). For other OS (e.g. RHEL), you would need a different role or conditional tasks (e.g. yum, different config paths).
 
 ---

@@ -111,8 +111,8 @@ Dependency scanning runs as a CI step after the project is built (or in parallel
 A dedicated **POC document** for dependency scanning (Java CI) is available at **[dependency-scanning-java-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-172-mukesh/Applications/Understanding/Java_CI_Checks/Dependency_Scanning/POC/README.md)**. It covers:
 
 1. **Scope** — Java (Maven) project repo; one CI system (e.g. Jenkins or GitLab CI).  
-2. **Add scanner** — Integrate OWASP Dependency-Check Maven plugin (or Snyk CLI) into the build; run after `mvn compile` or `mvn verify`.   
-3. **Run in CI** — Trigger on every PR or main build; publish report (e.g. artifact or security dashboard).  
+2. **Add scanner** — Use Trivy to scan the project filesystem (`trivy fs .`) and generate SARIF/JSON reports as part of the build.  
+3. **Run in CI** — Trigger Trivy scan on every PR or main build; publish the report as an artifact (or feed it into a security dashboard).  
 
 
 For the full step-by-step POC (prerequisites, commands, success criteria), see [dependency-scanning-java-poc.md](https://github.com/Snaatak-Saarthi/documentation/blob/SCRUM-172-mukesh/Applications/Understanding/Java_CI_Checks/Dependency_Scanning/POC/README.md).
@@ -133,7 +133,7 @@ For the full step-by-step POC (prerequisites, commands, success criteria), see [
 
 ## 10. Recommendation / Conclusion
 
-Use **dependency scanning** as a standard step in **Java CI checks** for Java (Maven) applications. Integrate **OWASP Dependency-Check** (or **Snyk**) into the Maven build and CI pipeline; fail the build on high/critical vulnerabilities and treat scan reports as part of the definition of done. Combine with Dependabot (if on GitHub) for automated upgrade PRs. Document which tool and thresholds are used so the team can maintain and extend the checks.
+Use **dependency scanning** as a standard step in **Java CI checks** for Java (Maven) applications. Integrate **Trivy** (e.g. `trivy fs .` with SARIF or JSON output) into the Maven build and CI pipeline; fail the build on high/critical vulnerabilities and treat scan reports as part of the definition of done. Combine with Dependabot (if on GitHub) for automated upgrade PRs. Document which tool and thresholds are used so the team can maintain and extend the checks.
 
 ---
 
