@@ -1,0 +1,27 @@
+---
+- name: Install PostgreSQL packages (Ubuntu)
+  become: true
+  ansible.builtin.apt:
+    name:
+      - postgresql
+      - postgresql-contrib
+    state: present
+    update_cache: true
+
+- name: Ensure PostgreSQL service is enabled and running
+  become: true
+  ansible.builtin.service:
+    name: "{{ postgresql_service_name }}"
+    state: started
+    enabled: true
+
+- name: Allow local connections from all users (optional)
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+    regexp: '^host\s+all\s+all\s+127\.0\.0\.1/32\s+'
+    line: 'host    all             all             127.0.0.1/32            md5'
+    state: present
+  notify: Restart PostgreSQL
+  when: postgresql_manage_pg_hba
+
