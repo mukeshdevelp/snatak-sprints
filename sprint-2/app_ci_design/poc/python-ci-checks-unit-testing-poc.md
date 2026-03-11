@@ -14,11 +14,13 @@
 
 1. [Scope and context](#1-scope-and-context)
 2. [Prerequisites](#2-prerequisites)
-3. [Step 1 — Python API: build, lint, and unit tests](#3-step-1--python-api-build-lint-and-unit-tests)
-4. [Step 2 — Python worker: add tests and run in CI](#4-step-2--python-worker-add-tests-and-run-in-ci)
-5. [Step 3 — Integrate both into CI](#5-step-3--integrate-both-into-ci)
-6. [Step 4 — Coverage and thresholds](#6-step-4--coverage-and-thresholds)
-7. [Success criteria](#7-success-criteria)
+3. [Unit testing on Attendance](#3-unit-testing-on-attendance)
+   - 3.1 [Attendance API (API/attendance-api)](#31-attendance-api-apiattendance-api)
+4. [Unit testing on Notification](#4-unit-testing-on-notification)
+   - 4.1 [Notification worker (API/notification-worker)](#41-notification-worker-apinotification-worker)
+5. [Integrate both into CI](#5-step-3--integrate-both-into-ci)
+6. [Coverage and thresholds](#6-step-4--coverage-and-thresholds)
+7. [Advantages of using pytest (and related tools)](#7-advantages-of-using-pytest-and-related-tools)
 8. [Contact Information](#8-contact-information)
 9. [References](#9-references)
 
@@ -28,10 +30,9 @@
 
 | Item | Description |
 |------|-------------|
-| **Python API** | Flask-based REST API; Poetry, pytest, pytest-cov, pytest-mock, pylint; tests in router, client, models, utils. |
-| **Python worker** | Python service (e.g. SMTP, Elasticsearch); pip + requirements.txt; POC adds minimal unit tests if none exist. |
-| **Repo locations** | Python API project directory (e.g. **~/python-api**); Python worker project directory (e.g. **~/python-worker**). |
-| **POC goal** | Run unit tests for both applications in CI; optionally enforce coverage thresholds. |
+| **Attendance API** | Python Flask REST API in **API/attendance-api**; Poetry, pytest, pytest-cov, pylint; PostgreSQL, Redis. |
+| **Notification worker** | Python worker in **API/notification-worker**; pip + requirements.txt or Poetry; POC adds or runs unit tests. |
+| **POC goal** | Run unit tests for both applications (attendance API and notification worker), optionally enforce coverage thresholds. |
 
 ---
 
@@ -46,55 +47,92 @@
 
 ---
 
-## 3. Step 1 — Python API: build, lint, and unit tests
+## 3. Unit testing on Attendance
 
-1. Navigate to the Python API project directory:
-   ```bash
-   cd ~/python-api
-   ```
-2. Install dependencies:
-   ```bash
-   make build
-   # or: poetry config virtualenvs.create false && poetry install --no-root --no-interaction --no-ansi
-   ```
-3. Run lint (e.g. pylint):
-   ```bash
-   make fmt
-   # or: pylint router/ client/ models/ utils/ app.py
-   ```
-4. Run unit tests:
-   ```bash
-   python3 -m pytest
-   ```
-5. Run tests with coverage:
-   ```bash
-   python3 -m pytest --cov=.
-   ```
-6. Tests are typically under `router/tests/`, `client/tests/`, `models/tests/`, `utils/tests/` (e.g. test_cache, test_postgres_conn, test_validator). Ensure all pass locally before adding to CI.
+This section covers unit testing for the **Attendance API** in **API/attendance-api** (Python, Flask, Poetry, PostgreSQL, Redis).
+
+### 3.1 Attendance API (API/attendance-api)
+
+**Step 3.1.1 — Navigate to the Attendance API project**
+
+```bash
+cd API/attendance-api
+```
+
+**Step 3.1.2 — Install dependencies**
+
+```bash
+make build
+# or: poetry config virtualenvs.create false && poetry install --no-root --no-interaction --no-ansi
+```
+
+**Step 3.1.3 — Run lint (e.g. pylint)**
+
+```bash
+make fmt
+# or: pylint router/ client/ models/ utils/ app.py
+```
+
+**Step 3.1.4 — Run unit tests**
+
+```bash
+python3 -m pytest
+```
+
+**Step 3.1.5 — Run tests with coverage and save report in HTML**
+
+```bash
+python3 -m pytest --cov=. --cov-report=html
+```
+
+- The **coverage report** is saved in the **`htmlcov/`** directory in the project root (`API/attendance-api/htmlcov/`).
+- Open **`htmlcov/index.html`** in a browser to view the report (line-by-line coverage, summary by file).
+
+**Step 3.1.6 — Confirm test layout and pass**
+
+Tests are typically under `router/tests/`, `client/tests/`, `models/tests/`, `utils/tests/` (e.g. test_cache, test_postgres_conn, test_validator). Mock PostgreSQL and Redis in tests where needed. Ensure all tests pass locally before adding to CI.
 
 ---
 
-## 4. Step 2 — Python worker: add tests and run in CI
+## 4. Unit testing on Notification
 
-1. Navigate to the Python worker project directory:
-   ```bash
-   cd ~/python-worker
-   ```
-2. Install dependencies:
-   ```bash
-   make build
-   # or: pip3 install -r requirements.txt
-   ```
-3. Add a minimal test suite (POC):
-   - Create a `tests/` directory and a `tests/test_*.py` (e.g. test config loading or a helper that builds the mail payload).
-   - Mock SMTP and Elasticsearch (or other external services) in tests.
-   - Use **pytest** (add `pytest` to `requirements.txt` or a dev-requirements file) or **unittest**.
-4. Run tests locally:
-   ```bash
-   python3 -m pytest tests/ -v
-   # or: python3 -m unittest discover -s tests
-   ```
-5. Document the test command so CI can run the same.
+This section covers unit testing for the **Notification worker** in **API/notification-worker**.
+
+### 4.1 Notification worker (API/notification-worker)
+
+**Step 4.1.1 — Navigate to the Notification worker project**
+
+```bash
+cd API/notification-worker
+```
+
+**Step 4.1.2 — Install dependencies**
+
+```bash
+make build
+# or: pip3 install -r requirements.txt
+```
+
+**Step 4.1.3 — Add or locate the test suite (POC)**
+
+- If no tests exist: create a `tests/` directory and add `tests/test_*.py` (e.g. test config loading or a helper that builds the notification payload).
+- Mock external services (e.g. SMTP, email gateway, message queue) in tests.
+- Use **pytest** (add `pytest` to `requirements.txt` or a dev-requirements file) or **unittest**.
+
+**Step 4.1.4 — Run tests locally and save report in HTML**
+
+```bash
+python3 -m pytest tests/ -v --cov=. --cov-report=html
+# or, without coverage: python3 -m pytest tests/ -v
+# or: python3 -m unittest discover -s tests
+```
+
+- The **coverage report** is saved in the **`htmlcov/`** directory in the project root (`API/notification-worker/htmlcov/`).
+- Open **`htmlcov/index.html`** in a browser to view the report.
+
+**Step 4.1.5 — Document the test command**
+
+Record the test command (e.g. `python3 -m pytest tests/ -v --cov-report=html`) so CI or other developers can run the same. Add `htmlcov/` to `.gitignore` if you do not want to commit the generated report.
 
 ---
 
@@ -104,12 +142,12 @@
    - Checkout repo; change to the Python API project directory.
    - Install: `poetry install --no-root` (or `make build`).
    - Lint: `make fmt` or `pylint router/ client/ models/ utils/ app.py`.
-   - Test: `python3 -m pytest --cov=. --cov-report=xml` (or `--junitxml=report.xml` for JUnit).
+   - Test: `python3 -m pytest --cov=. --cov-report=xml --cov-report=html` (or `--junitxml=report.xml` for JUnit). The HTML report is in `htmlcov/`; publish `htmlcov/` or `coverage.xml` as artifacts if needed.
    - Publish coverage and/or JUnit report as artifacts; fail the job if pytest exits non-zero.
-2. **Python worker job**:
-   - Checkout repo; change to the Python worker project directory.
+2. **Notification worker job**:
+   - Checkout repo; change to **API/notification-worker**.
    - Install: `pip install -r requirements.txt` (and pytest if not in requirements).
-   - Test: `python3 -m pytest tests/ -v` (or equivalent).
+   - Test: `python3 -m pytest tests/ -v --cov=. --cov-report=html` (or equivalent). HTML report is in `htmlcov/`.
    - Fail the job if tests fail.
 3. Run both jobs on every push or MR to the relevant paths.
 
@@ -117,27 +155,35 @@
 
 ## 6. Step 4 — Coverage and thresholds
 
-1. For the **Python API**, set a coverage threshold in CI (e.g. fail if coverage &lt; 70%). Example with pytest-cov:
+1. For the **Attendance API** (**API/attendance-api**), set a coverage threshold and save the report in HTML:
    ```bash
-   python3 -m pytest --cov=. --cov-fail-under=70
+   python3 -m pytest --cov=. --cov-report=html --cov-fail-under=70
    ```
-2. Optionally publish coverage to a dashboard (e.g. GitLab coverage parsing, or a coverage server).
-3. For the **Python worker**, coverage is optional in the POC; focus on tests passing. Add `--cov` and thresholds later if the test suite grows.
+   The report is saved in **`htmlcov/index.html`**; open it in a browser to view. Optionally publish `htmlcov/` or `coverage.xml` to a dashboard or CI artifacts.
+2. For the **Notification worker** (**API/notification-worker**), coverage is optional in the POC; to save an HTML report:
+   ```bash
+   python3 -m pytest tests/ -v --cov=. --cov-report=html
+   ```
+   Report location: **`htmlcov/index.html`**. Add `--cov-fail-under` later if you enforce a threshold.
 
 ---
 
-## 7. Success criteria
+## 7. Advantages of using pytest (and related tools)
 
-| Criterion | Status |
-|-----------|--------|
-| Python API: `make build` and `make fmt` succeed in CI. | Pending |
-| Python API: `python3 -m pytest --cov=.` runs and all tests pass. | Pending |
-| Python API: Coverage report (and optionally threshold) is enforced in CI. | Pending |
-| Python worker: Dependencies install in CI. | Pending |
-| Python worker: At least one unit test exists and runs in CI. | Pending |
-| Both applications’ test jobs are part of the same pipeline or project. | Pending |
-| Process is documented (commands, paths, thresholds). | Pending |
+This POC uses **pytest** for unit tests, with **pytest-cov** for coverage and **pytest-mock** (or **unittest.mock**) for mocking. Advantages over the built-in **unittest** or other test runners:
 
+| Advantage | Description |
+|-----------|-------------|
+| **Less boilerplate** | No need to subclass TestCase; plain functions and `assert` statements. Tests are shorter and easier to read. |
+| **Discovery and naming** | Automatically finds tests in `test_*.py` and `*_test.py`; flexible naming without a fixed class structure. |
+| **Fixtures** | Built-in fixture system for setup/teardown and shared resources (e.g. DB, API client); cleaner than unittest setUp/tearDown. |
+| **Parametrization** | `@pytest.mark.parametrize` runs the same test with different inputs; reduces duplication compared to unittest. |
+| **Plugins and ecosystem** | **pytest-cov** for coverage, **pytest-mock** for patching; many plugins for async, ordering, and reporting. |
+| **Clear failure output** | Assertion introspection shows values on failure (e.g. expected vs actual); unittest often requires more manual debugging. |
+| **Coverage integration** | `pytest --cov` produces coverage reports and supports thresholds (`--cov-fail-under`); fits CI quality gates. |
+| **Widely adopted** | De facto standard for Python testing; easy to find examples, CI templates, and team familiarity. |
+
+| Both applications’ 
 ---
 
 ## 8. Contact Information
