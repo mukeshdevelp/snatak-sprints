@@ -20,7 +20,7 @@
 6. [Step 3 — Scan the project and generate SARIF report](#6-step-3--scan-the-project-and-generate-sarif-report)
 7. [Step 4 — Visualize the SARIF report](#7-step-4--visualize-the-sarif-report)
 8. [Step 5 — Ignore specific vulnerabilities](#8-step-5--ignore-specific-vulnerabilities)
-9. [Step 6 — Quick full workflow](#9-step-6--quick-full-workflow)
+9. [Advantages of using Trivy](#9-advantages-of-using-trivy)
 10. [Contact Information](#10-contact-information)
 11. [References](#11-references)
 
@@ -29,12 +29,6 @@
 ## 1. Introduction
 
 This guide explains how to scan a Maven project for **dependency vulnerabilities** using **Trivy** and generate a **SARIF report** for visualization.
-
-**Advantages of using SARIF:**
-
-- Standardized report format
-- GitHub Security tab compatible
-- Can be visualized locally in a browser
 
 ---
 
@@ -169,18 +163,11 @@ trivy fs .
 
 ---
 
-## 9. Step 6 — Quick full workflow
+## 9. Advantages of using Trivy
 
-```bash
-# 1. Build the project
-mvn clean package
-
-# 2. Run Trivy and generate SARIF
-trivy fs --format sarif -o trivy-report.sarif .
-
-# 3. Visualize locally
-# Upload trivy-report.sarif to https://sarifweb.azurewebsites.net/
-```
+- Uses a single binary, easy to install and run
+- Scans filesystem, images, and SBOMs with one tool
+- Supports multiple output formats (table, JSON, SARIF) for CI integration
 
 ---
 
