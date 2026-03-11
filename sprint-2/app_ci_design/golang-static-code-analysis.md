@@ -1,4 +1,4 @@
-# GoLang CI Checks | Static Code Analysis Documentation
+# GoLang CI Checks | Static Code Analysis
 
 
 
@@ -64,6 +64,9 @@
 ```
 [Commit/PR] → [CI: checkout] → [go fmt / go vet] → [Linter (e.g. golangci-lint)] → [Report / Pass/Fail] → [go build, go test] → [Merge or block]
 ```
+
+<img width="649" height="1314" alt="image" src="https://github.com/user-attachments/assets/c6b872a5-a044-4093-9a0c-a0bb17aed30c" />
+
 
 Static analysis runs as a CI step (often before or alongside `go build` and `go test`). The pipeline fails if formatting is wrong, `go vet` reports issues, or the linter finds violations above the configured severity.
 
