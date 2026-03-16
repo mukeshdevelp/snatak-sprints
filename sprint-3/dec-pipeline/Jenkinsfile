@@ -1,0 +1,89 @@
+pipeline {
+  agent any
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+  }
+
+  environment {
+    // Example envs; adapt to your project
+    APP_NAME        = "salary-api"
+    SONARQUBE_ENV   = "My-SonarQube-Server"   // Jenkins SonarQube server name
+    SONARQUBE_TOKEN = credentials('sonar-token-id')
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build & Unit Tests') {
+      steps {
+        sh 'mvn clean test'
+      }
+    }
+
+    stage('Static Analysis / Lint') {
+      when {
+        expression { fileExists('pom.xml') }
+      }
+      steps {
+        // Placeholder for Java static analysis (e.g. Checkstyle, SpotBugs)
+        sh 'mvn verify -DskipTests'
+      }
+    }
+
+    stage('Dependency Scanning (Trivy fs)') {
+      steps {
+        sh '''
+          if command -v trivy >/dev/null 2>&1; then
+            trivy fs --exit-code 1 --severity CRITICAL,HIGH .
+          else
+            echo "Trivy not installed; skipping dependency scan."
+          fi
+        '''
+      }
+    }
+
+    stage('SonarQube Analysis') {
+      steps {
+        withSonarQubeEnv(SONARQUBE_ENV) {
+          sh '''
+            mvn sonar:sonar \
+              -Dsonar.login=$SONARQUBE_TOKEN
+          '''
+        }
+      }
+    }
+
+    stage('Quality Gate') {
+      steps {
+        script {
+          timeout(time: 5, unit: 'MINUTES') {
+            def qg = waitForQualityGate()
+            if (qg.status != 'OK') {
+              error "Pipeline aborted due to Quality Gate failure: ${qg.status}"
+            }
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "Build succeeded for ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+      // Example notification hook (email, Slack, etc.)
+      // emailext to: 'dev-team@example.com', subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}", body: "Build passed."
+    }
+    failure {
+      echo "Build failed for ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+      // Example failure notification hook
+      // emailext to: 'devops-team@example.com', subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}", body: "Build failed. Check Jenkins logs."
+    }
+  }
+}
+
