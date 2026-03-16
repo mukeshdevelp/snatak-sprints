@@ -238,20 +238,19 @@ Record the test command (e.g. `python3 -m pytest tests/ -v --cov-report=html`) s
 
 ## 7. Advantages of using pytest (and related tools)
 
-This POC uses **pytest** for unit tests, with **pytest-cov** for coverage and **pytest-mock** (or **unittest.mock**) for mocking. Advantages over the built-in **unittest** or other test runners:
+This POC uses **pytest** for unit tests, with **pytest-cov** for coverage. Advantages over the built-in **unittest** or other test runners:
 
 | Advantage | Description |
 |-----------|-------------|
 | **Less boilerplate** | No need to subclass TestCase; plain functions and `assert` statements. Tests are shorter and easier to read. |
-| **Discovery and naming** | Automatically finds tests in `test_*.py` and `*_test.py`; flexible naming without a fixed class structure. |
-| **Fixtures** | Built-in fixture system for setup/teardown and shared resources (e.g. DB, API client); cleaner than unittest setUp/tearDown. |
-| **Parametrization** | `@pytest.mark.parametrize` runs the same test with different inputs; reduces duplication compared to unittest. |
-| **Plugins and ecosystem** | **pytest-cov** for coverage, **pytest-mock** for patching; many plugins for async, ordering, and reporting. |
-| **Clear failure output** | Assertion introspection shows values on failure (e.g. expected vs actual); unittest often requires more manual debugging. |
+| **Discovery and naming** | Automatically finds tests in `test_*.py` and `*_test.py`, flexible naming without a fixed class structure. |
+| **Fixtures** | Built-in fixture system for setup/teardown and shared resources (e.g. DB, API client), cleaner than unittest setUp/tearDown. |
+| **Parametrization** | `@pytest.mark.parametrize` runs the same test with different inputs, reduces duplication compared to unittest. |
+| **Plugins and ecosystem** | **pytest-cov** for coverage, **pytest-mock** for patching, many plugins for async, ordering, and reporting. |
+| **Clear failure output** | Assertion introspection shows values on failure (e.g. expected vs actual), unittest often requires more manual debugging. |
 | **Coverage integration** | `pytest --cov` produces coverage reports and supports thresholds (`--cov-fail-under`); fits CI quality gates. |
-| **Widely adopted** | De facto standard for Python testing; easy to find examples, CI templates, and team familiarity. |
-
-| Both applications’ 
+| **Widely adopted** | De facto standard for Python testing, easy to find examples, CI templates, and team familiarity. |
+ 
 ---
 
 ## 8. Contact Information
