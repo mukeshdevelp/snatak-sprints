@@ -3,7 +3,7 @@
 
 ---
 
-#sqp_9b8832ac18e78c9d43ec6f9628c4ad55dc7c2023
+
 | Author | Created on | Version | Last updated by | Last edited on | Pre Reviewer | L0 Reviewer | L1 Reviewer | L2 Reviewer |
 |--------|------------|---------|-----------------|----------------|--------------|-------------|-------------|-------------|
 | Mukesh Sharma | 11-03-2026 | v1.0 | Mukesh Sharma | 11-03-2026 |  |  |  |  |
@@ -59,7 +59,6 @@ After you create and assign a Quality Gate, SonarQube will evaluate it whenever 
 | **SonarQube server** | A running SonarQube instance (Community, Developer, or Enterprise). |
 | **Admin or Quality Gate admin rights** | A user account with permission to create and edit Quality Gates and assign them to projects. |
 
-No CI system, scanner configuration, or tokens are required for the steps in this document.
 
 ---
 
