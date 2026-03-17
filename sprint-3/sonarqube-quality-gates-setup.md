@@ -88,7 +88,8 @@ Projects need at least one successful analysis before a Quality Gate result is s
 5. Save the new Quality Gate. The gate is created with no conditions; you will add conditions in Step 3.
 
 **Expected Output**
-![alt text](image.png)
+<img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/1b98a88c-a48b-4b2d-b752-6501ce8397f3" />
+
 
 ---
 
@@ -105,7 +106,8 @@ With your **custom Quality Gate** selected in the Quality Gates list:
 Repeat for every condition you want. The gate fails if any condition is not met.
 
 **Expected Output**
-![alt text](image-1.png)
+<img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/bb5f90cd-8627-4be7-91e8-57a0a5f4fac9" />
+
 
 ### 6.1 Example conditions (recommended baseline)
 
@@ -135,9 +137,12 @@ You can add conditions on **overall code** as well; many teams start with New Co
 
 All projects that do not have another gate explicitly assigned will use this gate for future analyses.
 **Expected Output**
-![alt text](image-2.png)
-![alt text](image-3.png)
-![alt text](image-4.png)
+<img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/c43088e4-ba47-4635-8f06-e2eeac4fbaa7" />
+
+<img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/c4e34420-80f1-45ac-a8f7-b77ad3899830" />
+
+<img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/c686deff-bbea-4de8-98de-9a230e4fe1de" />
+
 
 ### 7.2 Assign the gate to specific projects
 
@@ -148,7 +153,8 @@ All projects that do not have another gate explicitly assigned will use this gat
 After assignment, each new analysis of those projects will be evaluated against this Quality Gate. The pass/fail result appears on the project dashboard in SonarQube.
 
 
-![alt text](image-5.png)
+<img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/52ea9f92-c9de-4f59-9ad9-4ee8d32b8afc" />
+
 
 ---
 
