@@ -136,7 +136,9 @@ You can add conditions on **overall code** as well; many teams start with New Co
 2. Click **Set as Default**.
 
 All projects that do not have another gate explicitly assigned will use this gate for future analyses.
+
 **Expected Output**
+
 <img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/c43088e4-ba47-4635-8f06-e2eeac4fbaa7" />
 
 <img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/c4e34420-80f1-45ac-a8f7-b77ad3899830" />
