@@ -187,6 +187,9 @@ Still on **Manage Jenkins → Configure Global Security**:
 
 This tells Jenkins to delegate authorization to the Role-Based Strategy plugin.
 
+<img width="1918" height="448" alt="image" src="https://github.com/user-attachments/assets/a742b3b9-d861-4a15-82c4-da1b44393129" />
+
+
 ---
 
 ## 8. Step 5 — Create Dev, QA, and DevOps roles
@@ -242,15 +245,19 @@ Then assign permissions:
 
 Click **Save** after setting the checkboxes.
 
+<img width="1918" height="448" alt="image" src="https://github.com/user-attachments/assets/dd0b870b-1e51-40dd-9c70-990d7ed7c209" />
+
 ### 8.2 (Optional) Project roles
 
 If you want Dev/QA to have access only to certain jobs by name patterns:
 
-1. In **Manage Roles**, under **Project roles**, create:
+1. In **Manage Roles**, under **Item roles**, create:
    - `dev-jobs` with a pattern like `dev-.*`
    - `qa-jobs` with a pattern like `qa-.*`
 2. Assign Job permissions to these project roles (Read, Discover, Build).
 3. Later you can assign these project roles to dev / qa groups instead of granting global Job permissions.
+
+<img width="1918" height="448" alt="image" src="https://github.com/user-attachments/assets/4460c8c7-2fe0-4dad-adc9-7c2cf3aa86c6" />
 
 ---
 
@@ -272,6 +279,8 @@ In the **Global roles** section:
    - For `my-company-ci/qa-team`, tick the **qa** role.
    - For `my-company-ci/devops-team`, tick the **devops** role.
 4. Click **Save**.
+
+<img width="1918" height="448" alt="image" src="https://github.com/user-attachments/assets/5ffb5f86-622d-4403-b0c9-d82d6c2a08dc" />
 
 Now:
 
