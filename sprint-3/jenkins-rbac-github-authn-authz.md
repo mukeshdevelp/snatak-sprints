@@ -67,6 +67,11 @@ Recommended pattern:
   - `devops-team`
 - Add GitHub users to the appropriate teams.
 
+<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/8cd94b3f-2fe0-43b9-88f0-6cfdb7f423a0" />
+<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/07e7327a-7c4d-4572-83d6-59d914702270" />
+<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/ac82e429-d890-4f55-bb93-4aacd3d68d33" />
+<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/411ed819-c4d0-409b-b077-abb538250bfa" />
+
 When using the GitHub Authentication plugin, Jenkins can treat GitHub teams as **groups**. Group names usually look like:
 
 - `my-company-ci/dev-team`  
