@@ -68,9 +68,7 @@ Recommended pattern:
 - Add GitHub users to the appropriate teams.
 
 <img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/8cd94b3f-2fe0-43b9-88f0-6cfdb7f423a0" />
-<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/07e7327a-7c4d-4572-83d6-59d914702270" />
-<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/ac82e429-d890-4f55-bb93-4aacd3d68d33" />
-<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/411ed819-c4d0-409b-b077-abb538250bfa" />
+
 
 When using the GitHub Authentication plugin, Jenkins can treat GitHub teams as **groups**. Group names usually look like:
 
@@ -103,13 +101,17 @@ From the Jenkins UI (as admin):
    - **Role-based Authorization Strategy** plugin.
 3. After installation, **restart Jenkins** if prompted.
 
+<img width="1919" height="126" alt="image" src="https://github.com/user-attachments/assets/b2cb4620-9675-4565-8f73-a607d32f3b16" />
+<img width="1919" height="126" alt="image" src="https://github.com/user-attachments/assets/bd4165f8-e3b3-4455-9aea-d6d9f58d5e38" />
+
+
 ---
 
 ## 5. Step 2 — Create GitHub org, teams, and users
 
 You can adapt these steps to an existing GitHub org; the example assumes a new org.
 
-1. In GitHub, create (or use) an **organization**, e.g. `my-company-ci`.
+1. In GitHub, create (or use) an **organization**, e.g. `jenkins-batch-17`.
 2. Under the org, create teams:
    - `dev-team`
    - `qa-team`
@@ -120,6 +122,12 @@ You can adapt these steps to an existing GitHub org; the example assumes a new o
    - **DevOps / platform engineers** → `devops-team`
 
 Later, these team names will be used in Jenkins as **groups** to assign roles.
+
+<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/07e7327a-7c4d-4572-83d6-59d914702270" />
+
+<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/ac82e429-d890-4f55-bb93-4aacd3d68d33" />
+
+<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/411ed819-c4d0-409b-b077-abb538250bfa" />
 
 ---
 
@@ -135,16 +143,21 @@ In GitHub (under your organization or user):
    - **Application name:** `Jenkins CI`
    - **Homepage URL:** `https://<your-jenkins-url>/`
    - **Authorization callback URL:** `https://<your-jenkins-url>/securityRealm/finishLogin`
+
+
+
 4. After creating, note the:
    - **Client ID**
    - **Client Secret** (you will paste this into Jenkins).
+
+<img width="1918" height="788" alt="image" src="https://github.com/user-attachments/assets/6a94a83b-2cd8-484f-b78b-942256f804eb" />
 
 ### 6.2 Configure Jenkins Security Realm
 
 In Jenkins:
 
 1. Go to **Manage Jenkins → Configure Global Security**.
-2. Under **Security Realm**, select **GitHub Authentication Plugin** (exact text may vary).
+2. Under **Security Realm**, select **GitHub Authentication Plugin**.
 3. Set:
    - **GitHub Web URI:** `https://github.com`
    - **GitHub API URI:** `https://api.github.com`
@@ -154,6 +167,8 @@ In Jenkins:
 4. Save the configuration.
 
 From this point, users should be able to log in to Jenkins using the **“Sign in with GitHub”** button.
+
+
 
 ---
 
