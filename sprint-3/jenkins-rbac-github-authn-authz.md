@@ -168,6 +168,10 @@ In Jenkins:
 
 From this point, users should be able to log in to Jenkins using the **“Sign in with GitHub”** button.
 
+<img width="1918" height="788" alt="Screenshot from 2026-03-20 15-39-46" src="https://github.com/user-attachments/assets/d7b2fe64-d085-4422-bc4a-30b28642ee25" />
+
+<img width="1918" height="788" alt="Screenshot from 2026-03-20 15-40-32" src="https://github.com/user-attachments/assets/02a19f19-1ae8-4698-9245-7f1f3597d9f7" />
+
 
 
 ---
