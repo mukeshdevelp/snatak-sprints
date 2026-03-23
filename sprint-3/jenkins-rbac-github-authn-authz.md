@@ -15,6 +15,9 @@
 1. [Introduction](#1-introduction)
 2. [What is Jenkins authorization (in this POC)](#2-what-is-jenkins-authorization-in-this-poc)
 3. [Target RBAC model](#3-target-rbac-model)
+   - 3.1 [Roles to implement](#31-roles-to-implement)
+   - 3.2 [Permission mapping (high level)](#32-permission-mapping-high-level)
+   - 3.3 [Fixed authorization values (this POC)](#33-fixed-authorization-values-this-poc)
 4. [Prerequisites](#4-prerequisites)
 5. [Step 1 — Install the Role-based Authorization Strategy plugin](#5-step-1--install-the-role-based-authorization-strategy-plugin)
 6. [Step 2 — Select Role-Based Strategy under Authorization](#6-step-2--select-role-based-strategy-under-authorization)
@@ -73,7 +76,98 @@ It does **not** cover:
 | **qa** | Read | Same as dev (or item-scoped) | Read | — |
 | **devops** | Read + **Administer** | Full job permissions | Full | Full (as needed) |
 
-Exact checkboxes are set in **Manage Roles** (see Step 3).
+The **exact** checkboxes to tick are defined in **Section 3.3** and applied in **Step 3**.
+
+### 3.3 Fixed authorization values (this POC)
+
+Use these values in **Manage Roles → Global roles** so all environments match. Labels follow the Jenkins UI (LTS); if your build adds plugins, extra rows may appear—leave them **unchecked** for `dev` / `qa` unless you explicitly need them.
+
+#### Anonymous (not a named role — set under Configure Global Security)
+
+| Category | Permission | Value |
+|----------|------------|--------|
+| **Overall** | Administer | **Off** |
+| **Overall** | Read | **Off** |
+| **Job** | *(all)* | **Off** |
+
+Anonymous users must **not** run builds or read jobs.
+
+#### Global role `dev` — tick **only** these
+
+| Category | Permission | Value |
+|----------|------------|--------|
+| **Overall** | Read | **On** |
+| **Overall** | Administer | **Off** |
+| **Job** | Build | **On** |
+| **Job** | Cancel | **On** |
+| **Job** | Discover | **On** |
+| **Job** | Read | **On** |
+| **Job** | Workspace | **On** |
+| **Job** | Configure | **Off** |
+| **Job** | Create | **Off** |
+| **Job** | Delete | **Off** |
+| **Job** | Move | **Off** |
+| **Run** | Replay | **On** |
+| **Run** | Update | **On** |
+| **Run** | Delete | **Off** |
+| **View** | Read | **On** |
+| **View** | Configure | **Off** |
+| **View** | Create | **Off** |
+| **View** | Delete | **Off** |
+| **Credentials** | *(all)* | **Off** |
+| **Agent** | *(all)* | **Off** |
+| **SCM** | Tag | **Off** |
+
+#### Global role `qa` — same as `dev` (identical checkboxes)
+
+Apply the **same** table as **`dev`** above. If you use **item roles** (Section 8), you can later remove overlapping global Job permissions and rely only on item roles for `qa`.
+
+#### Global role `devops` — tick these (full admin for this POC)
+
+| Category | Permission | Value |
+|----------|------------|--------|
+| **Overall** | Administer | **On** |
+| **Overall** | Read | **On** |
+| **Job** | Build | **On** |
+| **Job** | Cancel | **On** |
+| **Job** | Configure | **On** |
+| **Job** | Create | **On** |
+| **Job** | Delete | **On** |
+| **Job** | Discover | **On** |
+| **Job** | Move | **On** |
+| **Job** | Read | **On** |
+| **Job** | Workspace | **On** |
+| **Run** | Delete | **On** |
+| **Run** | Replay | **On** |
+| **Run** | Update | **On** |
+| **View** | Configure | **On** |
+| **View** | Create | **On** |
+| **View** | Delete | **On** |
+| **View** | Read | **On** |
+| **Credentials** | Create | **On** |
+| **Credentials** | Delete | **On** |
+| **Credentials** | ManageDomains | **On** |
+| **Credentials** | Update | **On** |
+| **Credentials** | View | **On** |
+| **Agent** | Build | **On** |
+| **Agent** | Configure | **On** |
+| **Agent** | Connect | **On** |
+| **Agent** | Create | **On** |
+| **Agent** | Delete | **On** |
+| **Agent** | Disconnect | **On** |
+| **Agent** | Provision | **On** |
+| **SCM** | Tag | **On** |
+
+If your Jenkins shows **Overall → RunScripts** or plugin-specific permissions, enable them **only** on `devops` if your admins need them; keep **Off** for `dev` / `qa`.
+
+#### Item roles (optional — fixed values for this POC)
+
+| Item role name | Pattern (regex) | Job permissions to enable |
+|----------------|-----------------|----------------------------|
+| `dev-jobs` | `dev-.*` | Discover, Read, Build, Workspace, Cancel |
+| `qa-jobs` | `qa-.*` | Discover, Read, Build, Workspace, Cancel |
+
+Do **not** enable Job **Configure**, **Delete**, or **Create** on these item roles unless you intentionally allow pipeline edits for those folders.
 
 ---
 
@@ -113,15 +207,10 @@ This activates **authorization** via the plugin.
 **Manage Jenkins → Manage and Assign Roles → Manage Roles → Global roles**
 
 1. Add three global roles: **`dev`**, **`qa`**, **`devops`**.
-2. For **`dev`** and **`qa`**, enable at minimum:
-   - **Overall:** Read  
-   - **Job:** Discover, Read, Build, Workspace (optional)  
-   - **View:** Read  
-3. For **`devops`**, enable:
-   - **Overall:** Read, **Administer**  
-   - **Job:** full set as required (Create, Configure, Delete, Build, …)  
-   - **Credentials**, **View**, and other areas as needed for your admins.  
-4. **Save**.
+2. For **`dev`**, set checkboxes **exactly** as in **Section 3.3 — Global role `dev`** (Overall Read; Job Build/Cancel/Discover/Read/Workspace; Run Replay/Update; View Read; everything else listed as **Off**).
+3. For **`qa`**, use the **same** checkboxes as **`dev`** (Section 3.3), unless you later switch to item-only access for QA.
+4. For **`devops`**, set checkboxes **exactly** as in **Section 3.3 — Global role `devops`** (full admin set for this POC).
+5. **Save**.
 
 <img width="1918" height="448" alt="Manage Roles — global roles dev qa devops" src="https://github.com/user-attachments/assets/dd0b870b-1e51-40dd-9c70-990d7ed7c209" />
 
@@ -132,10 +221,10 @@ This activates **authorization** via the plugin.
 Use **Item roles** when Dev/QA should only see jobs matching a **name pattern**.
 
 1. Same page: **Manage Roles → Item roles**.
-2. Examples:
-   - Role `dev-jobs`, pattern `dev-.*` — Job: Read, Discover, Build.  
-   - Role `qa-jobs`, pattern `qa-.*` — Job: Read, Discover, Build.  
-3. **Save**. You will assign these item roles in Step 5 to specific users/groups.
+2. Create roles with **fixed values** from **Section 3.3 — Item roles**:
+   - **`dev-jobs`** — pattern **`dev-.*`** — enable Job: Discover, Read, Build, Workspace, Cancel (no Configure/Delete/Create).
+   - **`qa-jobs`** — pattern **`qa-.*`** — same Job permissions as `dev-jobs`.
+3. **Save**. Assign these item roles in Step 5 to specific users/groups if you use pattern-based access.
 
 <img width="1918" height="448" alt="Manage Roles — item roles" src="https://github.com/user-attachments/assets/4460c8c7-2fe0-4dad-adc9-7c2cf3aa86c6" />
 
@@ -154,6 +243,21 @@ Use **Item roles** when Dev/QA should only see jobs matching a **name pattern**.
 
 Repeat for each user or group.
 
+#### 9.1.1 Principals used in this POC
+
+Use these principals in **Assign Roles** (User/group column) and apply the permission sets defined in **Section 3.3**:
+
+| GitHub ID | Assigned role | Overall permissions | Job permissions | Run permissions | View permissions | Credentials / Agent / SCM |
+|------------|----------------|---------------------|-----------------|-----------------|------------------|----------------------------|
+| `Aditya-1818` | `dev` | Read | Build, Cancel, Discover, Read, Workspace | Replay, Update | Read | All Off |
+| `hardbro-7861` | `dev` | Read | Build, Cancel, Discover, Read, Workspace | Replay, Update | Read | All Off |
+| `Abhinav-1901` | `qa` | Read | Build, Cancel, Discover, Read, Workspace | Replay, Update | Read | All Off |
+| `Jangra-gunjani12` | `qa` | Read | Build, Cancel, Discover, Read, Workspace | Replay, Update | Read | All Off |
+| `ShreyasAvsthi` | `qa` | Read | Build, Cancel, Discover, Read, Workspace | Replay, Update | Read | All Off |
+| `admin` | `devops` | Read, Administer | Build, Cancel, Configure, Create, Delete, Discover, Move, Read, Workspace | Delete, Replay, Update | Configure, Create, Delete, Read | Credentials: Create/Delete/ManageDomains/Update/View; Agent: Build/Configure/Connect/Create/Delete/Disconnect/Provision; SCM Tag |
+| `mukeshdevelp` | `devops` | Read, Administer | Build, Cancel, Configure, Create, Delete, Discover, Move, Read, Workspace | Delete, Replay, Update | Configure, Create, Delete, Read | Credentials: Create/Delete/ManageDomains/Update/View; Agent: Build/Configure/Connect/Create/Delete/Disconnect/Provision; SCM Tag |
+| `suraj8957` | `devops` | Read, Administer | Build, Cancel, Configure, Create, Delete, Discover, Move, Read, Workspace | Delete, Replay, Update | Configure, Create, Delete, Read | Credentials: Create/Delete/ManageDomains/Update/View; Agent: Build/Configure/Connect/Create/Delete/Disconnect/Provision; SCM Tag |
+
 <img width="1918" height="448" alt="Assign Roles — global roles matrix" src="https://github.com/user-attachments/assets/5ffb5f86-622d-4403-b0c9-d82d6c2a08dc" />
 
 ### 9.2 Item roles (if defined)
@@ -167,9 +271,9 @@ Repeat for each user or group.
 ## 10. Step 6 — Validate authorization
 
 1. Use accounts that **already** can log in (your Security Realm).  
-2. Sign in as a user with only **`dev`** → expect **Build** on allowed jobs; **no** **Manage Jenkins**; **no** job **Configure** (if permissions were set correctly).  
-3. Sign in as **`qa`** → same as dev, or only jobs allowed by **item roles**.  
-4. Sign in as **`devops`** → full admin access.  
+2. Sign in as `Aditya-1818` (role `dev`) → expect **Build** on allowed jobs; **no** **Manage Jenkins**; **no** job **Configure** (if permissions were set correctly).  
+3. Sign in as `Abhinav-1901` (role `qa`) → same as dev, or only jobs allowed by **item roles**.  
+4. Sign in as `admin` (role `devops`) → full admin access.  
 
 If behavior is wrong, adjust **Manage Roles** (permissions) and **Assign Roles** (who gets which role), not login settings.
 

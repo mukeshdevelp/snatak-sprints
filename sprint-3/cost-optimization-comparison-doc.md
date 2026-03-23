@@ -1,4 +1,4 @@
-# AWS EC2 Instance Comparison — Graviton, AMD, and Intel
+# Comparison Documentation — Graviton, AMD, and Intel Instances
 
 
 
@@ -29,6 +29,7 @@
 ## 1. Introduction
 
 Choosing the right EC2 instance type can significantly affect **performance**, **cost**, and **compatibility** of your workloads. AWS offers instances powered by three main processor families: **AWS Graviton** (ARM-based), **AMD (x86)**, and **Intel (x86)**. This document outlines the key differences between them in terms of performance, cost, compatibility, and best use cases to support **cost optimization** and workload placement decisions.
+
 
 ---
 
