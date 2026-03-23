@@ -162,6 +162,8 @@ Repeat for each user or group.
 2. Tick **`dev-jobs`**, **`qa-jobs`**, etc.  
 3. **Save**.
 
+<img width="1916" height="1070" alt="image" src="https://github.com/user-attachments/assets/eaa659a8-317e-456a-85ea-198989fa3760" />
+
 ---
 
 ## 10. Step 6 — Validate authorization
