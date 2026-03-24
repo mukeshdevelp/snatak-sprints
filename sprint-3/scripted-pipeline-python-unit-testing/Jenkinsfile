@@ -1,0 +1,181 @@
+node {
+
+    def REPORT_DIR = "reports"
+    def ATTENDANCE_DIR = "attendance/attendance_api"
+    def NOTIFICATION_DIR = "notification/notification-worker"
+    
+    try {
+
+        stage('Clean Workspace') {
+            deleteDir()
+        }
+
+        stage('Checkout Code') {
+            git url: 'https://github.com/mukeshdevelp/ot-microservice-sarthi.git', branch: 'backend'
+        }
+
+        stage('Setup Python') {
+            sh '''
+                python3 --version
+                python3.11 --version || true
+
+            
+
+                python3 -m pip --version
+            '''
+        }
+
+        // ==========================
+        // Attendance API
+        // ==========================
+        stage('Install Attendance Dependencies') {
+            dir(ATTENDANCE_DIR) {
+                sh '''
+                    pwd
+                    ls -al
+                    if ! command -v poetry &> /dev/null
+                    then
+                        echo "Installing Poetry..."
+                        curl -sSL https://install.python-poetry.org | python3 -
+                    fi
+
+                    
+                    
+                '''
+            }
+        }
+        stage('installing poetry dependencies for attendance') {
+            dir(ATTENDANCE_DIR) {
+                sh '''
+                    export PATH=$HOME/.local/bin:$PATH
+                    # pwd - /var/lib/jenkins/workspace/unit-testing-python-scripted/attendance/attendance-api
+                    ls -al
+                    poetry config virtualenvs.create true
+                    # Prefer Python 3.11 for this project to avoid PyYAML build issues on 3.12.
+                    poetry lock --regenerate
+                    poetry install --no-root --no-interaction --no-ansi
+                '''
+            }
+        }
+
+        stage('Lint Attendance Code') {
+            dir(ATTENDANCE_DIR) {
+                sh '''
+                    echo "Linting Attendance API code with Pylint..."
+                    export PATH=$HOME/.local/bin:$PATH
+                    poetry run pylint router/ client/ models/ utils/ app.py || true
+                    echo "Completed linting Attendance API code"
+                '''
+            }
+        }
+
+       stage('Run Attendance Tests + Coverage') {
+            dir(ATTENDANCE_DIR) {
+                sh """
+                    echo "Running Attendance API tests with coverage..."
+                    export PATH=$HOME/.local/bin:$PATH
+
+                    #  ADD THIS LINE (FIX)
+                    export PYTHONPATH=\$(pwd)
+
+                    mkdir -p ../${REPORT_DIR}/attendance
+
+                    export COVERAGE_FILE=.coverage
+
+                    poetry run pytest . -v \
+                        --cov=. \
+                        --cov-report=html:../${REPORT_DIR}/attendance/htmlcov \
+                        --ignore=client/tests/test_postgres_conn.py \
+                        --ignore=client/tests/test_redis_conn.py
+
+                    echo "Completed Attendance API tests with coverage"
+                """
+            }
+        }
+        // working upto here
+        // Notification Worker
+   
+        stage('Install Notification Dependencies') {
+            dir(NOTIFICATION_DIR) {
+                sh '''
+                    echo "Setting up virtual environment for Notification service..."
+
+                    python3 -m venv venv
+
+                    # Use venv python directly (NO activate)
+                    venv/bin/python -m pip install --upgrade pip
+
+                    venv/bin/pip install -r requirements.txt
+                    venv/bin/pip install pytest pytest-cov
+
+                    echo "Dependencies installed inside venv"
+                '''
+            }
+        }
+        stage('Run Notification Tests + Coverage') {
+            dir(NOTIFICATION_DIR) {
+                sh """
+                    echo "Running Notification tests..."
+
+                    REPORT_PATH=\${WORKSPACE}/${REPORT_DIR}/notification
+
+                    mkdir -p \$REPORT_PATH
+
+                    venv/bin/python -m pytest tests/ -v \
+                        --cov=. \
+                        --cov-report=html:\$REPORT_PATH/htmlcov || true
+
+                    echo "Listing generated reports..."
+                    ls -R \$REPORT_PATH || true
+                """
+            }
+        }
+
+
+        // Archive Reports
+       
+        stage('Archive Reports') {
+            archiveArtifacts artifacts: "${REPORT_DIR}/**", fingerprint: true
+        }
+
+    } catch (err) {
+
+        try {
+            slackSend(
+                channel: '#ci-operation-notifications',
+                color: 'danger',
+                message: """
+                Build Failed
+
+                Job: ${env.JOB_NAME}
+                Build: #${env.BUILD_NUMBER}
+                URL: ${env.BUILD_URL}
+                """
+            )
+        } catch (MissingMethodException | NoSuchMethodError ignored) {
+            echo "slackSend step is not available on this Jenkins. Skipping Slack failure notification."
+        }
+
+        error "Pipeline failed: ${err}"
+
+    } finally {
+
+        if (currentBuild.currentResult == 'SUCCESS') {
+            try {
+                slackSend(
+                    channel: '#ci-operation-notifications',
+                    color: 'good',
+                    message: """
+                    Build Successful
+
+                    Job: ${env.JOB_NAME}
+                    Build: #${env.BUILD_NUMBER}
+                    URL: ${env.BUILD_URL}
+                """
+                )
+            } catch (MissingMethodException | NoSuchMethodError ignored) {
+                echo "slackSend step is not available on this Jenkins. Skipping Slack success notification."
+            }
+        }
+    }
+}
