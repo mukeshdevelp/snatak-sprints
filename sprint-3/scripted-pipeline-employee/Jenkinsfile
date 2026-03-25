@@ -69,13 +69,46 @@ node {
       }
 
     } catch (Exception e) {
-        currentBuild.result = 'FAILURE'
-        echo "Pipeline Failed: ${e}"
-        throw e
+        // Slack notification for failure
+        slackSend(
+            channel: '#ci-operation-notifications',
+            color: 'danger',
+            message: """
+            Build Failed
 
-    } finally {
-        stage('Cleanup') {
-            cleanWs()
-        }
+            Job: ${env.JOB_NAME}
+            Build: #${env.BUILD_NUMBER}
+            URL: ${env.BUILD_URL}
+            Error: ${e}
+            """
+        )
+
+        // Mark build as FAILURE and stop pipeline
+        currentBuild.result = 'FAILURE'
+        error "Pipeline failed: ${e}"
+      } finally {
+          stage('Cleanup') {
+              cleanWs()
+          }
+
+          // Success notification (only if build succeeded)
+          if (currentBuild.result == null || currentBuild.result == 'SUCCESS') {
+              slackSend(
+                  channel: '#ci-operation-notifications',
+                  color: 'good',
+                  message: """
+                  Build Successful
+
+                  Job: ${env.JOB_NAME}
+                  Build: #${env.BUILD_NUMBER}
+                  URL: ${env.BUILD_URL}
+                  """
+              )
+          }
+
+          // Archive artifacts safely (ensure REPORT_DIR is defined)
+          if (binding.hasVariable('REPORT_DIR')) {
+              archiveArtifacts artifacts: "${REPORT_DIR}/*", fingerprint: true
+          }
     }
 }
