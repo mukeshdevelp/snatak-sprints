@@ -113,44 +113,44 @@ pipeline {
             }
         }
         stage('Access Target Endpoint') {
-    steps {
-        sh """
-            echo "Registering API endpoints for ZAP..."
+            steps {
+                sh """
+                    echo "Registering API endpoints for ZAP..."
 
-            # Base URL
-            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}
+                    # Base URL
+                    curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}
 
-            # Known endpoints (ADD ALL YOUR APIs HERE)
-            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search/all
-            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search?id=1
-            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search?id=2
+                    # Known endpoints (ADD ALL YOUR APIs HERE)
+                    curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search/all
+                    curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search?id=1
+                    curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search?id=2
 
-            # Try POST/PUT endpoints if applicable
-            curl -X POST -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/create \
-                -H "Content-Type: application/json" \
-                -d '{"name":"test","status":"present"}' || true
+                    # Try POST/PUT endpoints if applicable
+                    curl -X POST -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/create \
+                        -H "Content-Type: application/json" \
+                        -d '{"name":"test","status":"present"}' || true
 
-            curl -X PUT -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/update \
-                -H "Content-Type: application/json" \
-                -d '{"id":1,"status":"absent"}' || true
+                    curl -X PUT -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/update \
+                        -H "Content-Type: application/json" \
+                        -d '{"id":1,"status":"absent"}' || true
 
-            # Try invalid paths (helps discovery sometimes)
-            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/test || true
+                    # Try invalid paths (helps discovery sometimes)
+                    curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/test || true
 
-            echo "All endpoints registered"
-        """
-    }
-}
+                    echo "All endpoints registered"
+                """
+            }
+        }
 
         stage('Run Active Scan') {
-    steps {
-        sh """
-            echo "Running Active Scan..."
+            steps {
+                sh """
+                    echo "Running Active Scan..."
 
-            curl "http://127.0.0.1:${ZAP_PORT}/JSON/ascan/action/scan/?url=http://34.239.167.247:8081/attendance/search/all&apikey=${ZAP_API_KEY}"
-        """
-    }
-}
+                    curl "http://127.0.0.1:${ZAP_PORT}/JSON/ascan/action/scan/?url=http://34.239.167.247:8081/attendance/search/all&apikey=${ZAP_API_KEY}"
+                """
+            }
+        }
 
         stage('Generate Report') {
             steps {
@@ -179,5 +179,23 @@ pipeline {
                 rm -rf ${ZAP_DIR} || true
             """
         }
+
+        success {
+            slackSend (
+                channel: '#ci-operation-notifications',
+                color: 'good',
+                message: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}\nZAP Scan Completed Successfully\nReport: ${env.BUILD_URL}artifact/${REPORT_DIR}/zap_attendance_report.html"
+            )
+        }
+
+        failure {
+            slackSend (
+                channel: '#ci-operation-notifications',
+                color: 'danger',
+                message: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}\nCheck logs: ${env.BUILD_URL}"
+            )
+        }
+
+        
     }
 }
