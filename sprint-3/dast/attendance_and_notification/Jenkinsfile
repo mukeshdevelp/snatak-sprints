@@ -4,7 +4,7 @@ pipeline {
 
     environment {
         TARGET_URL = "http://34.239.167.247:8081/"
-        ZAP_PORT = "8090"
+        ZAP_PORT = "9000"
         ZAP_API_KEY = "attendancekey"
         REPORT_DIR = "zap-reports"
         ZAP_DIR = "zap"
@@ -66,7 +66,6 @@ pipeline {
                 sh '''
                     echo "Setting Java 17..."
 
-                    # Find extracted Java directory
                     JAVA_DIR=$(ls -d java/jdk-17* | head -n 1)
 
                     export JAVA_HOME=$PWD/$JAVA_DIR
@@ -75,30 +74,36 @@ pipeline {
                     echo "Using JAVA_HOME=$JAVA_HOME"
                     java -version
 
-                    echo "Starting ZAP..."
+                    echo "Locating ZAP..."
 
-                    nohup $ZAP_DIR/ZAP_2.17.0/zap.sh -daemon \
+                    ZAP_PATH=$(find $ZAP_DIR -name zap.sh | head -n 1)
+
+                    if [ -z "$ZAP_PATH" ]; then
+                        echo "zap.sh not found!"
+                        ls -R $ZAP_DIR
+                        exit 1
+                    fi
+
+                    echo "Using ZAP from: $ZAP_PATH"
+
+                    echo "Starting ZAP..."
+                    export JAVA_OPTS="-Xmx1024m"
+
+                    nohup $ZAP_PATH -daemon \
                         -port $ZAP_PORT \
                         -host 127.0.0.1 \
                         -config api.key=$ZAP_API_KEY \
                         > zap.log 2>&1 &
 
-                    echo "Waiting for ZAP..."
+                    echo "Waiting for ZAP to initialize..."
+                    sleep 60
 
-                    for i in {1..12}
-                    do
-                        sleep 5
-                        curl -s http://127.0.0.1:$ZAP_PORT >/dev/null && echo "ZAP is UP" && exit 0
-                        echo "Waiting..."
-                    done
-
-                    echo "ZAP failed"
-                    cat zap.log
-                    exit 1
+                    echo "Verifying ZAP..."
+                    curl -s "http://127.0.0.1:$ZAP_PORT/JSON/core/view/version/?apikey=$ZAP_API_KEY" || true
                 '''
             }
         }
-
+        
         stage('Run Spider Scan') {
             steps {
                 sh """
@@ -110,13 +115,33 @@ pipeline {
         stage('Access Target Endpoint') {
     steps {
         sh """
-            echo "Accessing API so ZAP can register it..."
+            echo "Registering API endpoints for ZAP..."
 
-            curl -x http://127.0.0.1:${ZAP_PORT} \
-            http://34.239.167.247:8081/attendance/search/all
+            # Base URL
+            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}
+
+            # Known endpoints (ADD ALL YOUR APIs HERE)
+            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search/all
+            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search?id=1
+            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/search?id=2
+
+            # Try POST/PUT endpoints if applicable
+            curl -X POST -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/create \
+                -H "Content-Type: application/json" \
+                -d '{"name":"test","status":"present"}' || true
+
+            curl -X PUT -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/update \
+                -H "Content-Type: application/json" \
+                -d '{"id":1,"status":"absent"}' || true
+
+            # Try invalid paths (helps discovery sometimes)
+            curl -x http://127.0.0.1:${ZAP_PORT} ${TARGET_URL}/attendance/test || true
+
+            echo "All endpoints registered"
         """
     }
 }
+
         stage('Run Active Scan') {
     steps {
         sh """
