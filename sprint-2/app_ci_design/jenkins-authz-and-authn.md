@@ -17,13 +17,13 @@
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
-2. [What is jenkins authn and authz](#2-what-is-jenkins-authn-and-authz)
-3. [Why use authn and auhz](#3-why-use-authn-and-auhz)
+2. [What is jenkins authentication and authorization](#2-what-is-jenkins-authentication-and-authorization)
+3. [Why use authentication and authorization](#3-why-use-authentication-and-authorization)
 4. [Workflow diagram](#4-workflow-diagram)
 5. [Different types](#5-different-types)
 6. [Comparison table](#6-comparison-table)
 7. [Best practices](#7-best-practices)
-8. [Recommendation / Conclusion](#8-recommendation--conclusion)
+8. [Conclusion](#8-conclusion)
 9. [Contact Information](#9-contact-information)
 10. [References](#10-references)
 
@@ -37,7 +37,7 @@ Jenkins uses a **Security Realm** for authentication and an **Authorization Stra
 
 ---
 
-## 2. What is jenkins authn and authz
+## 2. What is jenkins authentication and authorization
 
 **Jenkins authentication and authorization** consist of:
 
@@ -56,7 +56,7 @@ Jenkins uses a **Security Realm** for authentication and an **Authorization Stra
 
 ---
 
-## 3. Why use authn and auhz
+## 3. Why use authentication and authorization
 
 | Reason | Description |
 |--------|-------------|
@@ -81,8 +81,7 @@ High-level flow for **login** and **permission check** in Jenkins:
 [User] → [Jenkins] → [Security Realm: verify identity] → [Authz Strategy: check permission] → [Allow / Deny]
 ```
 
-<img width="721" height="627" alt="image" src="https://github.com/user-attachments/assets/7fd7c303-59a4-47c1-9a42-3796c0f875da" />
-
+<img width="766" height="724" alt="image" src="https://github.com/user-attachments/assets/73a69edb-4f05-482c-8f0f-3b57b09a4e55" />
 
 ---
 
@@ -148,7 +147,7 @@ High-level flow for **login** and **permission check** in Jenkins:
 
 ---
 
-## 8. Recommendation / Conclusion
+## 8. Conclusion
 
 **Authentication:** Prefer a **Security Realm** that integrates with your organisation’s identity (LDAP or SAML/OIDC) so Jenkins uses the same identities as VCS and other tools. Use Jenkins’ own user database only for small or isolated setups.
 
@@ -160,10 +159,9 @@ Together, Authn and Authz ensure only the right people can access Jenkins and pe
 
 ## 9. Contact Information
 
-
-| Name|Email Address |
-|----------------|----------------|
-|Mukesh kumar Sharma|msmukeshkumarsharma95@gmail.com|
+| Name | Email Address |
+|------|----------------|
+| Mukesh kumar Sharma | msmukeshkumarsharma95@gmail.com |
 
 
 ---

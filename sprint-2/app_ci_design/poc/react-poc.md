@@ -1,6 +1,6 @@
-# React CI Checks & DAST — POC (Proof of Concept)
+# React CI Checks & DAST using OWASP ZAP — POC (Proof of Concept)
 
-This document is the **POC (Proof of Concept)** for **React CI checks and DAST** in the context of the **API/frontend** application (OT-Microservices frontend): scope, prerequisites, step-by-step setup, and success criteria.
+
 
 ---
 
@@ -15,13 +15,15 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 1. [Scope and context](#1-scope-and-context)
 2. [Prerequisites](#2-prerequisites)
-3. [Step 1 — Build and run the frontend](#3-step-1--build-and-run-the-frontend)
-4. [Step 2 — Add CI pipeline (lint, test, build)](#4-step-2--add-ci-pipeline-lint-test-build)
-5. [Step 3 — Serve the build and run DAST](#5-step-3--serve-the-build-and-run-dast)
-6. [Step 4 — Integrate and tune](#6-step-4--integrate-and-tune)
-7. [Success criteria](#7-success-criteria)
-8. [Contact Information](#8-contact-information)
-9. [References](#9-references)
+3. [Step 1 — Build the frontend](#3-step-1--build-the-frontend)
+4. [Step 2 — Serve the frontend locally](#4-step-2--serve-the-frontend-locally)
+5. [Step 3 — Install OWASP ZAP locally](#5-step-3--install-owasp-zap-locally)
+6. [Step 4 — Run ZAP daemon](#6-step-4--run-zap-daemon)
+7. [Step 5 — Generate HTML report](#7-step-5--generate-html-report)
+8. [Step 6 — Open HTML report in browser](#8-step-6--open-html-report-in-browser)
+9. [Benefits of DAST](#9-benefits-of-dast)
+10. [Contact Information](#10-contact-information)
+11. [References](#11-references)
 
 ---
 
@@ -29,11 +31,9 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 | Item | Description |
 |------|-------------|
-| **Application** | **API/frontend** — React (react-scripts) frontend for OT-Microservices; depends on Employee, Attendance, and Salary APIs. |
-| **Repo location** | `API/frontend` (e.g. within snatak-sprints or OT-Microservices). |
-| **Build** | `npm install`, `npm run build` (or `make build`); output in `build/`. |
-| **Run** | `serve -s build` on port 3000 (or `npm run start` for dev). |
-| **POC goal** | Add React CI checks (lint, test, build) and DAST scan in CI, using the frontend as the target. |
+| **Application** | Frontend — React (react-scripts) at **~/frontend**; build output in `build/`. |
+| **POC goal** | Perform DAST on the frontend using **OWASP ZAP** (local install, no Docker). |
+| **Target URL** | `http://localhost:3000` when the build is served locally. |
 
 ---
 
@@ -41,88 +41,184 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 | Requirement | Description |
 |-------------|-------------|
-| **Node.js and npm** | Node 16+ (per frontend Dockerfile); npm for install and build. |
-| **API/frontend repo** | Clone or use the existing `API/frontend` directory; ensure `package.json` and `Makefile` are present. |
-| **CI system** | GitLab CI, Jenkins, or similar (one pipeline for the POC). |
-| **DAST tool** | OWASP ZAP (Docker or CLI) or npm audit/Snyk for dependency checks; ZAP for dynamic scan of the running app. |
+| **Node.js and npm** | Node 16+; npm for install and build. |
+| **Frontend repo** | **~/frontend** with `package.json`. |
+| **Java** | Java 11+ (required by ZAP). |
+| **OWASP ZAP** | Installed locally. |
+| **Port 3000** | Free for serving the frontend. |
 
 ---
 
-## 3. Step 1 — Build and run the frontend
+## 3. Step 1 — Build the frontend
 
-1. Navigate to the frontend directory:
+```bash
+cd ~/frontend
+
+# buid the frontend
+npm run build
+# Or use
+make build
+```
+
+Confirm the build exists:
+
+```bash
+ls -la build/
+```
+
+
+---
+
+## 4. Step 2 — Serve the frontend locally
+
+The frontend must be **running** for ZAP to scan it.
+
+In a terminal, from **~/frontend**:
+
+```bash
+npm install -g serve
+serve -s build
+
+```
+
+Leave this terminal open. In **browser**, check that the app responds:
+
+
+
+---
+
+## 5. Step 3 — Install OWASP ZAP locally
+
+
+1. Download using `wget` (example for latest cross-platform ZIP):
    ```bash
-   cd API/frontend
+   mkdir -p ~/tools
+   cd ~/tools
+   sudo apt install openjdk-17-jdk -y
+   wget https://github.com/zaproxy/zaproxy/releases/download/v2.17.0/ZAP_2_17_0_unix.sh
+   chmod +x ZAP_2_17_0_unix.sh
+   ./ZAP_2_17_0_unix.sh
+   
    ```
-2. Install dependencies and build:
-   ```bash
-   make build
-   # or: npm install && npm run build
-   ```
-3. Serve the production build locally to verify:
-   ```bash
-   npx serve -s build -l 3000
-   ```
-   Or use the Docker image:
-   ```bash
-   make docker-build
-   make docker-run
-   ```
-4. Confirm the app loads at `http://localhost:3000`. The frontend uses relative paths (`/employee/`, `/attendance/`, `/salary/`) that in production are routed via a reverse proxy to the backend APIs; for DAST you can scan the static UI first or run against a full stack (frontend + proxy + APIs).
+
+**Expected Output**
+
+<img width="1920" height="889" alt="image" src="https://github.com/user-attachments/assets/840cefc1-b4eb-4932-be81-a0fa47402d11" />
+
+<img width="1920" height="919" alt="image" src="https://github.com/user-attachments/assets/9808cc9e-7dd6-48e0-9374-24ed97467f34" />
+
+<img width="1920" height="919" alt="image" src="https://github.com/user-attachments/assets/b34dd382-cb36-454c-8044-8b4605a03326" />
+
+
+<img width="1920" height="919" alt="image" src="https://github.com/user-attachments/assets/3efb75d9-7422-4457-b938-2de85c08f30e" />
+
+
+<img width="1920" height="249" alt="image" src="https://github.com/user-attachments/assets/c3354bec-3cf4-4b43-8e58-d548b2b336d4" />
+
+2. Use `~/tools/zap/zap.sh` (Linux).
+
+Verify:
+
+```bash
+zap.sh -version
+
+```
+<img width="1920" height="362" alt="image" src="https://github.com/user-attachments/assets/cb485685-af9c-4615-a785-f02b24ef1c96" />
+
+
+Use the full path to `zap.sh` in the next steps if it is not on your `PATH`.
 
 ---
 
-## 4. Step 2 — Add CI pipeline (lint, test, build)
+## 6. Step 4 — Run ZAP daemon
 
-1. In your CI config (e.g. `.gitlab-ci.yml` or Jenkinsfile), add a job that:
-   - Checks out the repo (including `API/frontend` or the frontend-only repo).
-   - Runs `npm ci` or `npm install` in the frontend directory.
-   - Runs lint (if configured, e.g. `npm run lint` or ESLint).
-   - Runs tests: `npm run test -- --watchAll=false` (or equivalent for react-scripts).
-   - Runs `npm run build` and stores the `build/` artifact.
-2. Ensure the job passes so that the build artifact is available for the DAST step.
+With the frontend still running at `http://localhost:3000`, open a **new terminal** and run:
 
----
+```bash
+cd /usr/local/zaproxy/
+# Enter any private key
+sudo /usr/local/zaproxy/zap.sh -daemon -port 8090 -host 0.0.0.0 -config api.key=12345
+```
 
-## 5. Step 3 — Serve the build and run DAST
+**Expected Output**
 
-1. In CI, after the build job, add a DAST job that:
-   - Uses the `build/` artifact from the previous job.
-   - Starts a static server serving `build/` (e.g. `npx serve -s build -l 3000` in background, or a small Docker image with `serve`).
-   - Waits for the server to be ready (e.g. curl to `http://localhost:3000`).
-   - Runs OWASP ZAP (e.g. Docker image `owasp/zap2docker-stable`) in baseline or quick scan mode against `http://host:3000`.
-   - Parses the ZAP report and fails the job on high/critical findings (or uploads the report as an artifact).
-2. Example (conceptual) for a GitLab CI DAST stage:
-   - Start `serve -s build -l 3000`.
-   - Run: `docker run --network host -i owasp/zap2docker-stable zap-baseline.py -t http://localhost:3000 -r zap_report.html`.
-   - Publish `zap_report.html` as an artifact; optionally fail on exit code.
-3. Alternatively, run `npm audit` (or Snyk) in the same pipeline for dependency vulnerabilities alongside DAST.
+<img width="1920" height="426" alt="image" src="https://github.com/user-attachments/assets/265d947c-45fc-4208-98d0-cd456a255d8a" />
+
+<img width="1920" height="755" alt="image" src="https://github.com/user-attachments/assets/3af708f1-28a8-4faf-a190-d9e054473b3b" />
+
+<img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/af77131d-ebb1-4cb6-a33c-e683f106b017" />
+
+
+<img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/f119bd86-d00a-4fd3-ae68-87de8c64142e" />
+
+
 
 ---
 
-## 6. Step 4 — Integrate and tune
+## 7. Step 5 — Generate HTML report
 
-1. **Thresholds** — Configure the pipeline to fail only on high/critical DAST findings; document the threshold in the main design doc ([React CI checks — DAST](../react-ci-checks-dast.md)).
-2. **Baseline** — If ZAP reports false positives (e.g. on static assets), use ZAP baseline or exclusions so the POC pipeline stays green for known-good state.
-3. **Docs** — Document in this file or in the CI config: frontend path (`API/frontend`), build command (`make build` / `npm run build`), serve command (`serve -s build`), and DAST command/options.
-4. **Optional** — If the frontend is deployed to a staging URL, run DAST against that URL instead of a CI-internal server for closer-to-production coverage.
+Open the report:
+
+```bash
+# saving HTML report
+curl "http://localhost:8090/OTHER/core/other/htmlreport/?apikey=12345" > zap_report.html
+# scp to bastion
+ scp -i secretkey.pem ubuntu@10.0.3.250:~/zap_report.html ./frontend_zap.html
+# scp to local
+scp -i secretkey.pem ubuntu@54.81.223.183:~/frontend_zap.html ./frontend.html
+
+```
+
+**Expected Output**
+
+
+<img width="1920" height="139" alt="image" src="https://github.com/user-attachments/assets/07590315-66ec-47c6-92d1-3e4eaf55fcce" />
+
+<img width="1920" height="238" alt="image" src="https://github.com/user-attachments/assets/b9e9577e-d910-4508-be8c-6387cb73567b" />
+
 
 ---
 
-## 7. Success criteria
+## 8. Step 6 — Open HTML report in browser
 
-| Criterion | Status |
-|-----------|--------|
-| API/frontend builds successfully in CI (`make build` or `npm run build`). | ☐ |
-| Lint and test jobs run and pass (if configured). | ☐ |
-| Build artifact is available to the DAST job. | ☐ |
-| DAST (e.g. OWASP ZAP) runs against the served frontend and produces a report. | ☐ |
-| Pipeline fails or warns on high/critical findings (per threshold). | ☐ |
-| Process is documented (path, commands, thresholds). | ☐ |
+Open the copied **frontend.html** from local system in the browser.
+
+
+**Expected Output**
+
+
+<img width="1920" height="991" alt="image" src="https://github.com/user-attachments/assets/84a75008-dde9-4d41-ab50-5c4cb5ed4fc6" />
+
+<img width="1920" height="991" alt="image" src="https://github.com/user-attachments/assets/f428757f-8fa0-40b2-b177-a760eb1f6a43" />
+
+<img width="1920" height="991" alt="image" src="https://github.com/user-attachments/assets/1fbd25fe-3232-46d2-8f94-622d991001ac" />
+
+
+**Risk levels:**
+
+| Level | Action |
+|-------|--------|
+| **High/Critical** | Fix before release. |
+| **Medium** | Plan to fix. |
+| **Low/Info** | Review; often informational. |
+
+Typical frontend findings: missing security headers (CSP, X-Frame-Options), cookie flags. Use the report to adjust your app or reverse proxy configuration.
 
 ---
 
-## 8. Contact Information
+## 9. Benefits of DAST
+
+| Benefit | Description |
+|---------|-------------|
+| **Finds real runtime issues** | Tests the running frontend (HTML, JS, API calls) and catches vulnerabilities that only appear at runtime, not in static code. |
+| **OWASP Top 10 coverage** | Helps identify common web risks such as XSS, insecure redirects, and missing security headers. |
+| **Works against any environment** | Can be run against local builds (e.g. `http://localhost:3000`) or higher environments (staging/pre-prod) without code changes. |
+| **Complements unit and integration tests** | Adds a security layer on top of functional tests, without modifying the application code. |
+| **Repeatable process** | Once commands are defined, teams can re-run the same DAST steps after each major change or before releases. |
+
+---
+
+## 10. Contact Information
 
 | Name | Email Address |
 |------|----------------|
@@ -130,13 +226,12 @@ This document is the **POC (Proof of Concept)** for **React CI checks and DAST**
 
 ---
 
-## 9. References
+## 11. References
 
 | Link | Description |
 |------|-------------|
-| [React CI checks — DAST](../react-ci-checks-dast.md) | Main design document for React CI checks and DAST. |
-| [API/frontend README](../../../API/frontend/README.md) | Frontend application build and run instructions (relative to repo root). |
-| [OWASP ZAP](https://www.zaproxy.org/) | OWASP ZAP — dynamic application security testing. |
-| [npm audit](https://docs.npmjs.com/cli/v8/commands/npm-audit) | npm audit for dependency vulnerabilities. |
+| [React CI checks — DAST](../react-ci-checks-dast.md) | Main design document. |
+| [OWASP ZAP](https://www.zaproxy.org/) | OWASP ZAP. |
+| [ZAP Quick Start](https://www.zaproxy.org/getting-started/) | ZAP headless/CLI usage. |
 
 ---

@@ -1,0 +1,126 @@
+pipeline {
+  agent any
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+  }
+
+  environment {
+    APP_NAME        = "generic-ami"
+    PACKER_TEMPLATE = "packer/template.json"
+    SONARQUBE_ENV   = "My-SonarQube-Server"     // SonarQube server name in Jenkins global config
+    SONARQUBE_TOKEN = credentials('sonar-token-id') // Jenkins credentials ID for Sonar token
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Lint / Validate') {
+      steps {
+        sh '''
+          if command -v packer >/dev/null 2>&1; then
+            echo "==> Running packer fmt and validate"
+            packer fmt -check ${PACKER_TEMPLATE}
+            packer validate ${PACKER_TEMPLATE}
+          else
+            echo "Packer not installed; skipping packer fmt/validate."
+          fi
+        '''
+      }
+    }
+
+    stage('Tests / Generic Checks') {
+      steps {
+        sh '''
+          # TODO: add real tests or linting for your AMI build scripts
+          echo "==> Placeholder for tests / additional generic checks"
+        '''
+      }
+    }
+
+    stage('Dependency Scanning (Trivy fs, optional)') {
+      steps {
+        sh '''
+          if command -v trivy >/dev/null 2>&1; then
+            echo "==> Running Trivy filesystem scan"
+            trivy fs --exit-code 1 --severity CRITICAL,HIGH .
+          else
+            echo "Trivy not installed; skipping dependency scan."
+          fi
+        '''
+      }
+    }
+
+    stage('SonarQube Analysis (optional)') {
+      when {
+        expression { fileExists('pom.xml') || fileExists('sonar-project.properties') }
+      }
+      steps {
+        withSonarQubeEnv(SONARQUBE_ENV) {
+          sh '''
+            if [ -f pom.xml ]; then
+              mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN
+            elif [ -f sonar-project.properties ]; then
+              sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN
+            else
+              echo "No recognizable SonarQube project configuration found."
+            fi
+          '''
+        }
+      }
+    }
+
+    stage('Quality Gate (optional)') {
+      when {
+        expression { fileExists('pom.xml') || fileExists('sonar-project.properties') }
+      }
+      steps {
+        script {
+          timeout(time: 5, unit: 'MINUTES') {
+            def qg = waitForQualityGate()
+            if (qg.status != 'OK') {
+              error "Pipeline aborted due to Quality Gate failure: ${qg.status}"
+            }
+          }
+        }
+      }
+    }
+
+    stage('Build AMI') {
+      steps {
+        sh '''
+          if command -v packer >/dev/null 2>&1; then
+            echo "==> Building AMI with Packer"
+            packer build ${PACKER_TEMPLATE}
+          else
+            echo "Packer not installed; cannot build AMI."
+            exit 1
+          fi
+        '''
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "AMI pipeline succeeded for ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+      // Example: notify success via email or Slack
+      // emailext to: 'devops-team@example.com',
+      //          subject: "SUCCESS: AMI ${APP_NAME}",
+      //          body: "AMI build passed. See ${env.BUILD_URL}"
+    }
+    failure {
+      echo "AMI pipeline failed for ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+      // Example: notify failure
+      // emailext to: 'devops-team@example.com',
+      //          subject: "FAILURE: AMI ${APP_NAME}",
+      //          body: "AMI build failed. See ${env.BUILD_URL}"
+    }
+  }
+}
+

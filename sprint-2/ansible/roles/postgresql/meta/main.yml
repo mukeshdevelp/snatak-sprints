@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: "Mukesh Sharma"
+  description: "Simple PostgreSQL install role for Ubuntu using static inventory."
+  license: "MIT"
+  min_ansible_version: "2.11"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - "20.04"
+        - "22.04"
+
+dependencies: []
+
