@@ -1,0 +1,138 @@
+pipeline {
+    agent any
+
+    environment {
+        ZAP_SERVER   = "http://127.0.0.1:8090"
+        TARGET_URL   = "http://13.220.192.137:8084/api/v1/salary/search/all"
+        BASE_URL     = "http://13.220.192.137:8084"
+        API_KEY      = "1234567890"
+        SLACK_CHANNEL = '#ci-operation-notifications'
+    }
+
+    options {
+        skipDefaultCheckout(true)
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
+
+    stages {
+
+        stage('Clean Workspace (Before Build)') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Check ZAP API') {
+            steps {
+                sh '''
+                echo "Checking ZAP API..."
+                curl "${ZAP_SERVER}/JSON/core/view/version/?apikey=${API_KEY}"
+                '''
+            }
+        }
+
+        stage('Check Target Endpoint') {
+            steps {
+                sh '''
+                echo "Checking Target Endpoint..."
+                curl -I ${TARGET_URL} || exit 1
+                '''
+            }
+        }
+
+        stage('Spider Scan') {
+            steps {
+                sh '''
+                echo "Starting Spider Scan..."
+                curl "${ZAP_SERVER}/JSON/spider/action/scan/?url=${BASE_URL}&apikey=${API_KEY}"
+                '''
+            }
+        }
+
+        stage('Wait for Spider Completion') {
+            steps {
+                script {
+                    def status = "0"
+                    while (status != "100") {
+                        status = sh(
+                            script: """curl -s "${ZAP_SERVER}/JSON/spider/view/status/?scanId=0&apikey=${API_KEY}" | jq -r '.status'""",
+                            returnStdout: true
+                        ).trim()
+
+                        echo "Spider Progress: ${status}%"
+                        sleep(5)
+                    }
+                }
+            }
+        }
+
+        stage('Active Scan') {
+            steps {
+                sh '''
+                echo "Starting Active Scan..."
+                curl "${ZAP_SERVER}/JSON/ascan/action/scan/?url=${TARGET_URL}&apikey=${API_KEY}"
+                '''
+            }
+        }
+
+        stage('Wait for Active Scan Completion') {
+            steps {
+                script {
+                    def status = "0"
+                    while (status != "100") {
+                        status = sh(
+                            script: """curl -s "${ZAP_SERVER}/JSON/ascan/view/status/?scanId=0&apikey=${API_KEY}" | jq -r '.status'""",
+                            returnStdout: true
+                        ).trim()
+
+                        echo "Active Scan Progress: ${status}%"
+                        sleep(10)
+                    }
+                }
+            }
+        }
+
+        stage('Generate Report') {
+            steps {
+                sh '''
+                echo "Generating ZAP Report..."
+                curl "${ZAP_SERVER}/OTHER/core/other/htmlreport/?apikey=${API_KEY}" -o zap_report.html
+                '''
+            }
+        }
+
+        stage('Archive Report') {
+            steps {
+                archiveArtifacts artifacts: 'zap_report.html', fingerprint: true
+            }
+        }
+    }
+
+    post {
+
+        success {
+            echo "SUCCESS: DAST Scan Completed"
+
+            slackSend(
+                channel: env.SLACK_CHANNEL,
+                color: 'good',
+                message: "SUCCESS: DAST Scan Passed\nJob: ${env.JOB_NAME}\nBuild: #${env.BUILD_NUMBER}\nURL: ${env.BUILD_URL}"
+            )
+        }
+
+        failure {
+            echo "FAILURE: DAST Scan Failed"
+
+            slackSend(
+                channel: env.SLACK_CHANNEL,
+                color: 'danger',
+                message: "FAILURE: DAST Scan Failed\nJob: ${env.JOB_NAME}\nBuild: #${env.BUILD_NUMBER}\nURL: ${env.BUILD_URL}"
+            )
+        }
+
+        always {
+            cleanWs()
+            echo "Workspace cleaned"
+        }
+    }
+}

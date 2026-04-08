@@ -1,0 +1,113 @@
+pipeline {
+    agent any
+
+    environment {
+        SONARQUBE_ENV = 'SonarQube'
+
+        PROJECT_KEY = 'Go-Employee-API'
+        PROJECT_NAME = 'Go Employee API'
+
+        GO_PROJECT_DIR = '.'
+
+        SLACK_CHANNEL = '#ci-operation-notifications'
+    }
+
+    tools {
+        go 'go'
+      
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/OT-MICROSERVICES/employee-api.git'
+                sh '''
+                echo "Workspace:"
+                pwd
+                ls -la
+                '''
+            }
+        }
+
+        stage('Go Format') {
+            steps {
+                dir("${GO_PROJECT_DIR}") {
+                    sh 'go fmt ./...'
+                }
+            }
+        }
+
+        stage('Go Build') {
+            steps {
+                dir("${GO_PROJECT_DIR}") {
+                    sh 'go build'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+    steps {
+        script {
+            def scannerHome = tool 'sonar-scanner'  
+            dir("${GO_PROJECT_DIR}") {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                      -Dsonar.projectKey=${PROJECT_KEY} \
+                      -Dsonar.projectName="${PROJECT_NAME}" \
+                      -Dsonar.sources=. \
+                      -Dsonar.exclusions=**/vendor/**,**/*_test.go
+                    """
+                }
+            }
+        }
+    }
+}
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    script {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "Pipeline failed due to Quality Gate failure: ${qg.status}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+
+        success {
+            echo "Build & SonarQube analysis passed"
+
+           
+           
+            slackSend(
+                channel: "${SLACK_CHANNEL}",
+                color: 'good',
+                message: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            )
+           
+        }
+
+        failure {
+            echo "Pipeline failed"
+
+         
+            slackSend(
+                channel: "${SLACK_CHANNEL}",
+                color: 'danger',
+                message: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            )
+           
+        }
+
+        always {
+            cleanWs()
+        }
+    }
+}

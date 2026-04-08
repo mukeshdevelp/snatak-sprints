@@ -1,0 +1,11 @@
+---
+- name: Apply PostgreSQL role on Ubuntu hosts
+  hosts: postgresql_servers
+  become: true
+  vars:
+    # Override defaults if needed
+    # postgresql_version: "16"
+    # postgresql_manage_pg_hba: true
+  roles:
+    - postgresql
+

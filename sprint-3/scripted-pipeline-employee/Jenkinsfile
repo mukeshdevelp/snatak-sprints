@@ -1,0 +1,114 @@
+node {
+
+    // Variables
+    def REPO_URL = "https://github.com/OT-MICROSERVICES/employee-api.git"
+    def PROJECT_KEY = "golang-bug-analysis-mukesh"
+    def SONAR_HOST_URL = "http://192.168.8.17:9000"
+    // Jenkins credential ID
+    def SONAR_TOKEN = credentials('sonar-token-golang-bug-analysis')
+    // Configure in Jenkins tools 
+    def SCANNER_HOME = tool 'sonar-scanner'         
+
+    try {
+
+        stage('Clean Workspace') {
+            deleteDir()
+        }
+        stage('Setup Go Locally') {
+          sh '''
+              # Download Go if not already exists
+              if [ ! -d "$WORKSPACE/tools/go" ]; then
+                  mkdir -p $WORKSPACE/tools/go
+                  wget https://go.dev/dl/go1.21.7.linux-amd64.tar.gz
+                  tar -C $WORKSPACE/tools/go -xzf go1.21.7.linux-amd64.tar.gz --strip-components=1
+              fi
+
+              # Add Go to PATH
+              export PATH=$WORKSPACE/tools/go/bin:$PATH
+              go version
+          '''
+      }
+
+      stage('Checkout Code') {
+          git url: REPO_URL, branch: 'main'
+      }
+
+      stage('Setup Java (Sonar Requirement)') {
+          script {
+              def javaHome = tool name: 'jdk17', type: 'jdk'
+              env.JAVA_HOME = javaHome
+              env.PATH = "${javaHome}/bin:${env.PATH}"
+          }
+          sh 'java -version'
+      }
+
+      
+
+      stage('Run SonarQube Scan') {
+          withSonarQubeEnv('SonarQube') {   // <-- use the server name from Jenkins config
+              withCredentials([string(credentialsId: 'sonar-token-golang-bug-analysis', variable: 'SONAR_LOGIN')]) {
+                  sh """
+                      ${SCANNER_HOME}/bin/sonar-scanner \
+                          -Dsonar.projectKey=${PROJECT_KEY} \
+                          -Dsonar.sources=. \
+                          -Dsonar.login=${SONAR_LOGIN} \
+                          -Dsonar.go.coverage.reportPaths=coverage.out
+                  """
+              }
+          }
+      }
+
+      stage('Quality Gate Check') {
+          timeout(time: 5, unit: 'MINUTES') {
+              waitForQualityGate abortPipeline: true
+          }
+      }
+
+      stage('Success') {
+          echo "SonarQube Analysis Completed Successfully"
+      }
+
+    } catch (Exception e) {
+        // Slack notification for failure
+        slackSend(
+            channel: '#ci-operation-notifications',
+            color: 'danger',
+            message: """
+            Build Failed
+
+            Job: ${env.JOB_NAME}
+            Build: #${env.BUILD_NUMBER}
+            URL: ${env.BUILD_URL}
+            Error: ${e}
+            """
+        )
+
+        // Mark build as FAILURE and stop pipeline
+        currentBuild.result = 'FAILURE'
+        error "Pipeline failed: ${e}"
+      } finally {
+          stage('Cleanup') {
+              cleanWs()
+          }
+
+          // Success notification (only if build succeeded)
+          if (currentBuild.result == null || currentBuild.result == 'SUCCESS') {
+              slackSend(
+                  channel: '#ci-operation-notifications',
+                  color: 'good',
+                  message: """
+                  Build Successful
+
+                  Job: ${env.JOB_NAME}
+                  Build: #${env.BUILD_NUMBER}
+                  URL: ${env.BUILD_URL}
+                  """
+              )
+          }
+
+          // Archive artifacts safely (ensure REPORT_DIR is defined)
+          if (binding.hasVariable('REPORT_DIR')) {
+              archiveArtifacts artifacts: "${REPORT_DIR}/*", fingerprint: true
+          }
+    }
+}

@@ -1,0 +1,108 @@
+node {
+
+    def GO_VERSION = "1.21"
+    def REPORT_DIR = "reports"
+
+    try {
+
+        stage('Checkout Code') {
+            git(
+                branch: 'main',
+                url: 'https://github.com/OT-MICROSERVICES/employee-api.git'
+               
+            )
+        }
+
+        stage('Setup Go Environment') {
+            echo "Setting up Go..."
+            sh """
+                export PATH=\$PATH:/usr/local/go/bin
+                go version
+            """
+        }
+
+        stage('Install Dependencies') {
+            echo "Downloading Go modules..."
+            sh """
+                export PATH=\$PATH:/usr/local/go/bin
+                go mod tidy
+            """
+        }
+
+        stage('Run Unit Tests') {
+            echo "Running tests..."
+            sh """
+                export PATH=\$PATH:/usr/local/go/bin
+                go test ./... -v
+            """
+        }
+
+        stage('Install govulncheck') {
+            echo "Installing govulncheck..."
+            sh """
+                export PATH=\$PATH:/usr/local/go/bin
+                go install golang.org/x/vuln/cmd/govulncheck@latest
+            """
+        }
+
+        stage('Dependency Vulnerability Scan') {
+            echo "Running govulncheck scan..."
+
+            sh """
+                export PATH=\$PATH:/usr/local/go/bin:\$HOME/go/bin
+
+                mkdir -p ${REPORT_DIR}
+
+                govulncheck ./... > ${REPORT_DIR}/govulncheck-report.txt || true
+            """
+        }
+
+        stage('Archive Reports') {
+            echo "Archiving scan reports..."
+            archiveArtifacts artifacts: "${REPORT_DIR}/*.txt", allowEmptyArchive: true
+        }
+
+        stage('Slack Notification - Success') {
+            echo "Sending success notification..."
+            slackSend(
+                channel: '#ci-operation-notifications',
+                color: 'good',
+                message: """
+                GoLang CI Pipeline SUCCESS
+
+                Job: ${env.JOB_NAME}
+                Build: #${env.BUILD_NUMBER}
+                URL: ${env.BUILD_URL}
+                """
+            )
+        }
+
+    } catch (err) {
+
+        stage('Slack Notification - Failure') {
+            echo "Sending failure notification..."
+            slackSend(
+                channel: '#ci-operation-notifications',
+                color: 'danger',
+                message: """
+                GoLang CI Pipeline FAILED
+
+                Job: ${env.JOB_NAME}
+                Build: #${env.BUILD_NUMBER}
+                URL: ${env.BUILD_URL}
+
+                Error: ${err}
+                """
+            )
+        }
+
+        error "Pipeline failed: ${err}"
+
+    } finally {
+
+        stage('Cleanup') {
+            echo "Cleaning workspace..."
+            cleanWs()
+        }
+    }
+}   
